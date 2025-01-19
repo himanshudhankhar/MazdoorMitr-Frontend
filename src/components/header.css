@@ -1,0 +1,48 @@
+.header {
+    background-color: #2c3e50; /* Dark background to match footer */
+    color: #ecf0f1; /* Light text */
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid #e67e22; /* Accent border */
+    width: 100%; /* Full-width header */
+    box-sizing: border-box;
+  }
+  
+  .header-brand h1 {
+    font-size: 1.8rem;
+    margin: 0;
+    color: #e67e22; /* Accent color for branding */
+    font-weight: bold;
+  }
+  
+  .header-nav {
+    display: flex;
+    gap: 20px; /* Spacing between links */
+  }
+  
+  .header-nav a {
+    text-decoration: none;
+    color: #ecf0f1; /* Light text color */
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  
+  .header-nav a:hover {
+    color: #e67e22; /* Hover effect for links */
+  }
+  
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .header-nav {
+      margin-top: 10px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+  }
+  
