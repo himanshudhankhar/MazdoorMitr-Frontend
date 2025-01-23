@@ -9,7 +9,7 @@ export default function Header() {
                 <h1>MazdoorMitr</h1>
             </div>
             <nav class="header-nav">
-                <a href="/">Home</a>
+                <a href="/home">Home</a>
                 <a href="/profile">Profile</a>
                 <a href="/wallet">Wallet</a>
                 <a href="">Logout</a>

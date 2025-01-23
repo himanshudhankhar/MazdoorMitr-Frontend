@@ -5,6 +5,8 @@ import Login from "./components/Login";
 import Profile from './components/Profile';
 import Wallet from './components/Wallet';
 import Home from './components/Home';
+import ProfilePage from './components/ProfilePage';
+import CompleteProfileEmployer from './components/CompleteProfileEmployer';
 function App() {
 
   return (
@@ -15,7 +17,9 @@ function App() {
           <Route path="/" element={<MazdoorMitra />}>
                 <Route exact path="/profile" element={<Profile />} />
                 <Route exact path="/wallet" element={<Wallet />} />
-                <Route exact path="/" element={<Home />} />
+                <Route exact path="/profile-page/:profileid" element={<ProfilePage />} />
+                <Route exact path="/home" element={<Home />} />
+                <Route exact path="/complete-profile-employer" element={<CompleteProfileEmployer />} />
           </Route>
         </Routes>
       </BrowserRouter>
