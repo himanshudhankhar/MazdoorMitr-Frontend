@@ -17,11 +17,11 @@
     flex-wrap: wrap;
   }
   
-  .footer-content > div {
+  /* .footer-content > div {
     /* flex: 1 1 100px; */
-     /* Ensure responsive layout */
-     
-  }
+     /* Ensure responsive layout 
+  } 
+  */
   
   .footer h4 {
     margin-bottom: 10px;
