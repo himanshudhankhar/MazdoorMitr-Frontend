@@ -20,16 +20,19 @@ const EmployeeLogin = () => {
         <h2>Employee Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="name">Name:</label>
+            <label htmlFor="userid">UserID:</label>
             <input
               type="text"
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Enter your name"
+              placeholder="Enter your userid"
               required
             />
           </div>
+          <button type="submit" className="admin-login-btn" style={{marginBottom: '10px'}}>
+            Send OTP on Mobile
+          </button>
           <div className="employee-login-form-group">
             <label htmlFor="otp">OTP:</label>
             <input

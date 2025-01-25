@@ -20,16 +20,19 @@ const AdminLogin = () => {
         <h2>Admin Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="admin-login-form-group">
-            <label htmlFor="username">Username:</label>
+            <label htmlFor="passcode">Passcode:</label>
             <input
               type="text"
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your username"
+              placeholder="Enter admin passcode"
               required
             />
           </div>
+          <button type="submit" className="admin-login-btn" style={{marginBottom: '10px'}}>
+            Send OTP on Mobile
+          </button>
           <div className="admin-login-form-group">
             <label htmlFor="otp">OTP:</label>
             <input
