@@ -13,6 +13,7 @@ import EmployeeLogin from './components/EmployeeLoginPage';
 import EmployeeDashboard from './components/EmployeeDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import AddLabourer from './components/AddLabourer';
+import SearchModifyLabourer from './components/SearchAndModifyLabourer';
 function App() {
 
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route exact path="/employee-dashboard" element={<EmployeeDashboard />} />
           <Route exact path="/admin-dashboard" element={<AdminDashboard />} />
           <Route exact path="/add-labourer" element={<AddLabourer />} />
+          <Route exact path="/search-modify-labourer" element={<SearchModifyLabourer />} />
           <Route path="/" element={<MazdoorMitra />}>
                 <Route exact path="/profile" element={<Profile />} />
                 <Route exact path="/wallet" element={<Wallet />} />
