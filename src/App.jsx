@@ -13,6 +13,7 @@ import EmployeeLogin from './components/EmployeeLoginPage';
 import EmployeeDashboard from './components/EmployeeDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import AddLabourer from './components/AddLabourer';
+import AddEmployer from './components/AddEmployer';
 import SearchModifyLabourer from './components/SearchAndModifyLabourer';
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
           <Route exact path="/employee-dashboard" element={<EmployeeDashboard />} />
           <Route exact path="/admin-dashboard" element={<AdminDashboard />} />
           <Route exact path="/add-labourer" element={<AddLabourer />} />
+          <Route exact path="/add-employer" element={<AddEmployer />} />
           <Route exact path="/search-modify-labourer" element={<SearchModifyLabourer />} />
           <Route path="/" element={<MazdoorMitra />}>
                 <Route exact path="/profile" element={<Profile />} />
