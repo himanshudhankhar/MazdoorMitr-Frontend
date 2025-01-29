@@ -12,6 +12,7 @@ import CompleteProfileEmployer from './components/CompleteProfileEmployer';
 import EmployeeLogin from './components/EmployeeLoginPage';
 import EmployeeDashboard from './components/EmployeeDashboard';
 import AdminDashboard from './components/AdminDashboard';
+import AddLabourer from './components/AddLabourer';
 function App() {
 
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route exact path="/employee-login" element={<EmployeeLogin />} />
           <Route exact path="/employee-dashboard" element={<EmployeeDashboard />} />
           <Route exact path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route exact path="/add-labourer" element={<AddLabourer />} />
           <Route path="/" element={<MazdoorMitra />}>
                 <Route exact path="/profile" element={<Profile />} />
                 <Route exact path="/wallet" element={<Wallet />} />
