@@ -1,0 +1,121 @@
+.search-modify-employer-container {
+    display: flex;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #eef2f3;
+    justify-content: space-between;
+  }
+
+  .search-modify-employer-header {
+    background-color: #34495e;
+    color: #e67e22;
+    width: 100%;
+    padding: 15px 0;
+    text-align: center;
+    width: 100%;
+  }
+  
+  .search-modify-employer-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #e67e22;
+  }
+  
+  .search-modify-employer-search-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px;
+  }
+  
+  .search-modify-employer-search-container input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 200px;
+  }
+  
+  .search-modify-employer-btn {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .search-modify-employer-btn:hover {
+    background: #0056b3;
+  }
+  
+  .search-modify-employer-results-container {
+    margin-top: 20px;
+  }
+  
+  .search-modify-employer-results-container ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .search-modify-employer-results-container li {
+    padding: 10px;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+    border-radius: 5px;
+  }
+  
+  .search-modify-employer-results-container li:hover {
+    background: #e6f7ff;
+  }
+  
+  .search-modify-employer-card {
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 500px;
+    margin: 20px;
+  }
+  
+  .search-modify-employer-form-group {
+    margin-bottom: 15px;
+    margin-right: 20px;
+  }
+  
+  .search-modify-employer-form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .search-modify-employer-form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .search-modify-employer-image-preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-top: 10px;
+    border: 2px solid #ccc;
+  }
+  
+  .search-modify-employer-footer {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+  }
+  
