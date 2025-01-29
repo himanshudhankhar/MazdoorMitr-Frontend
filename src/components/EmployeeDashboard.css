@@ -1,0 +1,53 @@
+.header-employee-dashboard {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.dashboard-container-employee-dashboard {
+    padding: 20px;
+    max-width: 800px;
+    margin: 20px auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.dashboard-container-employee-dashboard h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.action-buttons-employee-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.dashboard-btn-employee-dashboard {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.dashboard-btn-employee-dashboard:hover {
+    background-color: #0056b3;
+}
+
+.footer-employee-dashboard {
+    background-color: #2c3e50;
+    color: #e67e22;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
