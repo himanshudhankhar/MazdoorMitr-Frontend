@@ -1,0 +1,114 @@
+.profile-transactions-container {
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-transactions-header h1 {
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .profile-transactions-search {
+    margin-top: 20px;
+  }
+  
+  .profile-transactions-search input {
+    padding: 10px;
+    width: 60%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .profile-transactions-search-btn {
+    padding: 10px 15px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .profile-transactions-search-btn:hover {
+    background: #0056b3;
+  }
+  
+  .profile-transactions-error {
+    color: red;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  
+  .profile-transactions-results {
+    margin-top: 20px;
+    text-align: left;
+  }
+  
+  .profile-transactions-results ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .profile-transactions-results li {
+    padding: 10px;
+    margin: 5px 0;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+  }
+  
+  .profile-transactions-results li:hover {
+    background: #e0e0e0;
+  }
+  
+  .profile-transactions-details {
+    margin-top: 20px;
+    text-align: left;
+  }
+  
+  .profile-transactions-details h2 {
+    font-size: 20px;
+    color: #333;
+  }
+  
+  .profile-transactions-details table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .profile-transactions-details th,
+  .profile-transactions-details td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .profile-transactions-details th {
+    background: #007bff;
+    color: white;
+  }
+  
+  .profile-transactions-details .credit {
+    color: green;
+  }
+  
+  .profile-transactions-details .debit {
+    color: red;
+  }
+  
+  .profile-transactions-footer {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+  }
+  

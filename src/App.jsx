@@ -16,6 +16,10 @@ import AddLabourer from './components/AddLabourer';
 import AddEmployer from './components/AddEmployer';
 import SearchModifyLabourer from './components/SearchAndModifyLabourer';
 import SearchModifyEmployer from './components/SearchModifyEmployer';
+import ReportProfiles from './components/ReportProfiles';
+import MediationRequests from './components/MediationRequests';
+import ProfileTransactions from './components/ProfileTransactions';
+import IncompleteProfiles from './components/IncompleteProfiles';
 function App() {
 
   return (
@@ -31,6 +35,10 @@ function App() {
           <Route exact path="/add-employer" element={<AddEmployer />} />
           <Route exact path="/search-modify-labourer" element={<SearchModifyLabourer />} />
           <Route exact path="/search-modify-employer" element={<SearchModifyEmployer />} />
+          <Route exact path="/report-profiles" element={<ReportProfiles />} />
+          <Route exact path="/mediation-requests" element={<MediationRequests />} />
+          <Route exact path="/profile-transactions" element={<ProfileTransactions />} />
+          <Route exact path="/incomplete-profiles" element={<IncompleteProfiles />} />
           <Route path="/" element={<MazdoorMitra />}>
                 <Route exact path="/profile" element={<Profile />} />
                 <Route exact path="/wallet" element={<Wallet />} />
