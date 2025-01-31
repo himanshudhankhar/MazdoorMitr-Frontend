@@ -20,6 +20,7 @@ import ReportProfiles from './components/ReportProfiles';
 import MediationRequests from './components/MediationRequests';
 import ProfileTransactions from './components/ProfileTransactions';
 import IncompleteProfiles from './components/IncompleteProfiles';
+import AllTransactions from './components/AllTransactions';
 function App() {
 
   return (
@@ -39,6 +40,7 @@ function App() {
           <Route exact path="/mediation-requests" element={<MediationRequests />} />
           <Route exact path="/profile-transactions" element={<ProfileTransactions />} />
           <Route exact path="/incomplete-profiles" element={<IncompleteProfiles />} />
+          <Route exact path="/all-transactions" element={<AllTransactions />} />
           <Route path="/" element={<MazdoorMitra />}>
                 <Route exact path="/profile" element={<Profile />} />
                 <Route exact path="/wallet" element={<Wallet />} />

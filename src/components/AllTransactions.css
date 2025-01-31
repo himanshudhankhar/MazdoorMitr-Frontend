@@ -1,0 +1,62 @@
+.admin-transaction-container {
+    width: 90%;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+.admin-transaction-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.admin-transaction-search-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.admin-transaction-tables {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.admin-transaction-table-container {
+    flex: 1;
+    min-width: 400px;
+    overflow-x: auto;
+}
+
+.admin-transaction-subtitle {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.admin-transaction-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+.admin-transaction-table th, 
+.admin-transaction-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.admin-transaction-table th {
+    background-color: #f4f4f4;
+}
+
+.admin-transaction-credit {
+    color: green;
+    font-weight: bold;
+}
+
+.admin-transaction-debit {
+    color: red;
+    font-weight: bold;
+}

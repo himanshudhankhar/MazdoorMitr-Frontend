@@ -9,7 +9,7 @@ const dummyProfiles = [
 
 const dummyTransactions = {
   201: [
-    { id: 1, amount: 100, type: "Credited", method: "UPI" },
+    { id: 1, amount: 100, type: "Credited", method: "UPI: 9079161380@upi" },
     { id: 2, amount: 50, type: "Debited", method: "Service Fee" },
   ],
   202: [
