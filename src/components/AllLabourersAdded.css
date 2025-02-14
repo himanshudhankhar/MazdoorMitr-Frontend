@@ -1,0 +1,39 @@
+.admin-labourers-container {
+    width: 90%;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+.admin-labourers-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.admin-labourers-search-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.admin-labourers-table-container {
+    overflow-x: auto;
+}
+
+.admin-labourers-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+.admin-labourers-table th, 
+.admin-labourers-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.admin-labourers-table th {
+    background-color: #f4f4f4;
+}

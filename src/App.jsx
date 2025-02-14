@@ -21,6 +21,9 @@ import MediationRequests from './components/MediationRequests';
 import ProfileTransactions from './components/ProfileTransactions';
 import IncompleteProfiles from './components/IncompleteProfiles';
 import AllTransactions from './components/AllTransactions';
+import AllMediationRequests from './components/AllMediationRequests';
+import AllLabourersAdded from './components/AllLabourersAdded';
+import AllEmployersAdded from './components/AllEmployersAdded';
 function App() {
 
   return (
@@ -41,6 +44,9 @@ function App() {
           <Route exact path="/profile-transactions" element={<ProfileTransactions />} />
           <Route exact path="/incomplete-profiles" element={<IncompleteProfiles />} />
           <Route exact path="/all-transactions" element={<AllTransactions />} />
+          <Route exact path="/all-mediation-requests" element={<AllMediationRequests />} />
+          <Route exact path="/all-labourers-added" element={<AllLabourersAdded />} />
+          <Route exact path="/all-employers-added" element={<AllEmployersAdded />} />
           <Route path="/" element={<MazdoorMitra />}>
                 <Route exact path="/profile" element={<Profile />} />
                 <Route exact path="/wallet" element={<Wallet />} />

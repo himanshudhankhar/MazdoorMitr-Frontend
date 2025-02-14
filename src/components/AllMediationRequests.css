@@ -1,0 +1,49 @@
+.admin-mediation-container {
+    width: 90%;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+.admin-mediation-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.admin-mediation-search-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.admin-mediation-table-container {
+    overflow-x: auto;
+}
+
+.admin-mediation-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+.admin-mediation-table th, 
+.admin-mediation-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.admin-mediation-table th {
+    background-color: #f4f4f4;
+}
+
+.admin-mediation-done {
+    color: green;
+    font-weight: bold;
+}
+
+.admin-mediation-pending {
+    color: red;
+    font-weight: bold;
+}

@@ -51,14 +51,8 @@ const AdminDashboard = () => {
               </button>
             </div>
             <div className="analytics-card">
-              <h4>Labourers Area Wise</h4>
-              <button onClick={() => handleRedirect("/labourers-area")} className="view-details-btn">
-                View Details
-              </button>
-            </div>
-            <div className="analytics-card">
-              <h4>Employers Area Wise</h4>
-              <button onClick={() => handleRedirect("/employers-area")} className="view-details-btn">
+              <h4>Employers Added</h4>
+              <button onClick={() => handleRedirect("/employers-added")} className="view-details-btn">
                 View Details
               </button>
             </div>

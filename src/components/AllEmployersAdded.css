@@ -1,0 +1,43 @@
+.admin-employers-container {
+    width: 90%;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+.admin-employers-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.admin-employers-search {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.admin-employers-input {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.admin-employers-table-container {
+    overflow-x: auto;
+}
+
+.admin-employers-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+.admin-employers-table th,
+.admin-employers-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.admin-employers-table th {
+    background-color: #f4f4f4;
+}
