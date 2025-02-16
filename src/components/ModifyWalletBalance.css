@@ -1,0 +1,107 @@
+.admin-wallet-container {
+    width: 90%;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+.admin-wallet-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.admin-wallet-search {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.admin-wallet-input {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.admin-wallet-table-container {
+    overflow-x: auto;
+}
+
+.admin-wallet-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+.admin-wallet-table th,
+.admin-wallet-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.admin-wallet-table th {
+    background-color: #f4f4f4;
+}
+
+.admin-wallet-add {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.admin-wallet-deduct {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.admin-wallet-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.admin-wallet-modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    width: 300px;
+}
+
+.admin-wallet-modal-input {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+}
+
+.admin-wallet-modal-actions {
+    display: flex;
+    justify-content: space-around;
+}
+
+.admin-wallet-confirm {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.admin-wallet-cancel {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+}

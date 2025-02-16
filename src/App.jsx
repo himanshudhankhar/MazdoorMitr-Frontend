@@ -24,6 +24,7 @@ import AllTransactions from './components/AllTransactions';
 import AllMediationRequests from './components/AllMediationRequests';
 import AllLabourersAdded from './components/AllLabourersAdded';
 import AllEmployersAdded from './components/AllEmployersAdded';
+import ModifyWalletBalance from './components/ModifyWalletBalance';
 function App() {
 
   return (
@@ -47,6 +48,7 @@ function App() {
           <Route exact path="/all-mediation-requests" element={<AllMediationRequests />} />
           <Route exact path="/all-labourers-added" element={<AllLabourersAdded />} />
           <Route exact path="/all-employers-added" element={<AllEmployersAdded />} />
+          <Route exact path="/modify-wallet-balance" element={<ModifyWalletBalance />} />
           <Route path="/" element={<MazdoorMitra />}>
                 <Route exact path="/profile" element={<Profile />} />
                 <Route exact path="/wallet" element={<Wallet />} />
