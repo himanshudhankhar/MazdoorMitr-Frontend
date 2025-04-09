@@ -1,0 +1,128 @@
+.quickclap-landing-page {
+    font-family: "Segoe UI", sans-serif;
+    color: #333;
+  }
+  
+  /* Hero Section */
+  .quickclap-hero {
+    background: linear-gradient(135deg, #f0f4ff, #fff);
+    text-align: center;
+    padding: 80px 20px;
+  }
+  
+  .quickclap-hero h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #1e1e88;
+  }
+  
+  .quickclap-hero p {
+    font-size: 20px;
+    max-width: 600px;
+    margin: 0 auto 30px;
+    color: #555;
+  }
+  
+  .quickclap-cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  
+  /* Buttons */
+  .quickclap-btn {
+    padding: 14px 28px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  .quickclap-btn.quickclap-primary {
+    background-color: #1e1e88;
+    color: white;
+  }
+  
+  .quickclap-btn.quickclap-primary:hover {
+    background-color: #3333aa;
+  }
+  
+  .quickclap-btn.quickclap-secondary {
+    background-color: white;
+    color: #1e1e88;
+    border: 2px solid #1e1e88;
+  }
+  
+  .quickclap-btn.quickclap-secondary:hover {
+    background-color: #f0f0ff;
+  }
+  
+  .quickclap-btn.quickclap-large {
+    font-size: 18px;
+    padding: 16px 36px;
+  }
+  
+  /* Features Section */
+  .quickclap-features {
+    background-color: #f9f9f9;
+    padding: 60px 20px;
+    text-align: center;
+  }
+  
+  .quickclap-features h2 {
+    font-size: 32px;
+    margin-bottom: 40px;
+  }
+  
+  .quickclap-feature-cards {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .quickclap-feature-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    max-width: 300px;
+    flex: 1;
+  }
+  
+  .quickclap-feature-card h3 {
+    color: #1e1e88;
+    margin-bottom: 12px;
+  }
+  
+  /* Call to Action */
+  .quickclap-call-to-action {
+    background-color: #1e1e88;
+    color: white;
+    text-align: center;
+    padding: 80px 20px;
+  }
+  
+  .quickclap-call-to-action h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+  
+  .quickclap-call-to-action p {
+    font-size: 18px;
+    margin-bottom: 30px;
+  }
+  
+  /* Footer */
+  .quickclap-footer {
+    text-align: center;
+    font-size: 14px;
+    padding: 20px;
+    background-color: #eee;
+    color: #555;
+  }
+  

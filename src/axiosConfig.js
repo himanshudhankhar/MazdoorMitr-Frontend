@@ -1,7 +1,21 @@
+// src/utils/axiosInstance.js
 import axios from "axios";
 
-const api = axios.create({
- baseURL: import.meta.env.REACT_APP_BASE_URL || "http://localhost:5001",
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:5001/", // your backend base URL
+  withCredentials: false, // credentials are now sent via header
 });
 
-export default api;
+// Add interceptor to attach token to every request
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+export default axiosInstance;

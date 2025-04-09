@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
 import api from '../axiosConfig';
 import validator from 'validator';
 
 const LoginPage = () => {
+    const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(true);
     const [step, setStep] = useState("form");
     const [role, setRole] = useState("Employer");
@@ -30,12 +32,17 @@ const LoginPage = () => {
             var resp = response.data;
             var status = response.status;
             if (resp.success == undefined || resp.success == false || status >= 400) {
-                console.log(JSON.stringify(response));
                 alert(resp.message);
+            } else {
+                console.log("response", resp)
+                const token = resp.token || resp.authToken; // assuming backend returns the token
+                localStorage.setItem("authToken", token);
+                navigate("/home");
             }
             //redirect
         } catch (error) {
             alert("Something went wrong. Try again");
+            console.log(error.message);
         }
     };
 
@@ -101,7 +108,7 @@ const LoginPage = () => {
                     <h1>MazdoorMitr</h1>
                 </div>
                 <nav class="header-nav">
-                    <a href="/">Home</a>
+                    <a href="/landing">Home</a>
                     <a href="/about">About</a>
                     <a href="/contact">Contact</a>
                 </nav>
