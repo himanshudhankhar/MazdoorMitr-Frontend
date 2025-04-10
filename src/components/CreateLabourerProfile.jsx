@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./CreateLabourerProfile.css";
+import axios from "axios";
+import axiosInstance from "../axiosConfig";
 
 const CreateLabourerProfile = () => {
     const [profileImage, setProfileImage] = useState(null);
@@ -9,27 +11,90 @@ const CreateLabourerProfile = () => {
     const [skills, setSkills] = useState("");
     const [callTimeStart, setCallTimeStart] = useState("");
     const [callTimeEnd, setCallTimeEnd] = useState("");
+    const [imageUrl, setImageUrl] = useState("");
+    const [changedImage, setChangedImage] = useState(false);
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
         if (file) {
+            setChangedImage(true);
             setProfileImage(URL.createObjectURL(file));
         }
     };
 
-    const handleSubmit = (event) => {
+    useEffect(() => {
+        const fetchProfile = async () => {
+            const userId = localStorage.getItem("userId");
+            if (!userId) return;
+
+            try {
+                const res = await axiosInstance.post(
+                    "/api/users/protected/get-profile",
+                    { id: userId },
+                    { withCredentials: true }
+                );
+
+                const data = res.data.profile;
+                console.log("profile data", data);
+                setName(data.name || "");
+                setLocation(data.location || "");
+                setContactNumber(data.contactNumber || "");
+                setSkills(data.skills || "");
+                setCallTimeStart(data.callTimeStart || "");
+                setCallTimeEnd(data.callTimeEnd || "");
+                if (data.imageUrl) {
+                    setImageUrl(data.imageUrl);
+                }
+
+            } catch (err) {
+                console.error("Failed to load profile", err);
+            }
+        };
+
+        fetchProfile();
+    }, []);
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        // Perform the form submission logic here
-        console.log({
-            profileImage,
-            name,
-            location,
-            contactNumber,
-            skills,
-            callTimeStart,
-            callTimeEnd,
-        });
+
+        try {
+            const fileInput = document.getElementById("profileImage");
+            if(!fileInput  && !imageUrl) {
+                alert("Upload Image!!");
+                return;
+            }
+            var userId = localStorage.getItem("userId");
+            const formData = new FormData();
+            if(fileInput) {
+            const file = fileInput.files[0];
+            formData.append("file", file); // image
+            }
+            formData.append("name", name);
+            formData.append("location", location);
+            formData.append("contactNumber", contactNumber);
+            formData.append("skills", skills);
+            formData.append("callTimeStart", callTimeStart);
+            formData.append("callTimeEnd", callTimeEnd);
+            formData.append("id", userId);
+
+            const res = await axiosInstance.post("/api/users/protected/labourer/profile", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                withCredentials: true, // important for auth
+            });
+
+            if (res.status === 200) {
+                alert("Profile updated successfully!");
+            } else {
+                alert("Failed to update profile.");
+            }
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            alert("Error updating profile");
+        }
     };
+
 
     return (
         <div className="create-labourer-profile">
@@ -45,9 +110,9 @@ const CreateLabourerProfile = () => {
                             accept="image/*"
                             onChange={handleImageUpload}
                         />
-                        {profileImage && (
+                        {(profileImage || imageUrl) && (
                             <div className="image-preview">
-                                <img src={profileImage} alt="Preview" />
+                                <img src={changedImage ? profileImage : imageUrl} alt="Preview" />
                             </div>
                         )}
                     </div>

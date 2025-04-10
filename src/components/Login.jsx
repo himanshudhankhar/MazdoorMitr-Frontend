@@ -37,7 +37,8 @@ const LoginPage = () => {
                 console.log("response", resp)
                 const token = resp.token || resp.authToken; // assuming backend returns the token
                 localStorage.setItem("authToken", token);
-                navigate("/home");
+                localStorage.setItem("userId", resp.userId);
+                navigate(resp.forwardLink);
             }
             //redirect
         } catch (error) {
