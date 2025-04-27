@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./CreateLabourerProfile.css";
-import axios from "axios";
 import axiosInstance from "../axiosConfig";
+import { useNavigate } from "react-router-dom";
 
 const CreateLabourerProfile = () => {
+    const navigate = useNavigate();
     const [profileImage, setProfileImage] = useState(null);
     const [name, setName] = useState("");
     const [location, setLocation] = useState("");
@@ -30,7 +31,7 @@ const CreateLabourerProfile = () => {
             try {
                 const res = await axiosInstance.post(
                     "/api/users/protected/get-profile",
-                    { id: userId },
+                    { id: userId, userTypeRequired: "Labourer" },
                     { withCredentials: true }
                 );
 
@@ -47,7 +48,11 @@ const CreateLabourerProfile = () => {
                 }
 
             } catch (err) {
-                console.error("Failed to load profile", err);
+                console.error("Failed to load profile", err.response.data.message);
+                if(err.response.data.message == "User Type mismatch") {
+                    alert("You are not registered as Labourer!");
+                    navigate("/home");
+                }
             }
         };
 
