@@ -1,73 +1,186 @@
-import React from 'react';
-import './Profile.css';
+import React, { useState, useEffect } from "react";
+import "./Profile.css";
+import axiosInstance from "../axiosConfig";
 
 const Profile = () => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [profileData, setProfileData] = useState({
+        profileImage: "",
+        name: "",
+        location: "",
+        skills: "",
+        phone: "",
+        email: "",
+        callTimeStart: "",
+        callTimeEnd: "",
+        userType: "", // employer or labourer
+    });
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const userId = localStorage.getItem("userId");
+                const res = await axiosInstance.post("/api/users/protected/get-profile", { id: userId }, { withCredentials: true });
+                const data = res.data.profile;
+
+                setProfileData({
+                    profileImage: data.imageUrl || data.profileImage || "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg?w=1060",
+                    name: data.name || "",
+                    location: data.location || "",
+                    skills: data.skills || "",
+                    phone: data.contactNumber || "",
+                    email: data.email || "",
+                    callTimeStart: data.callTimeStart || "",
+                    callTimeEnd: data.callTimeEnd || "",
+                    userType: data.userType || "labourer",
+                });
+            } catch (err) {
+                console.error("Error fetching profile:", err);
+            }
+        };
+
+        fetchProfile();
+    }, []);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setProfileData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
+    const handleSave = async () => {
+        try {
+            const updatedProfile = {
+                id: localStorage.getItem("userId"),
+                name: profileData.name,
+                location: profileData.location,
+                skills: profileData.skills,
+                contactNumber: profileData.phone,
+                email: profileData.email,
+                callTimeStart: profileData.callTimeStart,
+                callTimeEnd: profileData.callTimeEnd,
+            };
+
+            await axiosInstance.post("/api/users/protected/update-profile", updatedProfile, { withCredentials: true });
+            alert("Profile updated successfully!");
+            setIsEditing(false);
+        } catch (err) {
+            console.error("Error updating profile:", err);
+            alert("Failed to update profile!");
+        }
+    };
+
     return (
-        <div className="employer-profile-container">
+        <div className="profile-container">
             {/* Profile Header */}
             <div className="profile-header">
                 <img
-                    src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg?w=1060"
+                    src={profileData.profileImage }
                     alt="Profile"
                     className="profile-picture"
                 />
-                <h1 className="profile-name">Jane Smith</h1>
-                <p className="profile-location">Mumbai, India</p>
-                <button className="edit-button">Edit Profile</button>
+                {isEditing ? (
+                    <>
+                        <input
+                            type="text"
+                            name="name"
+                            value={profileData.name}
+                            onChange={handleChange}
+                            placeholder="Name"
+                            className="edit-input"
+                        />
+                        <input
+                            type="text"
+                            name="location"
+                            value={profileData.location}
+                            onChange={handleChange}
+                            placeholder="Location"
+                            className="edit-input"
+                        />
+                        {profileData.userType === "Labourer" && (
+                            <input
+                                type="text"
+                                name="skills"
+                                value={profileData.skills}
+                                onChange={handleChange}
+                                placeholder="Skills (comma separated)"
+                                className="edit-input"
+                            />
+                        )}
+                    </>
+                ) : (
+                    <>
+                        <h1 className="profile-name">{profileData.name}</h1>
+                        {/* 👇 This is the new heading showing Employer/Labourer */}
+                        <h2 style={{ fontSize: "1.2rem", color: "#555", margin: "5px 0" }}>
+                            {profileData.userType === "Employer" ? "Employer" : "Labourer"}
+                        </h2>
+                        <p className="profile-location">{profileData.location}</p>
+                        {profileData.userType === "Labourer" && (
+                            <p className="profile-location">
+                                <strong>Skills:</strong> {profileData.skills}
+                            </p>
+                        )}
+                    </>
+                )}
+                <button className="edit-button" onClick={() => setIsEditing(!isEditing)}>
+                    {isEditing ? "Cancel" : "Edit Profile"}
+                </button>
             </div>
 
             {/* Contact Information */}
             <div className="profile-section">
                 <h2>Contact Information</h2>
-                <p><strong>Phone:</strong> +91-9876543210</p>
-                <p><strong>Preferred Call Timings:</strong> 10:00 AM - 6:00 PM</p>
-            </div>
-
-            {/* Hiring History */}
-            <div className="profile-section">
-                <h2>Hiring History</h2>
-                <ul className="history-list">
-                    <li>
-                        <strong>John Doe</strong> - Carpenter (Hired on Jan 10, 2025)
-                        <button className="small-button">View Details</button>
-                    </li>
-                    <li>
-                        <strong>Mary Johnson</strong> - Electrician (Hired on Dec 20, 2024)
-                        <button className="small-button">View Details</button>
-                    </li>
-                </ul>
-            </div>
-
-            {/* Job Postings
-            <div className="profile-section">
-                <h2>Job Postings</h2>
-                <ul className="postings-list">
-                    <li>
-                        <strong>Plumbing Work Needed</strong> - Open
-                        <button className="small-button">Edit</button>
-                    </li>
-                    <li>
-                        <strong>Painting Project</strong> - Completed
-                        <button className="small-button">View</button>
-                    </li>
-                </ul>
-            </div> */}
-
-            {/* Reviews and Ratings */}
-            <div className="profile-section">
-                <h2>Reviews & Ratings</h2>
-                <p>Rating: 4.7/5</p>
-                <ul className="reviews-list">
-                    <li>"Clear instructions and timely payment!"</li>
-                    <li>"Great to work with."</li>
-                </ul>
-            </div>
-
-            {/* Settings */}
-            <div className="profile-section">
-                <h2>Settings</h2>
-                <button className="small-button">Notification Preferences</button>
-                <button className="small-button delete-button">Delete Account</button>
+                {isEditing ? (
+                    <>
+                        <input
+                            type="text"
+                            name="phone"
+                            value={profileData.phone}
+                            onChange={handleChange}
+                            placeholder="Phone Number"
+                            className="edit-input"
+                        />
+                        {profileData.userType === "Employer" && (
+                            <input
+                                type="email"
+                                name="email"
+                                value={profileData.email}
+                                onChange={handleChange}
+                                placeholder="Email Address"
+                                className="edit-input"
+                            />
+                        )}
+                        <div className="timing-inputs">
+                            <input
+                                type="time"
+                                name="callTimeStart"
+                                value={profileData.callTimeStart}
+                                onChange={handleChange}
+                            />
+                            <span>to</span>
+                            <input
+                                type="time"
+                                name="callTimeEnd"
+                                value={profileData.callTimeEnd}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <button className="save-button" onClick={handleSave}>
+                            Save
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        <p><strong>Phone:</strong> {profileData.phone}</p>
+                        {profileData.userType === "Employer" && (
+                            <p><strong>Email:</strong> {profileData.email}</p>
+                        )}
+                        <p><strong>Preferred Call Timings:</strong> {profileData.callTimeStart} - {profileData.callTimeEnd}</p>
+                    </>
+                )}
             </div>
         </div>
     );
