@@ -9,9 +9,9 @@ export default function Header() {
                 <h1>MazdoorMitr</h1>
             </div>
             <nav class="header-nav">
-                <a href="/home">Home</a>
-                <a href="/profile">Profile</a>
-                <a href="/wallet">Wallet</a>
+                <a href="/app/home">Home</a>
+                <a href="/app/profile">Profile</a>
+                <a href="/app/wallet">Wallet</a>
                 <a href="">Logout</a>
             </nav>
         </header>

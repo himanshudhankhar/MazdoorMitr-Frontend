@@ -51,7 +51,7 @@ const CreateLabourerProfile = () => {
                 console.error("Failed to load profile", err.response.data.message);
                 if(err.response.data.message == "User Type mismatch") {
                     alert("You are not registered as Labourer!");
-                    navigate("/home");
+                    navigate("/app/home");
                 }
             }
         };
