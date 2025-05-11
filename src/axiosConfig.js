@@ -1,9 +1,13 @@
 // src/utils/axiosInstance.js
 import axios from "axios";
 
+const isLocalhost = window.location.hostname === "localhost";
+
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5001/", // your backend base URL
-  withCredentials: false, // credentials are now sent via header
+  baseURL: isLocalhost
+    ? "http://localhost:5000/mazdoormitr-f4413/us-central1/default"
+    : "/", // Firebase Hosting rewrites to cloud function
+  withCredentials: false, // or true if you're using cookies
 });
 
 // Add interceptor to attach token to every request

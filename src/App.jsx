@@ -27,12 +27,14 @@ import AllLabourersAdded from './components/AllLabourersAdded';
 import AllEmployersAdded from './components/AllEmployersAdded';
 import ModifyWalletBalance from './components/ModifyWalletBalance';
 import ProtectedRoute from "./components/ProtectedComponent";
+import MazdoorMitrLandingPage from './components/MazdoorMitrLandingPage';
 function App() {
 
   return (
     <>
       <BrowserRouter>
         <Routes>
+        <Route exact path="/" element={<MazdoorMitrLandingPage />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/admin-login" element={<AdminLoginPage />} />
           <Route exact path="/employee-login" element={<EmployeeLogin />} />
@@ -52,13 +54,13 @@ function App() {
           <Route exact path="/all-employers-added" element={<AllEmployersAdded />} />
           <Route exact path="/modify-wallet-balance" element={<ModifyWalletBalance />} />
           <Route exact path="/quickclap" element={<LandingPage />}/>
-          <Route path="/" element={<MazdoorMitra />}>
-                <Route exact path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                <Route exact path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
-                <Route exact path="/profile-page/:profileid" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-                <Route exact path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-                <Route exact path="/complete-profile-employer" element={<ProtectedRoute><CompleteProfileEmployer /></ProtectedRoute>} />
-                <Route exact path="/create-labourer-profile" element={<ProtectedRoute><CreateLabourerProfile /></ProtectedRoute>} />
+          <Route path="/app" element={<MazdoorMitra />}>
+                <Route exact path="profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                <Route exact path="wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
+                <Route exact path="profile-page/:profileid" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+                <Route exact path="home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+                <Route exact path="complete-profile-employer" element={<ProtectedRoute><CompleteProfileEmployer /></ProtectedRoute>} />
+                <Route exact path="create-labourer-profile" element={<ProtectedRoute><CreateLabourerProfile /></ProtectedRoute>} />
           </Route>
         </Routes>
       </BrowserRouter>
