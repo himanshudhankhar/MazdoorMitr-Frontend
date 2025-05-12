@@ -5,7 +5,7 @@ const isLocalhost = window.location.hostname === "localhost";
 
 const axiosInstance = axios.create({
   baseURL: isLocalhost
-    ? "http://localhost:5000/mazdoormitr-f4413/us-central1/default"
+    ? "http://localhost:5003"
     : "/", // Firebase Hosting rewrites to cloud function
   withCredentials: false, // or true if you're using cookies
 });
