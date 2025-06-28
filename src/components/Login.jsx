@@ -38,6 +38,7 @@ const LoginPage = () => {
                 const token = resp.token || resp.authToken; // assuming backend returns the token
                 localStorage.setItem("authToken", token);
                 localStorage.setItem("userId", resp.userId);
+                localStorage.setItem("userType", "user");
                 navigate(resp.forwardLink);
             }
             //redirect

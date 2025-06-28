@@ -1,13 +1,14 @@
-// components/ProtectedRoute.js
-import React from "react";
 import useAuthGuard from "./hooks/useAuthGuard";
 
-const ProtectedRoute = ({ children }) => {
-    const { user, loading } = useAuthGuard();
+const ProtectedRoute = ({ children, userType }) => {
+  const { user, loading, authorized } = useAuthGuard(userType);
 
-    if (loading) return <p>Loading...</p>;
+  if (loading) return <p>Loading...</p>;
 
-    return children;
+  if (!authorized) return <p>Unauthorized: Access denied.</p>;
+
+  return children;
 };
 
 export default ProtectedRoute;
+

@@ -1,40 +1,52 @@
 // hooks/useAuthGuard.js
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import axiosInstance from "../../axiosConfig";
-const useAuthGuard = () => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
 
-    useEffect(() => {
-        const verifyToken = async () => {
-            try {
-                const res = await axiosInstance.get("/api/users/protected", {   
-                    withCredentials: true, // ✅ THIS sends cookies like authToken
-                  });
-                  console.log('res.data',res.data.success);
-                if (res.data.success) {
-                    const data = res.data;
-                    console.log('data', data);
-                    setUser(data.user);
-                    
-                } else {
-                    console.log('res', res);
-                    navigate("/login");
-                }
-            } catch (err) {
-                navigate("/login");
-            } finally {
-                setLoading(false);
-            }
-        };
+const useAuthGuard = (userType) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [authorized, setAuthorized] = useState(false);
+  const navigate = useNavigate();
 
-        verifyToken();
-    }, [navigate]);
+  useEffect(() => {
+    const verifyToken = async () => {
+      try {
+        const res = await axiosInstance.post(
+          "/api/users/protected",
+          { userType },
+          { withCredentials: true }
+        );
 
-    return { user, loading };
+        const userFromResponse = res.data?.user;
+
+        if (res.data.success && userFromResponse?.userType === userType) {
+          setUser(userFromResponse);
+          setAuthorized(true);
+        } else {
+          // Navigate to respective login based on userType
+          if (userType === "admin") {
+            navigate("/admin-login");
+          } else {
+            navigate("/login");
+          }
+        }
+      } catch (err) {
+        console.error("Auth verification failed:", err);
+        if (userType === "admin") {
+          navigate("/admin-login");
+        } else {
+          navigate("/login");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    verifyToken();
+  }, [navigate, userType]);
+
+  return { user, loading, authorized };
 };
 
 export default useAuthGuard;
