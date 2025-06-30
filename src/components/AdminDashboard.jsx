@@ -1,10 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axiosInstance from "../axiosConfig";
 import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
+  const [labourerCount, setLabourerCount] = useState(null);
+  const [employerCount, setEmployerCount] = useState(null);
+
   const handleRedirect = (path) => {
-    console.log(`Redirect to: ${path}`);
+    const fullUrl = `${window.location.origin}${path}`;
+    window.open(fullUrl, "_blank");
   };
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const labourerRes = await axiosInstance.get("/api/users/protected/get-total-labourers");
+        if (labourerRes.data?.totalLabourers !== undefined) {
+          setLabourerCount(labourerRes.data.totalLabourers);
+        }
+
+        const employerRes = await axiosInstance.get("/api/users/protected/get-total-employers");
+        if (employerRes.data?.totalEmployers !== undefined) {
+          setEmployerCount(employerRes.data.totalEmployers);
+        }
+      } catch (error) {
+        console.error("Failed to fetch counts:", error);
+      }
+    };
+
+    fetchCounts();
+  }, []);
 
   return (
     <div className="admin-dashboard">
@@ -15,41 +40,45 @@ const AdminDashboard = () => {
       <div className="dashboard-container-admin-dashboard">
         <h2>Welcome, Admin</h2>
 
-        {/* Analytics Section */}
         <div className="analytics-section">
           <h3>Dashboard Analytics</h3>
           <div className="analytics-cards">
             <div className="analytics-card">
               <h4>Total Labourers</h4>
-              <p>5000</p>
+              <p>{labourerCount !== null ? labourerCount : "Loading..."}</p>
             </div>
-            
+
             <div className="analytics-card">
               <h4>Total Employers</h4>
-              <p>1200</p>
+              <p>{employerCount !== null ? employerCount : "Loading..."}</p>
             </div>
+
             <div className="analytics-card">
               <h4>Total Active Employees</h4>
               <p>15</p>
             </div>
+
             <div className="analytics-card">
               <h4>Total Transactions (Date Wise)</h4>
-              <button onClick={() => handleRedirect("/transactions-datewise")} className="view-details-btn">
+              <button onClick={() => handleRedirect("/all-transactions")} className="view-details-btn">
                 View Details
               </button>
             </div>
+
             <div className="analytics-card">
               <h4>Total Mediations (Date Wise)</h4>
               <button onClick={() => handleRedirect("/mediations-datewise")} className="view-details-btn">
                 View Details
               </button>
             </div>
+
             <div className="analytics-card">
               <h4>Labourers Added (Date & Employee Wise)</h4>
               <button onClick={() => handleRedirect("/labourers-added")} className="view-details-btn">
                 View Details
               </button>
             </div>
+
             <div className="analytics-card">
               <h4>Employers Added</h4>
               <button onClick={() => handleRedirect("/employers-added")} className="view-details-btn">
@@ -58,8 +87,6 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div>
-
-        {/* Action Buttons Section */}
 
         <div className="action-buttons-admin-dashboard">
           <button onClick={() => handleRedirect("/add-labourer")} className="dashboard-btn-admin-dashboard">

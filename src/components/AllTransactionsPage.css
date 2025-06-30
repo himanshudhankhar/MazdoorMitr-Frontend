@@ -1,0 +1,202 @@
+/* .all-transaction-pages-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+}
+
+.all-transaction-pages-heading {
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 2rem;
+  color: #333;
+}
+
+.all-transaction-pages-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.all-transaction-pages-filters label {
+  font-weight: bold;
+}
+
+.all-transaction-pages-filters input,
+.all-transaction-pages-filters select {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.all-transaction-pages-table-container {
+  overflow-x: auto;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.all-transaction-pages-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.all-transaction-pages-table th,
+.all-transaction-pages-table td {
+  padding: 12px 10px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.all-transaction-pages-table th {
+  background-color: #f1f1f1;
+  font-weight: 600;
+}
+
+.all-transaction-pages-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.all-transaction-pages-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 12px;
+}
+
+.all-transaction-pages-pagination button {
+  padding: 8px 14px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.all-transaction-pages-pagination button[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+@media screen and (max-width: 768px) {
+  .all-transaction-pages-filters {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .all-transaction-pages-table th,
+  .all-transaction-pages-table td {
+    font-size: 14px;
+  }
+} */
+
+.all-transaction-pages-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+}
+
+.all-transaction-pages-heading {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.all-transaction-pages-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.all-transaction-pages-filters label {
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.all-transaction-pages-filters input[type="text"],
+.all-transaction-pages-filters input[type="date"] {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.all-transaction-pages-filters button {
+  padding: 6px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.all-transaction-pages-filters button:hover {
+  background-color: #0056b3;
+}
+
+.all-transaction-pages-profiles-dropdown {
+  background: #fff;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 100%;
+  padding: 10px;
+}
+
+.all-transaction-pages-profile-option {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.all-transaction-pages-profile-option:hover {
+  background-color: #f0f0f0;
+}
+
+.all-transaction-pages-table-container {
+  overflow-x: auto;
+}
+
+.all-transaction-pages-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.all-transaction-pages-table th,
+.all-transaction-pages-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.all-transaction-pages-table th {
+  background-color: #007bff;
+  color: white;
+}
+
+.all-transaction-pages-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.all-transaction-pages-pagination button {
+  padding: 6px 12px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.all-transaction-pages-pagination button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}

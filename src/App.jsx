@@ -28,6 +28,9 @@ import AllEmployersAdded from './components/AllEmployersAdded';
 import ModifyWalletBalance from './components/ModifyWalletBalance';
 import ProtectedRoute from "./components/ProtectedComponent";
 import MazdoorMitrLandingPage from './components/MazdoorMitrLandingPage';
+import AllTransactionsPage from './components/AllTransactionsPage';
+import LabourersAddedPage from './components/LabourersAddedPage';
+import EmployersAddedPage from './components/EmployersAddedPage';
 function App() {
 
   return (
@@ -40,6 +43,8 @@ function App() {
           <Route exact path="/employee-login" element={<EmployeeLogin />} />
           <Route exact path="/employee-dashboard" element={<EmployeeDashboard />} />
           <Route exact path="/admin-dashboard" element={<ProtectedRoute userType="admin"><AdminDashboard /></ProtectedRoute> }/>
+          <Route exact path="/labourers-added" element={<LabourersAddedPage />} />
+          <Route exact path="/employers-added" element={<EmployersAddedPage />} />
           <Route exact path="/add-labourer" element={<AddLabourer />} />
           <Route exact path="/add-employer" element={<AddEmployer />} />
           <Route exact path="/search-modify-labourer" element={<SearchModifyLabourer />} />
@@ -48,7 +53,7 @@ function App() {
           <Route exact path="/mediation-requests" element={<MediationRequests />} />
           <Route exact path="/profile-transactions" element={<ProfileTransactions />} />
           <Route exact path="/incomplete-profiles" element={<IncompleteProfiles />} />
-          <Route exact path="/all-transactions" element={<AllTransactions />} />
+          <Route exact path="/all-transactions" element={<AllTransactionsPage />} />
           <Route exact path="/all-mediation-requests" element={<AllMediationRequests />} />
           <Route exact path="/all-labourers-added" element={<AllLabourersAdded />} />
           <Route exact path="/all-employers-added" element={<AllEmployersAdded />} />
