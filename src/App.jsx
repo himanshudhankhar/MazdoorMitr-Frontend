@@ -45,7 +45,7 @@ function App() {
           <Route exact path="/admin-dashboard" element={<ProtectedRoute userType="admin"><AdminDashboard /></ProtectedRoute> }/>
           <Route exact path="/labourers-added" element={<LabourersAddedPage />} />
           <Route exact path="/employers-added" element={<EmployersAddedPage />} />
-          <Route exact path="/add-labourer" element={<AddLabourer />} />
+          <Route exact path="/add-labourer" element={<ProtectedRoute userType="admin"><AddLabourer /></ProtectedRoute>} />
           <Route exact path="/add-employer" element={<AddEmployer />} />
           <Route exact path="/search-modify-labourer" element={<SearchModifyLabourer />} />
           <Route exact path="/search-modify-employer" element={<SearchModifyEmployer />} />
