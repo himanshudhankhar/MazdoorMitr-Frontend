@@ -1,0 +1,98 @@
+.modify-labourer-data-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.modify-labourer-data-heading {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.modify-labourer-data-search {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.modify-labourer-data-search input {
+  flex: 1;
+  padding: 8px;
+}
+
+.modify-labourer-data-search button {
+  padding: 8px 16px;
+  background-color: #004a99;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.modify-labourer-data-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modify-labourer-data-form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+}
+
+.modify-labourer-data-form input,
+.modify-labourer-data-form select {
+  padding: 8px;
+  margin-top: 5px;
+}
+
+.modify-labourer-data-image-preview {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.modify-labourer-data-image-preview img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+}
+
+.modify-labourer-data-submit-btn {
+  padding: 10px;
+  background-color: green;
+  color: white;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+.modify-labourer-data-record {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.modify-labourer-data-record:hover {
+  background-color: #eef6ff;
+  border-color: #007bff;
+}
+
+.modify-labourer-data-record h4 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.modify-labourer-data-record p {
+  margin: 2px 0;
+  font-size: 14px;
+  color: #555;
+}

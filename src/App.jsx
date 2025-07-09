@@ -31,6 +31,7 @@ import MazdoorMitrLandingPage from './components/MazdoorMitrLandingPage';
 import AllTransactionsPage from './components/AllTransactionsPage';
 import LabourersAddedPage from './components/LabourersAddedPage';
 import EmployersAddedPage from './components/EmployersAddedPage';
+import ModifyLabourerPage from './components/ModifyLabourerPage';
 function App() {
 
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route exact path="/labourers-added" element={<LabourersAddedPage />} />
           <Route exact path="/employers-added" element={<EmployersAddedPage />} />
           <Route exact path="/add-labourer" element={<ProtectedRoute userType="admin"><AddLabourer /></ProtectedRoute>} />
+          <Route exact path="/modify-labourer" element={<ProtectedRoute userType="admin"><ModifyLabourerPage /></ProtectedRoute>} />
           <Route exact path="/add-employer" element={<AddEmployer />} />
           <Route exact path="/search-modify-labourer" element={<SearchModifyLabourer />} />
           <Route exact path="/search-modify-employer" element={<SearchModifyEmployer />} />
