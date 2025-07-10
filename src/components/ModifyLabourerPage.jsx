@@ -3,12 +3,62 @@ import axiosInstance from "../axiosConfig";
 import "./ModifyLabourerPage.css";
 
 const hinglishTaglines = [
-  "Har kaam mein expert hoon",
-  "Mehnat se dar nahi lagta",
-  "Samay ka pakka hoon",
-  "Kaam perfect karta hoon",
-  "Skill se bhara hoon",
-  "Sab kaam perfect karta hoon masonry ka",
+  "Main expert hoon plumbing mein",
+    "Mere haathon mein hunar hai painting ka",
+    "Sab kaam perfect karta hoon masonry ka",
+    "Electrician ka king hoon main",
+    "Main hoon sabse tez painter",
+    "Mazbooti se karta hoon construction ka kaam",
+    "Lakdi ka boss, banaye har saaman ko dost!",
+    "Kaath pe hathoda, sapne banaye toda-toda!",
+    "Furniture ka jadoo, humse seekhe har naya mood!",
+    "Current ka khel, humse seekhe har ek cell!",
+    "Bijli ka jhatka, hum dete hain perfect latka!",
+    "Wire mein jaan, hum banaye ghar ka samaan!",
+    "Pipe ka raja, har leak ko kare saja!",
+    "Pani ka flow, humse na koi ro-ro!",
+    "Nalka ho ya tanki, hum hain asli masti ki khanki!",
+    "Deewar ka ustaad, banaye ghar bemisaal!",
+    "Eent aur cement, hum dete hain solid intent!",
+    "Chhath ho ya makaan, humse banta hai pura samaan!",
+    "Rang ka jadoogar, deewar banaye superstar!",
+    "Brush mein hai dum, har ghar ko banaye hum yum!",
+    "Colour ka blast, humse mile mast-mast!",
+    "Hammer ka hero, banaye ghar ko zero se nero!",
+    "Loha ya lakdi, humse sab hai sakdi!",
+    "Kaam ka swag, humse seekhe har ek jag!",
+    "Bijli ka funda, humse na koi chhupa chhunda!",
+    "Switch ka style, hum banaye ghar ko smile!",
+    "Watt ka power, humse chalta har ek tower!",
+    "Tap se tapak, hum band karein ek jhatak!",
+    "Pani ka pressure, humse mile perfect measure!",
+    "Pipeline ka plan, hum hain asli super man!",
+    "Cement ka josh, humse banta ghar ka hosh!",
+    "Eent pe eent, hum dete hain perfect scent!",
+    "Pillar ka power, humse chalta har ek floor!",
+    "Rangon ka mela, humse ghar ka khel khela!",
+    "Deewar ka fashion, humse mile colour ka passion!",
+    "Paint ka hungama, humse ghar ka naya drama!",
+    "Kaam mein speed, humse mile har ek need!",
+    "Tools ka tashan, humse ghar ka pura fashion!",
+    "Lakdi ka logic, humse banaye magic!",
+    "Current ka craze, humse ghar mein light ka phase!",
+    "Wire ka wonder, humse na koi blunder!",
+    "Pani ka boss, humse na koi loss!",
+    "Leak ka dushman, hum hain asli superhuman!",
+    "Tank ka tanker, humse chalta pani ka anchor!",
+    "Deewar ka dhamaal, humse ghar ka kamaal!",
+    "Cement ka charm, humse ghar ka perfect arm!",
+    "Makaan ka master, humse chalta har ek plaster!",
+    "Rang ka rocket, humse ghar ka naya socket!",
+    "Brush ka badshah, humse ghar ka naya shah!",
+    "Colour ka khel, humse ghar ka har ek cell!",
+    "Kaam ka king, humse chalta har ek wing!",
+    "Tools ka tufaan, humse ghar ka pura imaan!",
+    "Lakdi ka leader, humse ghar ka har ek feeder!",
+    "Bijli ka baap, humse chalta har ek tap!",
+    "Pipe ka prince, humse ghar ka har ek rinse!",
+    "Deewar ka don, humse ghar ka har ek tone!",
 ];
 
 const ModifyLabourerPage = () => {
@@ -29,8 +79,14 @@ const ModifyLabourerPage = () => {
       if (Array.isArray(data) && data.length > 0) {
         setUserRecords(data);
         setForm(null); // reset form
-      } else {
-        alert("No labourer found.");
+      } else if(res.data.success == false) {
+        setUserRecords([]);
+        setForm(null); // reset form
+        alert(res.data.message);
+      } else{
+        setUserRecords([]);
+        setForm(null); // reset form
+        alert("No Labourer found!!");
       }
     } catch (err) {
       console.error("Error fetching profile:", err);
@@ -107,7 +163,7 @@ const ModifyLabourerPage = () => {
         <div className="modify-labourer-data-records-list">
           <h4>Select a record:</h4>
           {userRecords.map((record, index) => (
-            <div className="modify-labourer-data-record" onClick={() => handleSelect(record)}>
+            <div className="modify-labourer-data-record" onClick={() => handleSelectRecord(record)}>
               <h4>{record.name}</h4>
               <p>Phone: {record.phone}</p>
               <p>Location: {record.location}</p>
@@ -126,11 +182,6 @@ const ModifyLabourerPage = () => {
           <label>
             Phone:
             <input type="text" name="phone" value={form.phone} onChange={handleChange} />
-          </label>
-
-          <label>
-            Mobile:
-            <input type="text" name="mobile" value={form.mobile || ""} onChange={handleChange} />
           </label>
 
           <label>
