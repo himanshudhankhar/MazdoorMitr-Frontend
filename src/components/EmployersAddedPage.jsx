@@ -59,7 +59,7 @@ const EmployersAddedPage = () => {
                 <td>
                   {employer.addedBy === "self"
                     ? "Self"
-                    : employer.createdBy || "Unknown"}
+                    : employer.employeeName || "Unknown"}
                 </td>
                 <td>
                   {employer.onboardingDate

@@ -14,7 +14,7 @@ import EmployeeLogin from './components/EmployeeLoginPage';
 import EmployeeDashboard from './components/EmployeeDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import AddLabourer from './components/AddLabourer';
-import AddEmployer from './components/AddEmployer';
+import AddEmployer from './components/AddEmployerPage';
 import SearchModifyLabourer from './components/SearchAndModifyLabourer';
 import SearchModifyEmployer from './components/SearchModifyEmployer';
 import ReportProfiles from './components/ReportProfiles';
@@ -32,6 +32,8 @@ import AllTransactionsPage from './components/AllTransactionsPage';
 import LabourersAddedPage from './components/LabourersAddedPage';
 import EmployersAddedPage from './components/EmployersAddedPage';
 import ModifyLabourerPage from './components/ModifyLabourerPage';
+import ModifyEmployerPage from './components/ModifyEmployersPage';
+import AddEmployeePage from './components/AddEmployeePage';
 function App() {
 
   return (
@@ -48,9 +50,11 @@ function App() {
           <Route exact path="/employers-added" element={<EmployersAddedPage />} />
           <Route exact path="/add-labourer" element={<ProtectedRoute userType="admin"><AddLabourer /></ProtectedRoute>} />
           <Route exact path="/modify-labourer" element={<ProtectedRoute userType="admin"><ModifyLabourerPage /></ProtectedRoute>} />
-          <Route exact path="/add-employer" element={<AddEmployer />} />
-          <Route exact path="/search-modify-labourer" element={<SearchModifyLabourer />} />
-          <Route exact path="/search-modify-employer" element={<SearchModifyEmployer />} />
+          <Route exact path="/add-employer" element={ <ProtectedRoute userType="admin"><AddEmployer /></ProtectedRoute>} />
+          <Route exact path="/add-employee" element={ <ProtectedRoute userType="admin"><AddEmployeePage /></ProtectedRoute>} />
+
+          {/* <Route exact path="/search-modify-labourer" element={<SearchModifyLabourer />} /> */}
+          <Route exact path="/modify-employer" element={<ProtectedRoute userType="admin"><ModifyEmployerPage /></ProtectedRoute>} />
           <Route exact path="/report-profiles" element={<ReportProfiles />} />
           <Route exact path="/mediation-requests" element={<MediationRequests />} />
           <Route exact path="/profile-transactions" element={<ProfileTransactions />} />
