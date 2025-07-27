@@ -11,6 +11,7 @@ const AddEmployeePage = () => {
     dob: "",
     aadhaar: null,
     personImage: null,
+    address: "",
   });
 
   const [otpSent, setOtpSent] = useState(false);
@@ -42,7 +43,7 @@ const AddEmployeePage = () => {
     }
 
     try {
-      await axiosInstance.post("/api/users/send-otp", { phone: form.phone });
+      await axiosInstance.post("/api/users/protected/send-otp-employee", { phone: form.phone, name: form.name });
       setOtpSent(true);
       setOtpVerified(false);
       alert("OTP sent successfully.");
@@ -54,9 +55,10 @@ const AddEmployeePage = () => {
 
   const verifyOtp = async () => {
     try {
-      const res = await axiosInstance.post("/api/users/verify-otp", {
+      const res = await axiosInstance.post("/api/users/protected/verify-otp-employee", {
         phone: form.phone,
         otp: form.otp,
+        name: form.name
       });
 
       if (res.data.success) {
@@ -84,7 +86,7 @@ const AddEmployeePage = () => {
     });
 
     try {
-      const res = await axiosInstance.post("/api/employees/register", formData);
+      const res = await axiosInstance.post("/api/users/protected/employees/register", formData);
       if (res.data.success) {
         alert("Employee added successfully.");
         setForm({
@@ -94,6 +96,7 @@ const AddEmployeePage = () => {
           dob: "",
           aadhaar: null,
           personImage: null,
+          address: "",
         });
         setAadhaarPreview(null);
         setPersonPreview(null);
@@ -202,6 +205,17 @@ const AddEmployeePage = () => {
               <img src={personPreview} alt="Person Preview" />
             </div>
           )}
+        </label>
+
+        <label>
+          Address:
+          <input
+            type="text"
+            name="address"
+            value={form.address}
+            onChange={handleChange}
+            required
+          />
         </label>
 
         <button type="submit" className="add-employee-submit-btn">
