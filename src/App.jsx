@@ -34,6 +34,7 @@ import EmployersAddedPage from './components/EmployersAddedPage';
 import ModifyLabourerPage from './components/ModifyLabourerPage';
 import ModifyEmployerPage from './components/ModifyEmployersPage';
 import AddEmployeePage from './components/AddEmployeePage';
+import ModifyEmployee from './components/ModifyEmployee';
 function App() {
 
   return (
@@ -52,7 +53,7 @@ function App() {
           <Route exact path="/modify-labourer" element={<ProtectedRoute userType="admin"><ModifyLabourerPage /></ProtectedRoute>} />
           <Route exact path="/add-employer" element={ <ProtectedRoute userType="admin"><AddEmployer /></ProtectedRoute>} />
           <Route exact path="/add-employee" element={ <ProtectedRoute userType="admin"><AddEmployeePage /></ProtectedRoute>} />
-
+          <Route exact path="/modify-employee" element={ <ProtectedRoute userType="admin"><ModifyEmployee /></ProtectedRoute>} />
           {/* <Route exact path="/search-modify-labourer" element={<SearchModifyLabourer />} /> */}
           <Route exact path="/modify-employer" element={<ProtectedRoute userType="admin"><ModifyEmployerPage /></ProtectedRoute>} />
           <Route exact path="/report-profiles" element={<ReportProfiles />} />

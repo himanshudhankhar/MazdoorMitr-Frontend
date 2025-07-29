@@ -1,0 +1,153 @@
+.modify-employee-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
+.modify-employee-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.modify-employee-search {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.modify-employee-search input {
+  padding: 8px;
+  font-size: 14px;
+}
+
+.modify-employee-search button {
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.modify-employee-list {
+  border-top: 1px solid #ccc;
+  margin-top: 10px;
+}
+
+.modify-employee-record {
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin: 8px 0;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.modify-employee-record:hover {
+  background-color: #f1f1f1;
+}
+
+.modify-employee-record.selected {
+  background-color: #d8eaff;
+  border-color: #0077cc;
+}
+
+.modify-employee-form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modify-employee-form input {
+  padding: 8px;
+  font-size: 14px;
+}
+
+.modify-employee-form button {
+  padding: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+/* /////////////////// */
+
+.modify-employee-container {
+  padding: 20px;
+  max-width: 700px;
+  margin: auto;
+}
+
+.modify-employee-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.modify-employee-search input {
+  margin: 5px;
+  padding: 10px;
+}
+
+.modify-employee-search button {
+  padding: 10px 20px;
+}
+
+.modify-employee-list {
+  margin-top: 20px;
+  background-color: #f9f9f9;
+  padding: 15px;
+}
+
+.modify-employee-record {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.modify-employee-record.selected {
+  background-color: #e0f7fa;
+}
+
+.modify-employee-form {
+  margin-top: 30px;
+  background-color: #f3f3f3;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.modify-employee-form input {
+  width: 95%;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.modify-employee-form button {
+  margin-top: 15px;
+  padding: 10px 20px;
+}
+
+.modify-employee-images {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.modify-employee-image-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modify-employee-profile-img,
+.modify-employee-aadhaar-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 5px;
+}
+
+.modify-employee-joining-date {
+  font-weight: bold;
+  margin: 10px 0;
+}
