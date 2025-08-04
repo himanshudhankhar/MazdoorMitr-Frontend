@@ -1,0 +1,87 @@
+.edit-labourer-employee-container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+
+.edit-labourer-employee-heading {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.edit-labourer-employee-search {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.edit-labourer-employee-search input {
+  flex: 1;
+  padding: 8px;
+}
+
+.edit-labourer-employee-search button {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.edit-labourer-employee-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.edit-labourer-employee-record {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.edit-labourer-employee-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.edit-labourer-employee-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.edit-labourer-employee-form label {
+  font-weight: bold;
+}
+
+.edit-labourer-employee-form input,
+.edit-labourer-employee-form select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.edit-labourer-employee-image-preview img {
+  margin-top: 10px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.edit-labourer-employee-update-btn {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.edit-labourer-employee-update-btn:hover {
+  background-color: #0056b3;
+}

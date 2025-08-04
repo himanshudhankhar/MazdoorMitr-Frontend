@@ -15,6 +15,7 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("authToken");
     const userType = localStorage.getItem("userType");
+    console.log("x-user-type", userType);
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
       config.headers["x-user-type"] = userType;

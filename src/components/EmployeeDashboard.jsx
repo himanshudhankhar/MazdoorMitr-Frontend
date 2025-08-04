@@ -1,53 +1,109 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axiosInstance from "../axiosConfig"; // Your Axios instance
 import "./EmployeeDashboard.css";
 
 const EmployeeDashboard = () => {
-  const handleRedirect = (path) => {
-    // Add routing logic here
-    console.log(`Redirect to: ${path}`);
-  };
+  const [employee, setEmployee] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchEmployeeData = async () => {
+      try {
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+          alert("User ID not found in local storage. Please login again.");
+          navigate("/employee-login");
+          return;
+        }
+
+        const res = await axiosInstance.post(
+          "/api/users/protected/employees/fetch-by-id",
+          { id: userId }
+        );
+
+        if (res.data.success) {
+          setEmployee(res.data.employee);
+        } else {
+          alert(res.data.message || "Failed to fetch employee data.");
+        }
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+        alert("Error fetching employee data.");
+      }
+    };
+
+    fetchEmployeeData();
+  }, [navigate]);
 
   return (
-    <div className="employee-dashboard">
-      <header className="employee-login-header-login">
+    <div className="employee-dashboard-container">
+      {/* Header */}
+      <header className="employee-dashboard-header">
         <h1>Employee Dashboard</h1>
       </header>
 
-      <div className="dashboard-container-employee-dashboard">
-        <h2>Welcome</h2>
-        <div className="action-buttons-employee-dashboard">
-          <button onClick={() => handleRedirect("/add-labourer")} className="dashboard-btn-employee-dashboard">
-            Add Labourer
+      {/* Profile Section */}
+      <section className="employee-dashboard-profile-section">
+        {employee ? (
+          <div className="employee-dashboard-profile-card">
+            <img
+              src={employee?.profileImageUrl || "/default-profile.png"}
+              alt="Employee"
+              className="employee-dashboard-profile-image"
+            />
+            <div className="employee-dashboard-profile-details">
+              <h2>{employee?.name || "N/A"}</h2>
+              <p>
+                <strong>Address:</strong> {employee?.address || "N/A"}
+              </p>
+              <p>
+                <strong>Phone:</strong> {employee?.phone || "N/A"}
+              </p>
+              <p>
+                <strong>Joining Date:</strong>{" "}
+                {employee?.createdAt
+                  ? new Date(employee.createdAt).toLocaleDateString()
+                  : "N/A"}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <p>Loading employee data...</p>
+        )}
+      </section>
+
+      {/* Actions Section */}
+      <section className="employee-dashboard-actions">
+        <h2>Quick Actions</h2>
+        <div className="employee-dashboard-action-buttons">
+          <button
+            onClick={() => navigate("/registered-labourers-by-employee")}
+            className="employee-dashboard-btn"
+          >
+            View Registered Labourers
           </button>
-          <button onClick={() => handleRedirect("/modify-labourer")} className="dashboard-btn-employee-dashboard">
-            Search & Modify Labourer Data
+          <button
+            onClick={() => navigate("/register-labourers-by-employee")}
+            className="employee-dashboard-btn"
+          >
+            Register Labourer
           </button>
-          <button onClick={() => handleRedirect("/add-employer")} className="dashboard-btn-employee-dashboard">
-            Add Employer
-          </button>
-          <button onClick={() => handleRedirect("/modify-employer")} className="dashboard-btn-employee-dashboard">
-            Search & Modify Employer Data
-          </button>
-          <button onClick={() => handleRedirect("/report-profiles-requests")} className="dashboard-btn-employee-dashboard">
-            Report Profiles Requests
-          </button>
-          <button onClick={() => handleRedirect("/mediation-requests")} className="dashboard-btn-employee-dashboard">
-            Mediation Requests
-          </button>
-          <button onClick={() => handleRedirect("/profile-transactions")} className="dashboard-btn-employee-dashboard">
-            Profilewise Transactions 
-          </button>
-          <button onClick={() => handleRedirect("/incomplete-profiles")} className="dashboard-btn-employee-dashboard">
-            Track Incomplete Profiles 
+          <button
+            onClick={() => navigate("/edit-labourer-by-employee")}
+            className="employee-dashboard-btn"
+          >
+            Edit Labourer Profile
           </button>
         </div>
-      </div>
+      </section>
 
-      <footer className="footer-employee-dashboard">
-        <p>&copy; 2025 Employee Dashboard. All Rights Reserved.</p>
+      {/* Footer */}
+      <footer className="employee-dashboard-footer">
+        <p>&copy; 2025 MazdoorMitr. All Rights Reserved.</p>
       </footer>
     </div>
   );
-}
+};
 
 export default EmployeeDashboard;

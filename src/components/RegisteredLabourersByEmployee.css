@@ -1,0 +1,44 @@
+.registered-labourers-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.registered-labourers-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.registered-labourers-date-section {
+  margin-bottom: 30px;
+}
+
+.registered-labourers-date-header {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #007bff;
+}
+
+.registered-labourers-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.registered-labourers-card {
+  display: flex;
+  gap: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  width: 300px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.registered-labourers-image {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+}

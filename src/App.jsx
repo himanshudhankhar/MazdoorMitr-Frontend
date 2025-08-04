@@ -35,6 +35,9 @@ import ModifyLabourerPage from './components/ModifyLabourerPage';
 import ModifyEmployerPage from './components/ModifyEmployersPage';
 import AddEmployeePage from './components/AddEmployeePage';
 import ModifyEmployee from './components/ModifyEmployee';
+import RegisteredLabourersByEmployee from './components/RegisteredLabourersByEmployee';
+import RegisterLabourerByEmployee from './components/RegisterLabourerByEmployee';
+import EditLabourerByEmployee from './components/EditLabourerByEmployee';
 function App() {
 
   return (
@@ -45,9 +48,12 @@ function App() {
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/admin-login" element={<AdminLoginPage />} />
           <Route exact path="/employee-login" element={<EmployeeLogin />} />
-          <Route exact path="/employee-dashboard" element={<EmployeeDashboard />} />
+          <Route exact path="/employee-dashboard" element={<ProtectedRoute userType="Employee"> <EmployeeDashboard /></ProtectedRoute>} />
           <Route exact path="/admin-dashboard" element={<ProtectedRoute userType="admin"><AdminDashboard /></ProtectedRoute> }/>
           <Route exact path="/labourers-added" element={<LabourersAddedPage />} />
+          <Route exact path="/registered-labourers-by-employee" element={<ProtectedRoute userType="Employee"> <RegisteredLabourersByEmployee /></ProtectedRoute>} />
+          <Route exact path="/register-labourers-by-employee" element={<ProtectedRoute userType="Employee"> <RegisterLabourerByEmployee /></ProtectedRoute>} />
+          <Route exact path="/edit-labourer-by-employee" element={<ProtectedRoute userType="Employee"> <EditLabourerByEmployee /></ProtectedRoute>} />
           <Route exact path="/employers-added" element={<EmployersAddedPage />} />
           <Route exact path="/add-labourer" element={<ProtectedRoute userType="admin"><AddLabourer /></ProtectedRoute>} />
           <Route exact path="/modify-labourer" element={<ProtectedRoute userType="admin"><ModifyLabourerPage /></ProtectedRoute>} />

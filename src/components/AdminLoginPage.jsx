@@ -12,6 +12,7 @@ const AdminLogin = () => {
   const handleSendOtp = async (event) => {
     event.preventDefault();
     try {
+      console.log("hi");
       const response = await axiosInstance.post('/api/users/send-otp/admin-login', { passcode: username });
       console.log(response.data);
       alert("OTP sent successfully to registered mobile (check console in dev mode)");

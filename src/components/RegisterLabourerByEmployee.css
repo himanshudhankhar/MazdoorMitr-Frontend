@@ -1,0 +1,88 @@
+.register-labourer-employee-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.register-labourer-employee-header {
+  background-color: #007bff;
+  padding: 15px;
+  text-align: center;
+  color: white;
+}
+
+.register-labourer-employee-container {
+  flex: 1;
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
+.register-labourer-employee-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.register-labourer-employee-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.register-labourer-employee-form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+}
+
+.register-labourer-employee-form input,
+.register-labourer-employee-form select {
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  /* width: 250px; */
+  width: 80%;
+}
+
+.register-labourer-employee-otp-btn,
+.register-labourer-employee-verify-btn,
+.register-labourer-employee-submit-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-top: 10px;
+  width: 85%;
+}
+
+.register-labourer-employee-otp-btn:hover,
+.register-labourer-employee-verify-btn:hover,
+.register-labourer-employee-submit-btn:hover {
+  background-color: #218838;
+}
+
+.register-labourer-employee-time-fields {
+  display: flex;
+  gap: 10px;
+}
+
+.register-labourer-employee-image-preview {
+  display: flex;
+  justify-content: center;
+}
+
+.register-labourer-employee-image-preview img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.register-labourer-employee-footer {
+  background-color: #f8f9fa;
+  text-align: center;
+  padding: 10px;
+}
