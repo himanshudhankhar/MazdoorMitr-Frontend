@@ -198,8 +198,18 @@ const LoginPage = () => {
                 </div>)}
 
 
-            <footer className="footer-login">
+            {/* <footer className="footer-login">
                 <p>&copy; 2025 MazdoorMitr. All rights reserved.</p>
+            </footer> */}
+            <footer className="landing-page-footer">
+                <div className="footer-links">
+                    <a href="/about-us">About Us</a>
+                    <a href="/terms-and-conditions">Terms & Conditions</a>
+                    <a href="/privacy-policy">Privacy Policy</a>
+                    <a href="/refund-policy">Refund Policy</a>
+                    <a href="/contact-us">Contact Us</a>
+                </div>
+                <p>© 2025 MazdoorMitr. Empowering India’s Workforce.</p>
             </footer>
         </div>
     );

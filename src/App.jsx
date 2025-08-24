@@ -38,6 +38,11 @@ import ModifyEmployee from './components/ModifyEmployee';
 import RegisteredLabourersByEmployee from './components/RegisteredLabourersByEmployee';
 import RegisterLabourerByEmployee from './components/RegisterLabourerByEmployee';
 import EditLabourerByEmployee from './components/EditLabourerByEmployee';
+import TermsConditions from './components/TermsandConditions';
+import RefundPolicy from './components/RefundPolicy';
+import AboutUs from './components/AboutUs';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import ContactUs from './components/ContactUs';
 function App() {
 
   return (
@@ -70,7 +75,12 @@ function App() {
           <Route exact path="/all-mediation-requests" element={<AllMediationRequests />} />
           <Route exact path="/all-labourers-added" element={<AllLabourersAdded />} />
           <Route exact path="/all-employers-added" element={<AllEmployersAdded />} />
-          <Route exact path="/modify-wallet-balance" element={<ModifyWalletBalance />} />
+          <Route exact path="/terms-and-conditions" element={<TermsConditions/>} />
+          <Route exact path="/refund-policy" element={<RefundPolicy/>} />
+          <Route exact path="/about-us" element={<AboutUs/>} />
+          <Route exact path="/privacy-policy" element={<PrivacyPolicy/>} />
+          <Route exact path="/contact-us" element={<ContactUs/>} />
+          <Route exact path="/modify-wallet-balance" element={<ProtectedRoute userType="admin"><ModifyWalletBalance /></ProtectedRoute>} />
           <Route exact path="/quickclap" element={<LandingPage />}/>
           <Route path="/app" element={<MazdoorMitra />}>
                 <Route exact path="profile" element={<ProtectedRoute userType="user"><Profile /></ProtectedRoute>} />
