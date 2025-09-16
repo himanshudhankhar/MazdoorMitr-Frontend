@@ -186,6 +186,8 @@ const Wallet = () => {
         }
     };
 
+    const currentWalletId = localStorage.getItem("userId");;
+
     return (
         <div className="wallet-page-container">
             <h1>Wallet</h1>
@@ -230,27 +232,43 @@ const Wallet = () => {
                         <table className="transactions-table">
                             <thead>
                                 <tr>
-                                    <th>UPI ID</th>
+                                    <th>Counterparty</th>
                                     <th>Date</th>
                                     <th>Amount (₹)</th>
                                     <th>Type</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {transactions.map((transaction, index) => (
-                                    <tr key={index}>
-                                        <td>{transaction.upiId || 'N/A'}</td>
-                                        <td>{formatTimestamp(transaction.timestamp)}</td>
-                                        <td>{transaction.amount.toFixed(2)}</td>
-                                        <td>{transaction.type}</td>
-                                    </tr>
-                                ))}
+                                {transactions.map((tx) => {
+                                    const isCredit = tx.receiverWalletId === currentWalletId;
+                                    const direction = isCredit ? "Credit (Received)" : "Debit (Given)";
+                                    const purpose = tx?.otherDetails?.type || "—";
+                                    const displayType = purpose ? `${direction} • ${purpose}` : direction;
+
+                                    // pick the name if available, otherwise fall back to ID
+                                    const counterparty = isCredit
+                                        ? tx.giverName || tx.giverWalletId
+                                        : tx.receiverName || tx.receiverWalletId;
+
+                                    return (
+                                        <tr key={tx.id || tx.transactionId}>
+                                            <td title={counterparty || ""}>{counterparty || "N/A"}</td>
+                                            <td>{formatTimestamp(tx.timestamp)}</td>
+                                            <td>{Number(tx.amount || 0).toFixed(2)}</td>
+                                            <td>{displayType}</td>
+                                            <td>{tx.status || "—"}</td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
+
                         <button className="show-all-btn" onClick={handleShowAllTransactions}>
                             Show All Transactions
                         </button>
                     </>
+
                 ) : (
                     <p>No transactions available.</p>
                 )}

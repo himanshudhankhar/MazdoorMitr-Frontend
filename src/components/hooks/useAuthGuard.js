@@ -20,7 +20,7 @@ const useAuthGuard = (userType) => {
 
         const userFromResponse = res.data?.user;
         console.log("user form "+ res.data);
-        if (res.data.success && userFromResponse?.userType === userType) {
+        if (res.data.success && userType == "user" && (userFromResponse?.userType == "Employer" || userFromResponse?.userType == "Labourer")) {
           setUser(userFromResponse);
           setAuthorized(true);
         } else {

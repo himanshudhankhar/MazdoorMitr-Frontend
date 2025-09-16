@@ -71,10 +71,10 @@ export default function Home() {
                 otheruserid: selectedProfile.id
             }, { withCredentials: true });
 
-            setContactNumber(res.data.contactNumber || 'Not available');
+            setContactNumber(res.data.contactNumber || res.data.message);
         } catch (error) {
             console.error('Error fetching contact number:', error);
-            setContactNumber('Error fetching contact number');
+            setContactNumber('Error fetching contact number ' + error.message);
         } finally {
             setContactLoading(false);
         }
