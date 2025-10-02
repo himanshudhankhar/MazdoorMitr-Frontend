@@ -317,29 +317,29 @@ const REFUND_HTML = `
 `;
 
 function PolicyModal({ open, onClose, sections }) {
-  if (!open) return null;
-  return (
-    <div className="mmodal-overlay" role="dialog" aria-modal="true" onClick={onClose}>
-      <div className="mmodal" onClick={(e) => e.stopPropagation()}>
-        <div className="mmodal-header">
-          <h2>Policies & User Agreement</h2>
-          <button className="mmodal-close" aria-label="Close" onClick={onClose}>✕</button>
-        </div>
-        <div className="mmodal-scroll">
-          {sections.map((s, idx) => (
-            <section key={idx} className="mmodal-section">
-              <h2 className="mmodal-section-title">{s.title}</h2>
-              <div className="mmodal-section-body" dangerouslySetInnerHTML={{ __html: s.html }} />
-            </section>
-          ))}
-        </div>
-        <div className="mmodal-footer">
-          <button className="mmodal-btn" onClick={onClose}>Close</button>
-        </div>
-      </div>
+    if (!open) return null;
+    return (
+        <div className="mmodal-overlay" role="dialog" aria-modal="true" onClick={onClose}>
+            <div className="mmodal" onClick={(e) => e.stopPropagation()}>
+                <div className="mmodal-header">
+                    <h2>Policies & User Agreement</h2>
+                    <button className="mmodal-close" aria-label="Close" onClick={onClose}>✕</button>
+                </div>
+                <div className="mmodal-scroll">
+                    {sections.map((s, idx) => (
+                        <section key={idx} className="mmodal-section">
+                            <h2 className="mmodal-section-title">{s.title}</h2>
+                            <div className="mmodal-section-body" dangerouslySetInnerHTML={{ __html: s.html }} />
+                        </section>
+                    ))}
+                </div>
+                <div className="mmodal-footer">
+                    <button className="mmodal-btn" onClick={onClose}>Close</button>
+                </div>
+            </div>
 
-      {/* Minimal CSS for modal (scoped classNames) */}
-      <style>{`
+            {/* Minimal CSS for modal (scoped classNames) */}
+            <style>{`
         .mmodal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:9999}
         .mmodal{background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.2);width:min(920px,100%);max-height:88vh;display:flex;flex-direction:column}
         .mmodal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #eee}
@@ -354,275 +354,350 @@ function PolicyModal({ open, onClose, sections }) {
         .mmodal-btn{background:#111;color:#fff;border:none;border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer}
         .mmodal-btn:hover{opacity:.9}
       `}</style>
-    </div>
-  );
+        </div>
+    );
 }
 
 const LoginPage = () => {
-  const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useState(true);
-  const [step, setStep] = useState("form");
-  const [role, setRole] = useState("Employer");
-  const [otp, setOtp] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [name, setName] = useState("");
+    const navigate = useNavigate();
+    const [isLogin, setIsLogin] = useState(true);
+    const [step, setStep] = useState("form");
+    const [role, setRole] = useState("Employer");
+    const [otp, setOtp] = useState("");
+    const [mobile, setMobile] = useState("");
+    const [name, setName] = useState("");
 
-  const [otpError, setOtpError] = useState("");
-  const [otpSuccess, setOtpSuccess] = useState("");
+    const [otpError, setOtpError] = useState("");
+    const [otpSuccess, setOtpSuccess] = useState("");
 
-  const [consentChecked, setConsentChecked] = useState(false);
-  const [showPolicies, setShowPolicies] = useState(false);
+    const [consentChecked, setConsentChecked] = useState(false);
+    const [showPolicies, setShowPolicies] = useState(false);
 
-  const policySections = useMemo(
-    () => [
-      { title: "Terms & Conditions", html: TERMS_HTML },
-      { title: "Privacy Policy", html: PRIVACY_HTML },
-      { title: "Wallet & Credits Policy", html: WALLET_HTML },
-      { title: "Refund Policy", html: REFUND_HTML },
-    ],
-    []
-  );
+    const policySections = useMemo(
+        () => [
+            { title: "Terms & Conditions", html: TERMS_HTML },
+            { title: "Privacy Policy", html: PRIVACY_HTML },
+            { title: "Wallet & Credits Policy", html: WALLET_HTML },
+            { title: "Refund Policy", html: REFUND_HTML },
+        ],
+        []
+    );
 
-  // Auto-open policies modal 1s after switching to Sign Up
-  useEffect(() => {
-    let t;
-    if (!isLogin) {
-      t = setTimeout(() => setShowPolicies(true), 1000);
-    } else {
-      setShowPolicies(false);
-    }
-    return () => t && clearTimeout(t);
-  }, [isLogin]);
+    // Auto-open policies modal 1s after switching to Sign Up
+    useEffect(() => {
+        let t;
+        if (!isLogin) {
+            t = setTimeout(() => setShowPolicies(true), 1000);
+        } else {
+            setShowPolicies(false);
+        }
+        return () => t && clearTimeout(t);
+    }, [isLogin]);
 
-  const toggleForm = () => {
-    setIsLogin((v) => !v);
-    setConsentChecked(false);
-  };
+    const toggleForm = () => {
+        setIsLogin((v) => !v);
+        setConsentChecked(false);
+    };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+    // const handleSubmit = async (event) => {
+    //     event.preventDefault();
 
-    if (!name.trim()) {
-      alert("Please enter your name");
-      return;
-    }
-    if (!validator.isMobilePhone(String(mobile), "en-IN")) {
-      alert("Enter a valid Indian mobile number");
-      return;
-    }
-    if (!isLogin && !consentChecked) {
-      alert("Please review and accept the policies to sign up.");
-      setShowPolicies(true);
-      return;
-    }
+    //     if (!name.trim()) {
+    //         alert("Please enter your name");
+    //         return;
+    //     }
+    //     if (!validator.isMobilePhone(String(mobile), "en-IN")) {
+    //         alert("Enter a valid Indian mobile number");
+    //         return;
+    //     }
+    //     if (!isLogin && !consentChecked) {
+    //         alert("Please review and accept the policies to sign up.");
+    //         setShowPolicies(true);
+    //         return;
+    //     }
 
-    try {
-      const url = isLogin ? "/api/users/login" : "/api/users/signup";
-      const payload = { name: name.trim().toLowerCase(), phone: mobile, userType: role };
+    //     try {
+    //         const url = isLogin ? "/api/users/login" : "/api/users/signup";
+    //         const payload = { name: name.trim().toLowerCase(), phone: mobile, userType: role };
 
-      const response = await api.post(url, payload);
-      const resp = response.data;
-      if (!resp?.success) {
-        alert((resp?.message || "Request failed") + (resp?.error ? `: ${resp.error}` : ""));
-        return;
-      }
-      setStep("otp");
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong. Try again");
-    }
-  };
+    //         const response = await api.post(url, payload);
+    //         const resp = response.data;
+    //         if (!resp?.success) {
+    //             alert((resp?.message || "Request failed") + (resp?.error ? `: ${resp.error}` : ""));
+    //             return;
+    //         }
+    //         setStep("otp");
+    //     } catch (err) {
+    //         console.error(err);
+    //         alert("Something went wrong. Try again");
+    //     }
+    // };
 
-  const handleVerifyOtp = async (e) => {
-    e.preventDefault();
-    setOtpError("");
-    setOtpSuccess("");
-    try {
-      const url = isLogin ? "/api/users/otp-verify" : "/api/users/signup-otp-verify";
-      const response = await api.post(url, { name, phone: mobile, userType: role, otp });
-      const resp = response.data;
-      if (!resp?.success) {
-        alert(resp?.message || "OTP verification failed");
-        return;
-      }
-      const token = resp.token || resp.authToken;
-      if (token) localStorage.setItem("authToken", token);
-      if (resp.userId) localStorage.setItem("userId", resp.userId);
-      localStorage.setItem("userType", role);
-      navigate(resp.forwardLink || "/");
-    } catch (err) {
-      console.error(err?.message || err);
-      alert("Something went wrong. Try again");
-    }
-  };
+    const handleSubmit = async (event) => {
+        event.preventDefault();
 
-  const handleResendOtp = async () => {
-    setOtpError("");
-    setOtpSuccess("");
-    try {
-      const url = "/api/users/resend-otp";
-      const response = await api.post(url, { name, phone: mobile, userType: role });
-      const data = response.data;
-      if (data?.success) setOtpSuccess("OTP resent successfully!");
-      else setOtpError(data?.message || "Failed to resend OTP. Try again later.");
-    } catch {
-      setOtpError("Server error. Try again.");
-    }
-  };
+        if (!name.trim()) {
+            alert("Please enter your name");
+            return;
+        }
+        if (!validator.isMobilePhone(String(mobile), "en-IN")) {
+            alert("Enter a valid Indian mobile number");
+            return;
+        }
+        if (!isLogin && !consentChecked) {
+            alert("Please review and accept the policies to sign up.");
+            setShowPolicies(true);
+            return;
+        }
 
-  return (
-    <div className="login-page">
-      <header className="header">
-        <div className="header-brand">
-          <h1>MazdoorMitr</h1>
-        </div>
-        <nav className="header-nav">
-          <a href="/landing">Home</a>
-          <a href="/about">About</a>
-          <a href="/contact">Contact</a>
-        </nav>
-      </header>
+        try {
+            // Normal URL/payload for user login or signup
+            var url = isLogin ? "/api/users/login" : "/api/users/signup";
+            var payload = { name: name.trim().toLowerCase(), phone: mobile, userType: role };
 
-      {step === "form" ? (
-        <div className="login-container">
-          <h1>{isLogin ? "Login" : "Sign Up"}</h1>
+            // 👉 If it's a signup and BusinessOwner, call bootstrap first
+            if (!isLogin && role === "BusinessOwner") {
+                    url = "/api/users/shops/signup";
+            }
+            if(isLogin && role === "BusinessOwner") {
+                url = "/api/users/shops/login";
+            }
 
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Name:</label>
-              <input
-                type="text"
-                placeholder="Enter your name"
-                required
-                id="loginName"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                autoComplete="name"
-              />
-            </div>
+            // Continue with the normal login/signup flow
+            const response = await api.post(url, payload);
+            const resp = response.data;
+            if (!resp?.success) {
+                alert((resp?.message || "Request failed") + (resp?.error ? `: ${resp.error}` : ""));
+                return;
+            }
+            setStep("otp");
+        } catch (err) {
+            console.error(err);
+            alert("Something went wrong. Try again");
+        }
+    };
 
-            <div className="form-group">
-              <label>Mobile Number:</label>
-              <input
-                type="tel"
-                placeholder="Enter your mobile number"
-                required
-                id="loginMobileNumber"
-                value={mobile}
-                onChange={(e) => setMobile(e.target.value)}
-                inputMode="numeric"
-                autoComplete="tel"
-              />
-            </div>
 
-            <div className="form-group">
-              <label>Role:</label>
-              <div className="role-selection">
-                <label>
-                  <input
-                    type="radio"
-                    name="role"
-                    value="Employer"
-                    checked={role === "Employer"}
-                    onChange={(e) => setRole(e.target.value)}
-                  />
-                  Employer
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="role"
-                    value="Labourer"
-                    checked={role === "Labourer"}
-                    onChange={(e) => setRole(e.target.value)}
-                  />
-                  Labourer
-                </label>
-              </div>
-            </div>
+    const handleVerifyOtp = async (e) => {
+        e.preventDefault();
+        setOtpError("");
+        setOtpSuccess("");
+        try {
+            
+            var url = isLogin ? "/api/users/otp-verify" : "/api/users/signup-otp-verify";
 
-            {/* Consent visible & required ONLY for Sign Up */}
-            {!isLogin && (
-              <div className="form-group">
-                <div className="consent-field">
-                    <label htmlFor="consentCheckbox" className="consent-label">
-                  <input
-                    id="consentCheckbox"
-                    type="checkbox"
-                    checked={!!consentChecked}
-                    onChange={(e) => setConsentChecked(e.target.checked)}
-                    required
-                  />
-                  
-                    I agree to the Terms, Privacy, Wallet & Refund policies.
-                  
-                  <span
-                    role="link"
-                    tabIndex={0}
-                    onClick={() => setShowPolicies(true)}
-                    onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setShowPolicies(true)}
-                    style={{ textDecoration: "underline", marginLeft: 8, cursor: "pointer", color: "#007bff" }}
-                  >
-                    Read more
-                  </span>
-                  </label>
+            if(role === "BusinessOwner" && isLogin) {
+                url = "api/users/shops/verify-otp-login";
+            }
+            
+            if(role === "BusinessOwner" && !isLogin) {
+                url = "api/users/shops/verify-otp-signup";
+            }
+
+            const response = await api.post(url, { name, phone: mobile, userType: role, otp });
+            const resp = response.data;
+            if (!resp?.success) {
+                alert(resp?.message || "OTP verification failed");
+                return;
+            }
+            const token = resp.token || resp.authToken;
+            if (token) localStorage.setItem("authToken", token);
+            if (resp.userId) localStorage.setItem("userId", resp.userId);
+            localStorage.setItem("userType", role);
+            navigate(resp.forwardLink || resp.redirectUrl || "/");
+        } catch (err) {
+            console.error(err?.message || err);
+            alert("Something went wrong. Try again");
+        }
+    };
+
+    const handleResendOtp = async () => {
+        setOtpError("");
+        setOtpSuccess("");
+        try {
+            const url = "/api/users/resend-otp";
+            const response = await api.post(url, { name, phone: mobile, userType: role });
+            const data = response.data;
+            if (data?.success) setOtpSuccess("OTP resent successfully!");
+            else setOtpError(data?.message || "Failed to resend OTP. Try again later.");
+        } catch {
+            setOtpError("Server error. Try again.");
+        }
+    };
+
+    return (
+        <div className="login-page">
+            <header className="header">
+                <div className="header-brand">
+                    <h1>MazdoorMitr</h1>
                 </div>
-              </div>
+                <nav className="header-nav">
+                    <a href="/landing">Home</a>
+                    <a href="/about">About</a>
+                    <a href="/contact">Contact</a>
+                </nav>
+            </header>
+
+            {step === "form" ? (
+                <div className="login-container">
+                    <h1>{isLogin ? "Login" : "Sign Up"}</h1>
+
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label>Name:</label>
+                            <input
+                                type="text"
+                                placeholder="Enter your name"
+                                required
+                                id="loginName"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                autoComplete="name"
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label>Mobile Number:</label>
+                            <input
+                                type="tel"
+                                placeholder="Enter your mobile number"
+                                required
+                                id="loginMobileNumber"
+                                value={mobile}
+                                onChange={(e) => setMobile(e.target.value)}
+                                inputMode="numeric"
+                                autoComplete="tel"
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label>Role:</label>
+                            <div className="role-selection">
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="role"
+                                        value="Employer"
+                                        checked={role === "Employer"}
+                                        onChange={(e) => setRole(e.target.value)}
+                                    />
+                                    Employer
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="role"
+                                        value="Labourer"
+                                        checked={role === "Labourer"}
+                                        onChange={(e) => setRole(e.target.value)}
+                                    />
+                                    Worker
+                                </label>
+
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="role"
+                                        value="BusinessOwner"
+                                        checked={role === "BusinessOwner"}
+                                        onChange={(e) => setRole(e.target.value)}
+                                    />
+                                    Business Owner
+                                </label>
+                            </div>
+                            <small className="role-hint">
+                                * Choose “Business Owner” if you run a shop etc we can recommend to employers/labourers.
+                            </small>
+                            <br />
+                            <small className="role-hint">
+                                * Choose “Employer” if you want to hire or to purchase something.
+                            </small>
+                        </div>
+
+
+                        {/* Consent visible & required ONLY for Sign Up */}
+                        {!isLogin && (
+                            <div className="form-group">
+                                <div className="consent-field">
+                                    <label htmlFor="consentCheckbox" className="consent-label">
+                                        <input
+                                            id="consentCheckbox"
+                                            type="checkbox"
+                                            checked={!!consentChecked}
+                                            onChange={(e) => setConsentChecked(e.target.checked)}
+                                            required
+                                        />
+
+                                        I agree to the Terms, Privacy, Wallet & Refund policies.
+
+                                        <span
+                                            role="link"
+                                            tabIndex={0}
+                                            onClick={() => setShowPolicies(true)}
+                                            onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setShowPolicies(true)}
+                                            style={{ textDecoration: "underline", marginLeft: 8, cursor: "pointer", color: "#007bff" }}
+                                        >
+                                            Read more
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        )}
+
+                        <button type="submit" className={isLogin ? "next-btn" : "signup-btn"}>
+                            {isLogin ? "Login" : "Sign Up"}
+                        </button>
+                    </form>
+
+                    <p className="toggle-link" onClick={toggleForm} role="button" tabIndex={0}>
+                        {isLogin ? "Don't have an account? Sign up here." : "Already have an account? Login here."}
+                    </p>
+                </div>
+            ) : (
+                <div className="otp-container">
+                    <h2>Enter OTP</h2>
+                    <form onSubmit={handleVerifyOtp}>
+                        <div className="form-group">
+                            <input
+                                type="text"
+                                maxLength="6"
+                                placeholder="Enter 6-digit OTP"
+                                required
+                                id="otpInput"
+                                value={otp}
+                                onChange={(e) => setOtp(e.target.value)}
+                                inputMode="numeric"
+                            />
+                        </div>
+
+                        <button type="submit" className="verify-btn">Verify OTP</button>
+
+                        <p className="resend-link" onClick={handleResendOtp} role="button" tabIndex={0}>
+                            Didn't receive the OTP? <span>Resend</span>
+                        </p>
+
+                        {otpSuccess && <p className="otp-success">{otpSuccess}</p>}
+                        {otpError && <p className="otp-error">{otpError}</p>}
+                    </form>
+                </div>
             )}
 
-            <button type="submit" className={isLogin ? "next-btn" : "signup-btn"}>
-              {isLogin ? "Login" : "Sign Up"}
-            </button>
-          </form>
+            {/* Auto-open Policies Modal on Sign Up */}
+            <PolicyModal open={showPolicies} onClose={() => setShowPolicies(false)} sections={policySections} />
 
-          <p className="toggle-link" onClick={toggleForm} role="button" tabIndex={0}>
-            {isLogin ? "Don't have an account? Sign up here." : "Already have an account? Login here."}
-          </p>
+            <footer className="landing-page-footer">
+                <div className="footer-links">
+                    <a href="/about-us">About Us</a>
+                    <a href="/terms-and-conditions">Terms & Conditions</a>
+                    <a href="/privacy-policy">Privacy Policy</a>
+                    <a href="/refund-policy">Refund Policy</a>
+                    <a href="/contact-us">Contact Us</a>
+                </div>
+                <p>© 2025 MazdoorMitr. Empowering India’s Workforce.</p>
+            </footer>
         </div>
-      ) : (
-        <div className="otp-container">
-          <h2>Enter OTP</h2>
-          <form onSubmit={handleVerifyOtp}>
-            <div className="form-group">
-              <input
-                type="text"
-                maxLength="6"
-                placeholder="Enter 6-digit OTP"
-                required
-                id="otpInput"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                inputMode="numeric"
-              />
-            </div>
-
-            <button type="submit" className="verify-btn">Verify OTP</button>
-
-            <p className="resend-link" onClick={handleResendOtp} role="button" tabIndex={0}>
-              Didn't receive the OTP? <span>Resend</span>
-            </p>
-
-            {otpSuccess && <p className="otp-success">{otpSuccess}</p>}
-            {otpError && <p className="otp-error">{otpError}</p>}
-          </form>
-        </div>
-      )}
-
-      {/* Auto-open Policies Modal on Sign Up */}
-      <PolicyModal open={showPolicies} onClose={() => setShowPolicies(false)} sections={policySections} />
-
-      <footer className="landing-page-footer">
-        <div className="footer-links">
-          <a href="/about-us">About Us</a>
-          <a href="/terms-and-conditions">Terms & Conditions</a>
-          <a href="/privacy-policy">Privacy Policy</a>
-          <a href="/refund-policy">Refund Policy</a>
-          <a href="/contact-us">Contact Us</a>
-        </div>
-        <p>© 2025 MazdoorMitr. Empowering India’s Workforce.</p>
-      </footer>
-    </div>
-  );
+    );
 };
 
 export default LoginPage;

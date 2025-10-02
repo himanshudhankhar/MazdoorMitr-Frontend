@@ -1,0 +1,141 @@
+/* CompleteShopProfile.css - styles for the Complete Shop Profile component
+   Save this as `CompleteShopProfile.css` in the same folder as the component
+   (or paste into your global stylesheet). */
+
+.complete-shop-profile {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  color: #1f2937;
+}
+
+.complete-shop-profile h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.complete-shop-profile form {
+  background: #ffffff;
+  padding: 1.25rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+}
+
+.complete-shop-profile label {
+  display: block;
+  font-size: 0.875rem;
+  color: #374151;
+  margin-bottom: 0.375rem;
+}
+
+.complete-shop-profile input[type="text"],
+.complete-shop-profile input[type="file"],
+.complete-shop-profile select,
+.complete-shop-profile textarea,
+.complete-shop-profile input[type="number"],
+.complete-shop-profile input[type="tel"] {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.complete-shop-profile input[readonly],
+.complete-shop-profile input[disabled] {
+  background: #f9fafb;
+}
+
+.complete-shop-profile .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.complete-shop-profile .btn-primary {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.complete-shop-profile .btn-secondary {
+  background: #f3f4f6;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+}
+
+.complete-shop-profile .items-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: #f3f4f6;
+  font-size: 0.875rem;
+}
+
+.complete-shop-profile .items-chip button {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+
+.complete-shop-profile .image-preview {
+  width: 9rem;
+  height: 6rem;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border: 1px dashed #e5e7eb;
+}
+
+.complete-shop-profile .image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.complete-shop-profile .flex {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.complete-shop-profile .small {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.complete-shop-profile .error {
+  color: #dc2626;
+  font-size: 0.9rem;
+}
+
+.complete-shop-profile .success {
+  color: #16a34a;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .complete-shop-profile .flex {
+    flex-direction: column;
+  }
+  .complete-shop-profile .image-preview {
+    width: 100%;
+    height: 200px;
+  }
+}

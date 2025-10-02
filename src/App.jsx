@@ -43,6 +43,7 @@ import RefundPolicy from './components/RefundPolicy';
 import AboutUs from './components/AboutUs';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import ContactUs from './components/ContactUs';
+import CompleteShopProfile from './components/CompleteShopProfile';
 function App() {
 
   return (
@@ -89,6 +90,8 @@ function App() {
                 <Route exact path="home" element={<ProtectedRoute userType="user"><Home /></ProtectedRoute>} />
                 <Route exact path="complete-profile-employer" element={<ProtectedRoute userType="user"><CompleteProfileEmployer /></ProtectedRoute>} />
                 <Route exact path="create-labourer-profile" element={<ProtectedRoute userType="user"><CreateLabourerProfile /></ProtectedRoute>} />
+                <Route exact path="complete-shop-profile" element={<ProtectedRoute userType="user"><CompleteShopProfile /></ProtectedRoute>} />
+
           </Route>
         </Routes>
       </BrowserRouter>
