@@ -1,141 +1,443 @@
-/* CompleteShopProfile.css - styles for the Complete Shop Profile component
-   Save this as `CompleteShopProfile.css` in the same folder as the component
-   (or paste into your global stylesheet). */
+/* ==== Scoped Complete Shop Profile Styles ==== */
 
-.complete-shop-profile {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 1.5rem;
-  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-  color: #1f2937;
+* { box-sizing: border-box; }
+
+.complete_shop_profile_page {
+  background: #f8f9fb;
+  color: #1e1f23;
+  max-width: 1100px;
+  margin: 18px auto 120px;
+  padding: 0 16px;
+  font-family: "Inter", sans-serif;
 }
 
-.complete-shop-profile h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.complete-shop-profile form {
+/* ===== Owner Card ===== */
+.complete_shop_profile_owner_card {
   background: #ffffff;
-  padding: 1.25rem;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+  border: 1px solid #e0e2e8;
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  margin: 10px 0 16px;
 }
 
-.complete-shop-profile label {
-  display: block;
-  font-size: 0.875rem;
-  color: #374151;
-  margin-bottom: 0.375rem;
-}
-
-.complete-shop-profile input[type="text"],
-.complete-shop-profile input[type="file"],
-.complete-shop-profile select,
-.complete-shop-profile textarea,
-.complete-shop-profile input[type="number"],
-.complete-shop-profile input[type="tel"] {
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  background: #ffffff;
-  box-sizing: border-box;
-}
-
-.complete-shop-profile input[readonly],
-.complete-shop-profile input[disabled] {
-  background: #f9fafb;
-}
-
-.complete-shop-profile .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-}
-
-.complete-shop-profile .btn-primary {
-  background: #16a34a;
-  color: #ffffff;
-}
-
-.complete-shop-profile .btn-secondary {
-  background: #f3f4f6;
-  color: #111827;
-  border: 1px solid #e5e7eb;
-}
-
-.complete-shop-profile .items-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  background: #f3f4f6;
-  font-size: 0.875rem;
-}
-
-.complete-shop-profile .items-chip button {
-  background: transparent;
-  border: none;
-  color: #ef4444;
-  cursor: pointer;
-  font-size: 0.8rem;
-  margin-left: 0.5rem;
-}
-
-.complete-shop-profile .image-preview {
-  width: 9rem;
-  height: 6rem;
-  border-radius: 8px;
-  overflow: hidden;
+.complete_shop_profile_owner_row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: #f8fafc;
-  border: 1px dashed #e5e7eb;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
-.complete-shop-profile .image-preview img {
+.complete_shop_profile_owner_hi {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.complete_shop_profile_owner_sub {
+  color: #555;
+}
+
+.complete_shop_profile_kv {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 8px;
+}
+
+.complete_shop_profile_k {
+  color: #777;
+}
+
+.complete_shop_profile_v {
+  color: #222;
+}
+
+/* ===== Stepper ===== */
+.complete_shop_profile_stepper {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.complete_shop_profile_step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #e9ecf5;
+  border: 1px solid #ccd2e0;
+  padding: 8px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+  opacity: 0.9;
+  color: #333;
+  transition: 0.2s;
+}
+
+.complete_shop_profile_step.is-active {
+  background: #2a6bf2;
+  color: #fff;
+  opacity: 1;
+  border-color: #2a6bf2;
+}
+
+.complete_shop_profile_step.is-done {
+  border-color: #2a6bf2;
+}
+
+.complete_shop_profile_step_dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #adb5c9;
+  color: #fff;
+  font-size: 12px;
+}
+
+.complete_shop_profile_step.is-active .complete_shop_profile_step_dot {
+  background: #fff;
+  color: #2a6bf2;
+}
+
+.complete_shop_profile_step_label {
+  font-weight: 700;
+}
+
+/* ===== Panel & Layout ===== */
+.complete_shop_profile_panel {
+  background: #ffffff;
+  border: 1px solid #e1e5ee;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.complete_shop_profile_grid_2 {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.complete_shop_profile_col_span_2 {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 900px) {
+  .complete_shop_profile_grid_2 { grid-template-columns: 1fr; }
+  .complete_shop_profile_kv { grid-template-columns: 110px 1fr; }
+}
+
+/* ===== Fields ===== */
+.complete_shop_profile_field label {
+  display: block;
+  margin: 2px 0 6px;
+  font-weight: 600;
+  color: #222;
+}
+
+.complete_shop_profile_input {
+  width: 100%;
+  background: #f6f7fb;
+  border: 1px solid #d4d8e4;
+  border-radius: 10px;
+  color: #1a1a1a;
+  padding: 10px 12px;
+  outline: none;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.complete_shop_profile_input:focus {
+  border-color: #2a6bf2;
+  background: #fff;
+}
+
+.complete_shop_profile_input.has-error {
+  border-color: #e74c3c;
+  background: #fff5f5;
+}
+
+.complete_shop_profile_req {
+  color: #e74c3c;
+}
+
+.complete_shop_profile_error {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.complete_shop_profile_error_bar {
+  background: #fff5f5;
+  border: 1px solid #e74c3c;
+  color: #b00000;
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin: 14px 0 8px;
+}
+
+/* ===== Switches ===== */
+.complete_shop_profile_switches {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.complete_shop_profile_switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #222;
+}
+
+.complete_shop_profile_switch.compact {
+  font-weight: 500;
+}
+
+.complete_shop_profile_switch input {
+  accent-color: #2a6bf2;
+}
+
+/* ===== Uploads ===== */
+.complete_shop_profile_uploader label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.complete_shop_profile_upload_box {
+  position: relative;
+  border: 1px dashed #c9cdda;
+  border-radius: 12px;
+  background: #f8f9fc;
+  min-height: 120px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.complete_shop_profile_upload_box.banner {
+  min-height: 160px;
+}
+
+.complete_shop_profile_upload_box input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.complete_shop_profile_upload_hint {
+  color: #777;
+  font-size: 13px;
+}
+
+.complete_shop_profile_preview {
   width: 100%;
   height: 100%;
+  object-fit: cover;
+}
+
+.complete_shop_profile_gallery_drop {
+  border: 1px dashed #c9cdda;
+  border-radius: 12px;
+  background: #f8f9fc;
+  padding: 10px;
+}
+
+.complete_shop_profile_gallery_grid {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 900px) {
+  .complete_shop_profile_gallery_grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.complete_shop_profile_gallery_cell {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #d4d8e4;
+}
+
+.complete_shop_profile_gallery_cell img {
+  width: 100%;
+  height: 120px;
   object-fit: cover;
   display: block;
 }
 
-.complete-shop-profile .flex {
+.complete_shop_profile_gallery_remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  border: none;
+  background: #e74c3c;
+  color: #fff;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+/* ===== Catalog ===== */
+.complete_shop_profile_card.like-border {
+  background: #f9fafe;
+  border: 1px solid #e0e3ee;
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.complete_shop_profile_card_head {
   display: flex;
-  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.complete_shop_profile_card_title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #222;
+}
+
+.complete_shop_profile_row {
+  display: grid;
+  grid-template-columns: 1.2fr .6fr .6fr auto auto;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 900px) {
+  .complete_shop_profile_row { grid-template-columns: 1fr 1fr; }
+}
+
+.complete_shop_profile_empty {
+  padding: 12px;
+  text-align: center;
+  color: #777;
+  border: 1px dashed #d4d8e4;
+  border-radius: 10px;
+}
+
+.complete_shop_profile_empty.small {
+  padding: 10px;
+  font-size: 13px;
+}
+
+/* ===== Hours ===== */
+.complete_shop_profile_hours_grid {
+  display: grid;
+  gap: 10px;
+}
+
+.complete_shop_profile_hour_row {
+  display: grid;
+  grid-template-columns: 70px 120px 1fr 30px 1fr;
+  gap: 8px;
   align-items: center;
 }
 
-.complete-shop-profile .small {
-  font-size: 0.85rem;
-  color: #6b7280;
+@media (max-width: 600px) {
+  .complete_shop_profile_hour_row { grid-template-columns: 70px 100px 1fr 20px 1fr; }
 }
 
-.complete-shop-profile .error {
-  color: #dc2626;
-  font-size: 0.9rem;
+.complete_shop_profile_hour_day {
+  font-weight: 700;
 }
 
-.complete-shop-profile .success {
-  color: #16a34a;
-  font-size: 0.9rem;
+.complete_shop_profile_time_sep {
+  color: #777;
+  text-align: center;
 }
 
-@media (max-width: 640px) {
-  .complete-shop-profile .flex {
-    flex-direction: column;
-  }
-  .complete-shop-profile .image-preview {
-    width: 100%;
-    height: 200px;
-  }
+/* ===== Review ===== */
+.complete_shop_profile_review_card {
+  background: #f9fafe;
+  border: 1px solid #e0e3ee;
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.complete_shop_profile_review_grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 900px) {
+  .complete_shop_profile_review_grid { grid-template-columns: 1fr; }
+}
+
+.complete_shop_profile_list {
+  margin: 6px 0 0 16px;
+}
+
+.complete_shop_profile_mini {
+  color: #666;
+  margin-top: 6px;
+}
+
+/* ===== Actions ===== */
+.complete_shop_profile_actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.complete_shop_profile_spacer { flex: 1; }
+
+.complete_shop_profile_btn {
+  border: 1px solid transparent;
+  background: transparent;
+  color: #222;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.complete_shop_profile_btn:hover {
+  transform: translateY(-1px);
+}
+
+.complete_shop_profile_btn_primary {
+  background: #2a6bf2;
+  color: #fff;
+}
+
+.complete_shop_profile_btn_secondary {
+  background: #10b981;
+  color: #fff;
+}
+
+.complete_shop_profile_btn_outline {
+  background: #f3f5fb;
+  border-color: #d4d8e4;
+}
+
+.complete_shop_profile_btn_light {
+  background: #e9edf6;
+  border: 1px solid #d4d8e4;
+}
+
+.complete_shop_profile_btn_danger {
+  background: #e74c3c;
+  color: #fff;
 }

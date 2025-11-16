@@ -1,0 +1,192 @@
+Container & layout
+.shop_page {
+  padding: 16px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.shop_page_head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.shop_title {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.shop_actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.shop_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+/* Cards */
+.shop_card {
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  padding: 14px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+
+.shop_card_head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.shop_card_title {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.shop_card_footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* Inputs & buttons */
+.shop_input {
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  padding: 8px 10px;
+  min-width: 220px;
+}
+
+.shop_btn {
+  border: 1px solid #d0d7de;
+  background: #f8fafc;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.shop_btn:hover { background: #f1f5f9; }
+.shop_btn_primary {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+.shop_btn_primary:hover { background: #1e40af; }
+.shop_btn_sm { padding: 6px 10px; font-size: .9rem; }
+.shop_btn_warn { background: #fee2e2; border-color: #fecaca; }
+
+/* Text & rows */
+.shop_row { display: flex; gap: 8px; margin: 2px 0; }
+.shop_label { font-weight: 600; color: #475569; }
+.shop_text { margin: 8px 0 0 0; color: #334155; }
+
+/* Tags / pills */
+.shop_pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.shop_pills_wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+
+.shop_pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #3730a3;
+  border: 1px solid #c7d2fe;
+  font-size: .9rem;
+}
+.shop_pill_alt {
+  background: #ecfeff;
+  color: #155e75;
+  border-color: #a5f3fc;
+}
+.shop_pill_active {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #86efac;
+}
+.shop_pill_x {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  color: #64748b;
+}
+
+/* Wallet */
+.shop_wallet {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.shop_wallet_actions { display: flex; gap: 6px; }
+
+/* Hours & days */
+.shop_hours { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.shop_divider { opacity: .6; }
+
+/* Modal & form */
+.shop_modal_backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.45);
+  display: grid; place-items: center;
+  z-index: 50;
+}
+.shop_modal {
+  width: min(880px, 92vw);
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 6px 28px rgba(0,0,0,.15);
+}
+.shop_modal_title { margin: 0 0 10px 0; }
+
+.shop_form { display: block; }
+.shop_form_grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(200px, 1fr));
+  gap: 12px;
+}
+.shop_field { display: flex; flex-direction: column; gap: 6px; }
+.shop_field_col2 { grid-column: span 2; }
+.shop_days { align-self: start; }
+.shop_days_pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.shop_tag_row { display: flex; gap: 8px; align-items: center; }
+
+.shop_modal_actions {
+  display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px;
+}
+
+/* Tabs */
+.shop_tabs { display: inline-flex; background: #f1f5f9; border-radius: 10px; padding: 4px; }
+.shop_tab {
+  border: none; background: transparent; padding: 6px 12px; border-radius: 8px; cursor: pointer;
+}
+.shop_tab_active { background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+
+/* Empty */
+.shop_empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 26px;
+  color: #64748b;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+@media (max-width: 720px) {
+  .shop_form_grid { grid-template-columns: 1fr; }
+  .shop_field_col2 { grid-column: auto; }
+}

@@ -1,0 +1,248 @@
+ /* Layout */
+.shop_dashboard_page {
+  max-width: 1200px;
+  margin: 20px auto 140px;
+  padding: 0 16px;
+}
+
+/* Sections */
+.shop_dashboard_section {
+  margin: 24px 0;
+}
+.shop_dashboard_section_head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+/* Titles */
+.shop_dashboard_title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: #111;
+}
+
+/* Buttons */
+.shop_dashboard_btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.shop_dashboard_btn_primary {
+  background: #007bff;
+  color: #fff;
+}
+.shop_dashboard_btn_primary:hover {
+  background: #0066d5;
+}
+
+.shop_dashboard_btn_outline {
+  border-color: #007bff;
+  color: #007bff;
+}
+.shop_dashboard_btn_outline:hover {
+  background: #e9f3ff;
+}
+
+/* Tabs */
+.shop_dashboard_tabs {
+  display: flex;
+  gap: 10px;
+}
+.shop_dashboard_tab {
+  background: #eee;
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+  color: #555;
+  transition: 0.2s;
+}
+.shop_dashboard_tab.is-active {
+  background: #007bff;
+  color: #fff;
+}
+
+/* Input/Search */
+.shop_dashboard_explore_controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.shop_dashboard_search {
+  flex: 1;
+  padding: 9px 12px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+/* My Shop Card */
+.shop_dashboard_myshop {
+  background: #ffffff;
+  border: 1px solid #e3e6ea;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.shop_dashboard_myshop_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.shop_dashboard_myshop_name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: #111;
+}
+.shop_dashboard_tagline {
+  font-size: 13px;
+  color: #555;
+  margin-top: 4px;
+}
+.shop_dashboard_myshop_image {
+  width: 75px;
+  height: 75px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+/* Small cards shared styles */
+.shop_dashboard_card {
+  background: #fff;
+  border: 1px solid #dde1e7;
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: 0.2s;
+}
+.shop_dashboard_card:hover {
+  box-shadow: 0 3px 8px rgba(0,0,0,0.07);
+  transform: translateY(-1px);
+}
+
+.shop_dashboard_card_small {
+  min-height: 180px;
+}
+
+.shop_dashboard_card_head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.shop_dashboard_card_title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+}
+.shop_dashboard_card_image {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+.shop_dashboard_card_text {
+  font-size: 13px;
+  color: #666;
+}
+
+/* Chip */
+.shop_dashboard_chip {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 11px;
+  background: #e8f2ff;
+  color: #005ad5;
+  border-radius: 6px;
+  margin-top: 4px;
+}
+
+/* Mini key-values */
+.shop_dashboard_kv {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 4px;
+}
+.shop_dashboard_k {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+}
+.shop_dashboard_v {
+  font-size: 13px;
+  color: #333;
+}
+
+.shop_dashboard_catalog_summary {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+/* Opening Hours Short Preview */
+.shop_dashboard_hours_list {
+  margin-top: 6px;
+}
+.shop_dashboard_hours_row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+.shop_dashboard_hours_day {
+  font-weight: 600;
+  color: #444;
+}
+.shop_dashboard_hours_time {
+  color: #333;
+}
+
+/* Explore Grid */
+.shop_dashboard_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+  margin-top: 10px;
+}
+
+/* Text Helpers */
+.shop_dashboard_muted {
+  font-size: 13px;
+  color: #666;
+  padding: 10px 0;
+}
+.shop_dashboard_error {
+  color: #c6003f;
+  background: #ffe4ec;
+  border: 1px solid #ff97b8;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+/* Subtitles */
+.shop_dashboard_subtitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 4px;
+}

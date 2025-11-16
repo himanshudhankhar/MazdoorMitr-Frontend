@@ -1,351 +1,1099 @@
+// import React, { useState } from "react";
+// import axiosInstance from "../axiosConfig";
+// import "./CompleteShopProfile.css"; // keep your existing CSS (uses complete_shop_profile_* names)
+
+// const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+
+// export default function CompleteShopProfileSinglePage({ initial = {} }) {
+//   // basics
+//   const [shopName, setShopName] = useState(initial.shopName || "");
+//   const [category, setCategory] = useState(initial.category || "");
+//   const [tagline, setTagline] = useState(initial.tagline || "");
+//   const [whatsapp, setWhatsapp] = useState(initial.whatsapp || "");
+//   const [about, setAbout] = useState(initial.about || "");
+
+//   // address
+//   const [address, setAddress] = useState(initial.address || "");
+//   const [city, setCity] = useState(initial.city || "");
+//   const [pincode, setPincode] = useState(initial.pincode || "");
+//   const [landmark, setLandmark] = useState(initial.landmark || "");
+
+//   // photos
+//   const [logoFile, setLogoFile] = useState(null);
+//   const [logoPreview, setLogoPreview] = useState(initial.photosPreview || "");
+
+//   // hours (array of { day, open, from, to })
+//   const [hours, setHours] = useState(() => (
+//     initial.hours || DAYS.map(d => ({ day: d, open: true, from: "09:30", to: "20:30" }))
+//   ));
+
+//   // catalog: items and services
+//   const [items, setItems] = useState(() => initial.items || []);
+//   const [services, setServices] = useState(() => initial.services || []);
+
+//   const [busy, setBusy] = useState(false);
+//   const [errors, setErrors] = useState({});
+
+//   // helpers for items/services
+//   const addItem = () => setItems(s => [...s, { id: crypto.randomUUID(), name: "", price: "", unit: "" }]);
+//   const addService = () => setServices(s => [...s, { id: crypto.randomUUID(), name: "", price: "", unit: "", eta: "" }]);
+//   const updateItem = (id, patch) => setItems(s => s.map(x => x.id === id ? { ...x, ...patch } : x));
+//   const updateService = (id, patch) => setServices(s => s.map(x => x.id === id ? { ...x, ...patch } : x));
+//   const removeItem = id => setItems(s => s.filter(x => x.id !== id));
+//   const removeService = id => setServices(s => s.filter(x => x.id !== id));
+
+//   // file handlers
+//   const handleLogoSelect = (file) => {
+//     if (!file) return;
+//     setLogoFile(file);
+//     setLogoPreview(URL.createObjectURL(file));
+//   };
+
+//   // validation before submit
+//   const validateAll = () => {
+//     const e = {};
+//     if (!shopName.trim()) e.shopName = "Shop name required";
+//     if (!category.trim()) e.category = "Category required";
+//     if (!about.trim()) e.about = "Short description required";
+//     if (!whatsapp.trim()) e.whatsapp = "WhatsApp required";
+//     if (!address.trim()) e.address = "Address required";
+//     if (!city.trim()) e.city = "City required";
+//     if (!pincode.trim()) e.pincode = "Pincode required";
+
+//     // check hours sanity
+//     for (const h of hours) {
+//       if (h.open && (!h.from || !h.to)) { e.hours = "Please provide opening and closing times"; break; }
+//     }
+
+//     // catalog: at least one item or service
+//     if ((items.length === 0) && (services.length === 0)) {
+//       e.catalog = "Add at least one item or service";
+//     } else {
+//       // ensure names present
+//       for (const it of items) if (!it.name.trim()) { e.catalog = "All items must have a name"; break; }
+//       for (const sv of services) if (!sv.name.trim()) { e.catalog = "All services must have a name"; break; }
+//     }
+
+//     setErrors(e);
+//     return Object.keys(e).length === 0;
+//   };
+
+//   // read shop id from localStorage
+//   const getShopId = () => localStorage.getItem("shopId");
+
+//   // upload logo first (if provided) — expects backend route POST /shops/:shopId/photos/upload
+//   async function uploadLogo(shopId) {
+//     if (!logoFile) return null;
+//     const form = new FormData();
+//     form.append("logo", logoFile); // backend expects field "logo"
+//     const res = await axiosInstance.post(`/api/users/protected/shops/${shopId}/photos/upload`, form, {
+//       headers: { "Content-Type": "multipart/form-data" },
+//     });
+//     // backend returns preview.logoUrl maybe; we ignore keys — we rely on server-side keys
+//     return res.data;
+//   }
+
+//   // submit entire payload: upload image first then send JSON to /shops/:shopId/details?finalize=1
+//   const handleSubmit = async (ev) => {
+//     ev?.preventDefault?.();
+//     if (!validateAll()) {
+//       window.scrollTo({ top: 0, behavior: "smooth" });
+//       return;
+//     }
+
+//     const shopId = getShopId();
+//     if (!shopId) {
+//       alert("shopId not found in localStorage. Please create a shop draft first.");
+//       return;
+//     }
+
+//     setBusy(true);
+//     setErrors({});
+
+//     try {
+//       // 1) upload image if present
+//       if (logoFile) {
+//         await uploadLogo(shopId);
+//         // optionally: update preview with server preview by re-fetching /shops/:shopId
+//       }
+
+//       // 2) build payload
+//       const payload = {
+//         basics: {
+//           shopName: shopName.trim(),
+//           category: category.trim(),
+//           tagline: tagline.trim(),
+//           whatsapp: whatsapp.trim(),
+//           about: about.trim(),
+//         },
+//         contact: {
+//           address: address.trim(),
+//           city: city.trim(),
+//           pincode: pincode.trim(),
+//           landmark: landmark.trim() || null,
+//         },
+//         catalog: {
+//           items: items.map(it => ({ name: it.name.trim(), price: it.price, unit: it.unit })),
+//           services: services.map(sv => ({ name: sv.name.trim(), price: sv.price, unit: sv.unit, eta: sv.eta })),
+//         },
+//         hours: hours.map(h => ({ day: h.day, open: !!h.open, from: h.from, to: h.to })),
+//       };
+
+//       // 3) finalize: server should validate required fields and set PENDING_REVIEW
+//       const res = await axiosInstance.post(`/api/users/protected/shops/${shopId}/details?finalize=1`, payload, {
+//         headers: { "Content-Type": "application/json" }
+//       });
+
+//       // success
+//       alert("Shop submitted for review.");
+//       // optionally redirect or update state with returned shop
+//       // e.g. console.log(res.data.shop)
+//     } catch (err) {
+//       console.error(err);
+//       if (err?.response?.status === 422) {
+//         const details = err.response.data?.details || [];
+//         alert("Validation errors:\n" + (details.join ? details.join("\n") : JSON.stringify(details)));
+//       } else {
+//         alert(err?.response?.data?.error || err.message || "Submission failed");
+//       }
+//     } finally {
+//       setBusy(false);
+//     }
+//   };
+
+//   // UI helpers for hours toggle/time change
+//   const setHourOpen = (index, open) => setHours(h => h.map((x,i) => i===index ? { ...x, open } : x));
+//   const setHourFrom = (index, from) => setHours(h => h.map((x,i) => i===index ? { ...x, from } : x));
+//   const setHourTo = (index, to) => setHours(h => h.map((x,i) => i===index ? { ...x, to } : x));
+
+//   return (
+//     <form className="complete_shop_profile_page" onSubmit={handleSubmit}>
+//       <h2 className="complete_shop_profile_owner_hi">Complete Shop Profile</h2>
+
+//       <div className="complete_shop_profile_panel" style={{ marginTop: 12 }}>
+//         {/* BASICS */}
+//         <div className="complete_shop_profile_grid_2">
+//           <div className="complete_shop_profile_field">
+//             <label>Shop Name <span className="complete_shop_profile_req">*</span></label>
+//             <input className={`complete_shop_profile_input ${errors.shopName ? "has-error" : ""}`}
+//               value={shopName} onChange={e => setShopName(e.target.value)} placeholder="Sharma Hardware" />
+//             {errors.shopName && <div className="complete_shop_profile_error">{errors.shopName}</div>}
+//           </div>
+
+//           <div className="complete_shop_profile_field">
+//             <label>Category <span className="complete_shop_profile_req">*</span></label>
+//             <input className={`complete_shop_profile_input ${errors.category ? "has-error" : ""}`}
+//               value={category} onChange={e => setCategory(e.target.value)} placeholder="Hardware" />
+//             {errors.category && <div className="complete_shop_profile_error">{errors.category}</div>}
+//           </div>
+
+//           <div className="complete_shop_profile_field">
+//             <label>Tagline</label>
+//             <input className="complete_shop_profile_input" value={tagline} onChange={e => setTagline(e.target.value)} placeholder="Everything for home renovation" />
+//           </div>
+
+//           <div className="complete_shop_profile_field">
+//             <label>WhatsApp <span className="complete_shop_profile_req">*</span></label>
+//             <input className={`complete_shop_profile_input ${errors.whatsapp ? "has-error" : ""}`}
+//               value={whatsapp} onChange={e => setWhatsapp(e.target.value)} placeholder="+91 98xxxx xxxx" />
+//             {errors.whatsapp && <div className="complete_shop_profile_error">{errors.whatsapp}</div>}
+//           </div>
+
+//           <div className="complete_shop_profile_field complete_shop_profile_col_span_2">
+//             <label>About (short description) <span className="complete_shop_profile_req">*</span></label>
+//             <textarea className={`complete_shop_profile_input ${errors.about ? "has-error" : ""}`}
+//               rows={4} value={about} onChange={e => setAbout(e.target.value)} placeholder="A short description of your shop..." />
+//             {errors.about && <div className="complete_shop_profile_error">{errors.about}</div>}
+//           </div>
+//         </div>
+
+//         {/* ADDRESS */}
+//         <h4 style={{ marginTop: 8 }}>Address</h4>
+//         <div className="complete_shop_profile_grid_2">
+//           <div className="complete_shop_profile_field complete_shop_profile_col_span_2">
+//             <label>Address <span className="complete_shop_profile_req">*</span></label>
+//             <input className={`complete_shop_profile_input ${errors.address ? "has-error" : ""}`}
+//               value={address} onChange={e => setAddress(e.target.value)} placeholder="B-12, Main Market, Rohini" />
+//             {errors.address && <div className="complete_shop_profile_error">{errors.address}</div>}
+//           </div>
+
+//           <div className="complete_shop_profile_field">
+//             <label>City <span className="complete_shop_profile_req">*</span></label>
+//             <input className={`complete_shop_profile_input ${errors.city ? "has-error" : ""}`}
+//               value={city} onChange={e => setCity(e.target.value)} placeholder="Delhi" />
+//             {errors.city && <div className="complete_shop_profile_error">{errors.city}</div>}
+//           </div>
+
+//           <div className="complete_shop_profile_field">
+//             <label>Pincode <span className="complete_shop_profile_req">*</span></label>
+//             <input className={`complete_shop_profile_input ${errors.pincode ? "has-error" : ""}`}
+//               value={pincode} onChange={e => setPincode(e.target.value)} placeholder="110085" />
+//             {errors.pincode && <div className="complete_shop_profile_error">{errors.pincode}</div>}
+//           </div>
+
+//           <div className="complete_shop_profile_field complete_shop_profile_col_span_2">
+//             <label>Landmark</label>
+//             <input className="complete_shop_profile_input" value={landmark} onChange={e => setLandmark(e.target.value)} placeholder="Near metro gate" />
+//           </div>
+//         </div>
+
+//         {/* PHOTO */}
+//         <div className="complete_shop_profile_field" style={{ marginTop: 8 }}>
+//           <label>Shop Image</label>
+//           <div className="complete_shop_profile_upload_box">
+//             {logoPreview ? <img className="complete_shop_profile_preview" src={logoPreview} alt="shop" /> :
+//               <div className="complete_shop_profile_upload_hint">Upload a shop image (will be uploaded first)</div>}
+//             <input type="file" accept="image/*" className="complete_shop_profile_file_input"
+//               onChange={e => handleLogoSelect(e.target.files?.[0])} />
+//           </div>
+//         </div>
+
+//         {/* HOURS */}
+//         <h4 style={{ marginTop: 12 }}>Opening Hours</h4>
+//         <div className="complete_shop_profile_hours_grid">
+//           {hours.map((h, i) => (
+//             <div key={h.day} className="complete_shop_profile_hour_row">
+//               <div className="complete_shop_profile_hour_day">{h.day}</div>
+//               <label className="complete_shop_profile_switch compact">
+//                 <input type="checkbox" checked={h.open} onChange={e => setHourOpen(i, e.target.checked)} />
+//                 <span>{h.open ? "Open" : "Closed"}</span>
+//               </label>
+//               <input type="time" className="complete_shop_profile_input" disabled={!h.open} value={h.from} onChange={e => setHourFrom(i, e.target.value)} />
+//               <div className="complete_shop_profile_time_sep">to</div>
+//               <input type="time" className="complete_shop_profile_input" disabled={!h.open} value={h.to} onChange={e => setHourTo(i, e.target.value)} />
+//             </div>
+//           ))}
+//         </div>
+//         {errors.hours && <div className="complete_shop_profile_error" style={{ marginTop: 8 }}>{errors.hours}</div>}
+
+//         {/* CATALOG */}
+//         <h4 style={{ marginTop: 12 }}>Items & Services</h4>
+//         <div className="complete_shop_profile_grid_2">
+//           {/* Items */}
+//           <div className="complete_shop_profile_card like-border">
+//             <div className="complete_shop_profile_card_head">
+//               <h3 className="complete_shop_profile_card_title">Items</h3>
+//               <button type="button" className="complete_shop_profile_btn complete_shop_profile_btn_primary" onClick={addItem}>+ Add Item</button>
+//             </div>
+//             {items.length === 0 && <div className="complete_shop_profile_empty small">No items yet</div>}
+//             {items.map((it, idx) => (
+//               <div key={it.id} className="complete_shop_profile_row">
+//                 <input className="complete_shop_profile_input" placeholder={`Item ${idx+1} name`} value={it.name} onChange={e => updateItem(it.id, { name: e.target.value })} />
+//                 <input className="complete_shop_profile_input" placeholder="Price" value={it.price} onChange={e => updateItem(it.id, { price: e.target.value })} />
+//                 <input className="complete_shop_profile_input" placeholder="Unit" value={it.unit} onChange={e => updateItem(it.id, { unit: e.target.value })} />
+//                 <button type="button" className="complete_shop_profile_btn complete_shop_profile_btn_danger" onClick={() => removeItem(it.id)}>Remove</button>
+//               </div>
+//             ))}
+//           </div>
+
+//           {/* Services */}
+//           <div className="complete_shop_profile_card like-border">
+//             <div className="complete_shop_profile_card_head">
+//               <h3 className="complete_shop_profile_card_title">Services</h3>
+//               <button type="button" className="complete_shop_profile_btn complete_shop_profile_btn_primary" onClick={addService}>+ Add Service</button>
+//             </div>
+//             {services.length === 0 && <div className="complete_shop_profile_empty small">No services yet</div>}
+//             {services.map((sv, idx) => (
+//               <div key={sv.id} className="complete_shop_profile_row">
+//                 <input className="complete_shop_profile_input" placeholder={`Service ${idx+1} name`} value={sv.name} onChange={e => updateService(sv.id, { name: e.target.value })} />
+//                 <input className="complete_shop_profile_input" placeholder="Price" value={sv.price} onChange={e => updateService(sv.id, { price: e.target.value })} />
+//                 <input className="complete_shop_profile_input" placeholder="Unit" value={sv.unit} onChange={e => updateService(sv.id, { unit: e.target.value })} />
+//                 <input className="complete_shop_profile_input" placeholder="ETA" value={sv.eta} onChange={e => updateService(sv.id, { eta: e.target.value })} />
+//                 <button type="button" className="complete_shop_profile_btn complete_shop_profile_btn_danger" onClick={() => removeService(sv.id)}>Remove</button>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//         {errors.catalog && <div className="complete_shop_profile_error" style={{ marginTop: 8 }}>{errors.catalog}</div>}
+
+//         {/* ACTIONS */}
+//         <div className="complete_shop_profile_actions" style={{ marginTop: 16 }}>
+//           <div className="complete_shop_profile_spacer" />
+//           <button type="button" className="complete_shop_profile_btn complete_shop_profile_btn_primary" onClick={handleSubmit} disabled={busy}>
+//             {busy ? "Submitting..." : "Submit Application"}
+//           </button>
+//         </div>
+//       </div>
+//     </form>
+//   );
+// }
+
+
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import './CompleteShopProfile.css';
+import axiosInstance from "../axiosConfig";
+import "./CompleteShopProfile.css"; // uses complete_shop_profile_* classes
 
-export default function CompleteShopProfile() {
-  const [name, setName] = useState("");
-  const [shopName, setShopName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [category, setCategory] = useState("");
-  const [itemsInput, setItemsInput] = useState("");
-  const [items, setItems] = useState([]);
-  const [address, setAddress] = useState("");
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
-  const [openingHours, setOpeningHours] = useState("");
-  const [paymentMethods, setPaymentMethods] = useState({ cash: true, upi: true, card: false });
-  const [description, setDescription] = useState("");
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
+const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-  // Categories - tweak as needed
-  const CATEGORIES = [
-    "General Store",
-    "Grocery",
-    "Food / Restaurant",
-    "Electronics",
-    "Clothing",
-    "Construction",
-    "Plumbing",
-    "Electrical",
-    "Salon / Beauty",
-    "Repair / Services",
-    "Other",
-  ];
+export default function CompleteShopProfileSinglePage({ initial = {} }) {
+  // basics
+  const [shopName, setShopName] = useState(initial.shopName || "");
+  const [category, setCategory] = useState(initial.category || "");
+  const [tagline, setTagline] = useState(initial.tagline || "");
+  const [whatsapp, setWhatsapp] = useState(initial.whatsapp || "");
+  const [about, setAbout] = useState(initial.about || "");
 
+  // address
+  const [address, setAddress] = useState(initial.address || "");
+  const [city, setCity] = useState(initial.city || "");
+  const [pincode, setPincode] = useState(initial.pincode || "");
+  const [landmark, setLandmark] = useState(initial.landmark || "");
+
+  // photos
+  const [logoFile, setLogoFile] = useState(null);
+  const [logoPreview, setLogoPreview] = useState(initial.photosPreview || "");
+
+  // hours (array of { day, open, from, to })
+  const [hours, setHours] = useState(() =>
+    initial.hours ||
+    DAYS.map((d) => ({ day: d, open: true, from: "09:30", to: "20:30" }))
+  );
+
+  // catalog: items and services
+  const [items, setItems] = useState(() => initial.items || []);
+  const [services, setServices] = useState(() => initial.services || []);
+
+  const [busy, setBusy] = useState(false);
+  const [loadingInitial, setLoadingInitial] = useState(true);
+  const [loadError, setLoadError] = useState("");
+  const [errors, setErrors] = useState({});
+
+  // ====== FETCH EXISTING SHOP & PREFILL ======
   useEffect(() => {
-    // Try to extract phone from token if present (safe guard)
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-      const parts = token.split(".");
-      if (parts.length < 2) return;
-      const payload = JSON.parse(atob(parts[1]));
-      if (payload) {
-        if (payload.phone) setPhone(payload.phone);
-        if (payload.name) setName(payload.name);
+    async function fetchShop() {
+      try {
+        setLoadingInitial(true);
+        setLoadError("");
+
+        const res = await axiosInstance.get(
+          "/api/users/protected/shops/me"
+        );
+        const shop = res.data?.shop;
+
+        if (!shop) {
+          setLoadingInitial(false);
+          return;
+        }
+
+        // Save shopId in localStorage so submit flow can use it
+        if (shop.id) {
+          localStorage.setItem("shopId", shop.id);
+        }
+
+        const basics = shop.basics || {};
+        const contact = shop.contact || {};
+        const catalog = shop.catalog || {};
+        const hoursArr = Array.isArray(shop.hours) ? shop.hours : null;
+
+        // Basics
+        setShopName(basics.shopName || "");
+        setCategory(basics.category || "");
+        setTagline(basics.tagline || "");
+        setWhatsapp(basics.whatsapp || "");
+        setAbout(basics.about || "");
+
+        // Contact
+        setAddress(contact.address || "");
+        setCity(contact.city || "");
+        setPincode(contact.pincode || "");
+        setLandmark(contact.landmark || "");
+
+        // Photo preview (from backend presigned URL)
+        if (shop.photoUrl) {
+          setLogoPreview(shop.photoUrl);
+        }
+
+        // Hours
+        if (hoursArr && hoursArr.length) {
+          // Ensure each day has day/open/from/to
+          setHours(
+            DAYS.map((day) => {
+              const existing = hoursArr.find((h) => h.day === day);
+              return (
+                existing || {
+                  day,
+                  open: true,
+                  from: "09:30",
+                  to: "20:30",
+                }
+              );
+            })
+          );
+        }
+
+        // Catalog
+        const backendItems = Array.isArray(catalog.items)
+          ? catalog.items
+          : [];
+        const backendServices = Array.isArray(catalog.services)
+          ? catalog.services
+          : [];
+
+        // Give each item/service a local id for React/key
+        setItems(
+          backendItems.map((it) => ({
+            id: crypto.randomUUID(),
+            name: it.name || "",
+            price: it.price || "",
+            unit: it.unit || "",
+          }))
+        );
+        setServices(
+          backendServices.map((sv) => ({
+            id: crypto.randomUUID(),
+            name: sv.name || "",
+            price: sv.price || "",
+            unit: sv.unit || "",
+            eta: sv.eta || "",
+          }))
+        );
+      } catch (err) {
+        console.error("Failed to load shop for editing:", err);
+        setLoadError(
+          err?.response?.data?.error ||
+            err?.message ||
+            "Failed to load shop profile."
+        );
+      } finally {
+        setLoadingInitial(false);
       }
-    } catch (e) {
-      // ignore parse errors
     }
+
+    fetchShop();
   }, []);
 
-  function handleAddItem() {
-    const v = itemsInput.trim();
-    if (!v) return;
-    if (items.includes(v)) {
-      setItemsInput("");
-      return;
-    }
-    setItems(prev => [...prev, v]);
-    setItemsInput("");
-  }
+  // helpers for items/services
+  const addItem = () =>
+    setItems((s) => [
+      ...s,
+      { id: crypto.randomUUID(), name: "", price: "", unit: "" },
+    ]);
+  const addService = () =>
+    setServices((s) => [
+      ...s,
+      { id: crypto.randomUUID(), name: "", price: "", unit: "", eta: "" },
+    ]);
+  const updateItem = (id, patch) =>
+    setItems((s) => s.map((x) => (x.id === id ? { ...x, ...patch } : x)));
+  const updateService = (id, patch) =>
+    setServices((s) => s.map((x) => (x.id === id ? { ...x, ...patch } : x)));
+  const removeItem = (id) =>
+    setItems((s) => s.filter((x) => x.id !== id));
+  const removeService = (id) =>
+    setServices((s) => s.filter((x) => x.id !== id));
 
-  function handleRemoveItem(item) {
-    setItems(prev => prev.filter(i => i !== item));
-  }
-
-  function handleImageChange(e) {
-    const file = e.target.files && e.target.files[0];
+  // file handlers
+  const handleLogoSelect = (file) => {
     if (!file) return;
-    setImageFile(file);
-    const reader = new FileReader();
-    reader.onload = ev => setImagePreview(ev.target.result);
-    reader.readAsDataURL(file);
+    setLogoFile(file);
+    setLogoPreview(URL.createObjectURL(file));
+  };
+
+  // validation before submit
+  const validateAll = () => {
+    const e = {};
+    if (!shopName.trim()) e.shopName = "Shop name required";
+    if (!category.trim()) e.category = "Category required";
+    if (!about.trim()) e.about = "Short description required";
+    if (!whatsapp.trim()) e.whatsapp = "WhatsApp required";
+    if (!address.trim()) e.address = "Address required";
+    if (!city.trim()) e.city = "City required";
+    if (!pincode.trim()) e.pincode = "Pincode required";
+
+    // check hours sanity
+    for (const h of hours) {
+      if (h.open && (!h.from || !h.to)) {
+        e.hours = "Please provide opening and closing times";
+        break;
+      }
+    }
+
+    // catalog: at least one item or service
+    if (items.length === 0 && services.length === 0) {
+      e.catalog = "Add at least one item or service";
+    } else {
+      for (const it of items) {
+        if (!it.name.trim()) {
+          e.catalog = "All items must have a name";
+          break;
+        }
+      }
+      for (const sv of services) {
+        if (!sv.name.trim()) {
+          e.catalog = "All services must have a name";
+          break;
+        }
+      }
+    }
+
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  // read shop id from localStorage
+  const getShopId = () => localStorage.getItem("shopId");
+
+  // upload logo first (if provided)
+  async function uploadLogo(shopId) {
+    if (!logoFile) return null;
+    const form = new FormData();
+    form.append("logo", logoFile); // backend expects field "logo"
+    const res = await axiosInstance.post(
+      `/api/users/protected/shops/${shopId}/photos/upload`,
+      form,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    );
+    return res.data;
   }
 
-  function useBrowserLocation() {
-    if (!navigator.geolocation) {
-      setError("Geolocation is not supported by your browser.");
+  // submit full payload
+  const handleSubmit = async (ev) => {
+    ev?.preventDefault?.();
+    if (!validateAll()) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    setError(null);
-    navigator.geolocation.getCurrentPosition(
-      pos => {
-        setLatitude(pos.coords.latitude.toString());
-        setLongitude(pos.coords.longitude.toString());
-      },
-      err => setError("Unable to fetch location: " + err.message),
-      { timeout: 10000 }
+
+    const shopId = getShopId();
+    if (!shopId) {
+      alert(
+        "shopId not found in localStorage. Please open this page from your shop dashboard."
+      );
+      return;
+    }
+
+    setBusy(true);
+    setErrors({});
+
+    try {
+      // 1) upload image if present
+      if (logoFile) {
+        await uploadLogo(shopId);
+      }
+
+      // 2) build payload
+      const payload = {
+        basics: {
+          shopName: shopName.trim(),
+          category: category.trim(),
+          tagline: tagline.trim(),
+          whatsapp: whatsapp.trim(),
+          about: about.trim(),
+        },
+        contact: {
+          address: address.trim(),
+          city: city.trim(),
+          pincode: pincode.trim(),
+          landmark: landmark.trim() || null,
+        },
+        catalog: {
+          items: items.map((it) => ({
+            name: it.name.trim(),
+            price: it.price,
+            unit: it.unit,
+          })),
+          services: services.map((sv) => ({
+            name: sv.name.trim(),
+            price: sv.price,
+            unit: sv.unit,
+            eta: sv.eta,
+          })),
+        },
+        hours: hours.map((h) => ({
+          day: h.day,
+          open: !!h.open,
+          from: h.from,
+          to: h.to,
+        })),
+      };
+
+      // 3) finalize
+      const res = await axiosInstance.post(
+        `/api/users/protected/shops/${shopId}/details?finalize=1`,
+        payload,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      alert("Shop submitted for review.");
+      console.log("Saved shop:", res.data.shop);
+    } catch (err) {
+      console.error(err);
+      if (err?.response?.status === 422) {
+        const details = err.response.data?.details || [];
+        alert(
+          "Validation errors:\n" +
+            (details.join ? details.join("\n") : JSON.stringify(details))
+        );
+      } else {
+        alert(
+          err?.response?.data?.error ||
+            err?.response?.data?.message ||
+            err.message ||
+            "Submission failed"
+        );
+      }
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  // UI helpers for hours
+  const setHourOpen = (index, open) =>
+    setHours((h) =>
+      h.map((x, i) => (i === index ? { ...x, open } : x))
+    );
+  const setHourFrom = (index, from) =>
+    setHours((h) =>
+      h.map((x, i) => (i === index ? { ...x, from } : x))
+    );
+  const setHourTo = (index, to) =>
+    setHours((h) =>
+      h.map((x, i) => (i === index ? { ...x, to } : x))
+    );
+
+  if (loadingInitial) {
+    return (
+      <div className="complete_shop_profile_page">
+        <div className="complete_shop_profile_panel">
+          Loading shop profile…
+        </div>
+      </div>
     );
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setError(null);
-    setSuccessMessage(null);
-
-    if (!shopName.trim()) return setError("Shop name is required");
-    if (!name.trim()) return setError("Owner name is required");
-
-    setLoading(true);
-    try {
-      const form = new FormData();
-      form.append("phone", phone || "");
-      form.append("name", name);
-      form.append("shopName", shopName);
-      form.append("address", address);
-      form.append("category", category);
-      form.append("items", JSON.stringify(items));
-      form.append("latitude", latitude);
-      form.append("longitude", longitude);
-      form.append("openingHours", openingHours);
-      form.append("paymentMethods", JSON.stringify(paymentMethods));
-      form.append("description", description);
-      if (imageFile) form.append("image", imageFile);
-
-      const token = localStorage.getItem("token");
-
-      const resp = await axios.post("/api/shops/complete-profile", form, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: token ? `Bearer ${token}` : undefined,
-        },
-      });
-
-      if (resp.data && resp.data.success) {
-        setSuccessMessage("Profile completed successfully. Redirecting...");
-        // redirect to dashboard (or use redirectUrl from API if returned)
-        const redirect = resp.data.redirectUrl || "/dashboard-shops";
-        setTimeout(() => {
-          window.location.href = redirect;
-        }, 1000);
-      } else {
-        setError(resp.data?.message || "Unknown error from server");
-      }
-    } catch (err) {
-      console.error(err);
-      setError(err.response?.data?.message || err.message || "Failed to submit");
-    } finally {
-      setLoading(false);
-    }
+  if (loadError) {
+    return (
+      <div className="complete_shop_profile_page">
+        <div className="complete_shop_profile_panel">
+          <div className="complete_shop_profile_error">
+            {loadError}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="complete-shop-profile max-w-3xl mx-auto p-6">
-      <h1 className="text-2xl font-semibold mb-4">Complete your shop profile</h1>
+    <form className="complete_shop_profile_page" onSubmit={handleSubmit}>
+      <h2 className="complete_shop_profile_owner_hi">
+        Complete Shop Profile
+      </h2>
 
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow">
-        {/* Owner name */}
-        <div>
-          <label className="block text-sm font-medium">Owner / Contact Name</label>
-          <input
-            value={name}
-            onChange={e => setName(e.target.value)}
-            className="mt-1 block w-full rounded border px-3 py-2"
-            placeholder="e.g. Rajesh Kumar"
-          />
-        </div>
-
-        {/* Phone (readonly if available) */}
-        <div>
-          <label className="block text-sm font-medium">Phone</label>
-          <input
-            value={phone}
-            onChange={e => setPhone(e.target.value)}
-            className="mt-1 block w-full rounded border px-3 py-2 bg-gray-50"
-            placeholder="Phone number"
-          />
-        </div>
-
-        {/* Shop name */}
-        <div>
-          <label className="block text-sm font-medium">Shop name</label>
-          <input
-            value={shopName}
-            onChange={e => setShopName(e.target.value)}
-            className="mt-1 block w-full rounded border px-3 py-2"
-            placeholder="e.g. Kumar General Store"
-          />
-        </div>
-
-        {/* Category */}
-        <div>
-          <label className="block text-sm font-medium">Category</label>
-          <select
-            value={category}
-            onChange={e => setCategory(e.target.value)}
-            className="mt-1 block w-full rounded border px-3 py-2"
-          >
-            <option value="">Select category</option>
-            {CATEGORIES.map(cat => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Items sold (tags) */}
-        <div>
-          <label className="block text-sm font-medium">Items / Services (add multiple)</label>
-          <div className="flex gap-2 mt-2">
+      <div className="complete_shop_profile_panel" style={{ marginTop: 12 }}>
+        {/* BASICS */}
+        <div className="complete_shop_profile_grid_2">
+          <div className="complete_shop_profile_field">
+            <label>
+              Shop Name{" "}
+              <span className="complete_shop_profile_req">*</span>
+            </label>
             <input
-              value={itemsInput}
-              onChange={e => setItemsInput(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleAddItem();
-                }
-              }}
-              className="flex-1 rounded border px-3 py-2"
-              placeholder="Type an item and press Enter or click Add"
+              className={`complete_shop_profile_input ${
+                errors.shopName ? "has-error" : ""
+              }`}
+              value={shopName}
+              onChange={(e) => setShopName(e.target.value)}
+              placeholder="Sharma Hardware"
             />
-            <button
-              type="button"
-              onClick={handleAddItem}
-              className="px-4 py-2 rounded bg-blue-600 text-white"
-            >
-              Add
-            </button>
+            {errors.shopName && (
+              <div className="complete_shop_profile_error">
+                {errors.shopName}
+              </div>
+            )}
           </div>
 
-          <div className="mt-3 flex flex-wrap gap-2">
-            {items.map(it => (
-              <div key={it} className="px-3 py-1 rounded-full bg-gray-100 flex items-center gap-2">
-                <span className="text-sm">{it}</span>
+          <div className="complete_shop_profile_field">
+            <label>
+              Category{" "}
+              <span className="complete_shop_profile_req">*</span>
+            </label>
+            <input
+              className={`complete_shop_profile_input ${
+                errors.category ? "has-error" : ""
+              }`}
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              placeholder="Hardware"
+            />
+            {errors.category && (
+              <div className="complete_shop_profile_error">
+                {errors.category}
+              </div>
+            )}
+          </div>
+
+          <div className="complete_shop_profile_field">
+            <label>Tagline</label>
+            <input
+              className="complete_shop_profile_input"
+              value={tagline}
+              onChange={(e) => setTagline(e.target.value)}
+              placeholder="Everything for home renovation"
+            />
+          </div>
+
+          <div className="complete_shop_profile_field">
+            <label>
+              WhatsApp{" "}
+              <span className="complete_shop_profile_req">*</span>
+            </label>
+            <input
+              className={`complete_shop_profile_input ${
+                errors.whatsapp ? "has-error" : ""
+              }`}
+              value={whatsapp}
+              onChange={(e) => setWhatsapp(e.target.value)}
+              placeholder="+91 98xxxx xxxx"
+            />
+            {errors.whatsapp && (
+              <div className="complete_shop_profile_error">
+                {errors.whatsapp}
+              </div>
+            )}
+          </div>
+
+          <div className="complete_shop_profile_field complete_shop_profile_col_span_2">
+            <label>
+              About (short description){" "}
+              <span className="complete_shop_profile_req">*</span>
+            </label>
+            <textarea
+              className={`complete_shop_profile_input ${
+                errors.about ? "has-error" : ""
+              }`}
+              rows={4}
+              value={about}
+              onChange={(e) => setAbout(e.target.value)}
+              placeholder="A short description of your shop..."
+            />
+            {errors.about && (
+              <div className="complete_shop_profile_error">
+                {errors.about}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ADDRESS */}
+        <h4 style={{ marginTop: 8 }}>Address</h4>
+        <div className="complete_shop_profile_grid_2">
+          <div className="complete_shop_profile_field complete_shop_profile_col_span_2">
+            <label>
+              Address{" "}
+              <span className="complete_shop_profile_req">*</span>
+            </label>
+            <input
+              className={`complete_shop_profile_input ${
+                errors.address ? "has-error" : ""
+              }`}
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="Block B, House no. 49, Rama Park"
+            />
+            {errors.address && (
+              <div className="complete_shop_profile_error">
+                {errors.address}
+              </div>
+            )}
+          </div>
+
+          <div className="complete_shop_profile_field">
+            <label>
+              City{" "}
+              <span className="complete_shop_profile_req">*</span>
+            </label>
+            <input
+              className={`complete_shop_profile_input ${
+                errors.city ? "has-error" : ""
+              }`}
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder="New Delhi"
+            />
+            {errors.city && (
+              <div className="complete_shop_profile_error">
+                {errors.city}
+              </div>
+            )}
+          </div>
+
+          <div className="complete_shop_profile_field">
+            <label>
+              Pincode{" "}
+              <span className="complete_shop_profile_req">*</span>
+            </label>
+            <input
+              className={`complete_shop_profile_input ${
+                errors.pincode ? "has-error" : ""
+              }`}
+              value={pincode}
+              onChange={(e) => setPincode(e.target.value)}
+              placeholder="110059"
+            />
+            {errors.pincode && (
+              <div className="complete_shop_profile_error">
+                {errors.pincode}
+              </div>
+            )}
+          </div>
+
+          <div className="complete_shop_profile_field complete_shop_profile_col_span_2">
+            <label>Landmark</label>
+            <input
+              className="complete_shop_profile_input"
+              value={landmark}
+              onChange={(e) => setLandmark(e.target.value)}
+              placeholder="Near metro gate"
+            />
+          </div>
+        </div>
+
+        {/* PHOTO */}
+        <div
+          className="complete_shop_profile_field"
+          style={{ marginTop: 8 }}
+        >
+          <label>Shop Image</label>
+          <div className="complete_shop_profile_upload_box">
+            {logoPreview ? (
+              <img
+                className="complete_shop_profile_preview"
+                src={logoPreview}
+                alt="shop"
+              />
+            ) : (
+              <div className="complete_shop_profile_upload_hint">
+                Upload a shop image (will be uploaded first)
+              </div>
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              className="complete_shop_profile_file_input"
+              onChange={(e) =>
+                handleLogoSelect(e.target.files?.[0])
+              }
+            />
+          </div>
+        </div>
+
+        {/* HOURS */}
+        <h4 style={{ marginTop: 12 }}>Opening Hours</h4>
+        <div className="complete_shop_profile_hours_grid">
+          {hours.map((h, i) => (
+            <div
+              key={h.day}
+              className="complete_shop_profile_hour_row"
+            >
+              <div className="complete_shop_profile_hour_day">
+                {h.day}
+              </div>
+              <label className="complete_shop_profile_switch compact">
+                <input
+                  type="checkbox"
+                  checked={h.open}
+                  onChange={(e) =>
+                    setHourOpen(i, e.target.checked)
+                  }
+                />
+                <span>{h.open ? "Open" : "Closed"}</span>
+              </label>
+              <input
+                type="time"
+                className="complete_shop_profile_input"
+                disabled={!h.open}
+                value={h.from}
+                onChange={(e) =>
+                  setHourFrom(i, e.target.value)
+                }
+              />
+              <div className="complete_shop_profile_time_sep">
+                to
+              </div>
+              <input
+                type="time"
+                className="complete_shop_profile_input"
+                disabled={!h.open}
+                value={h.to}
+                onChange={(e) => setHourTo(i, e.target.value)}
+              />
+            </div>
+          ))}
+        </div>
+        {errors.hours && (
+          <div
+            className="complete_shop_profile_error"
+            style={{ marginTop: 8 }}
+          >
+            {errors.hours}
+          </div>
+        )}
+
+        {/* CATALOG */}
+        <h4 style={{ marginTop: 12 }}>Items & Services</h4>
+        <div className="complete_shop_profile_grid_2">
+          {/* Items */}
+          <div className="complete_shop_profile_card like-border">
+            <div className="complete_shop_profile_card_head">
+              <h3 className="complete_shop_profile_card_title">
+                Items
+              </h3>
+              <button
+                type="button"
+                className="complete_shop_profile_btn complete_shop_profile_btn_primary"
+                onClick={addItem}
+              >
+                + Add Item
+              </button>
+            </div>
+            {items.length === 0 && (
+              <div className="complete_shop_profile_empty small">
+                No items yet
+              </div>
+            )}
+            {items.map((it, idx) => (
+              <div
+                key={it.id}
+                className="complete_shop_profile_row"
+              >
+                <input
+                  className="complete_shop_profile_input"
+                  placeholder={`Item ${idx + 1} name`}
+                  value={it.name}
+                  onChange={(e) =>
+                    updateItem(it.id, { name: e.target.value })
+                  }
+                />
+                <input
+                  className="complete_shop_profile_input"
+                  placeholder="Price"
+                  value={it.price}
+                  onChange={(e) =>
+                    updateItem(it.id, { price: e.target.value })
+                  }
+                />
+                <input
+                  className="complete_shop_profile_input"
+                  placeholder="Unit"
+                  value={it.unit}
+                  onChange={(e) =>
+                    updateItem(it.id, { unit: e.target.value })
+                  }
+                />
                 <button
                   type="button"
-                  onClick={() => handleRemoveItem(it)}
-                  className="text-xs text-red-500"
+                  className="complete_shop_profile_btn complete_shop_profile_btn_danger"
+                  onClick={() => removeItem(it.id)}
                 >
-                  ✕
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Services */}
+          <div className="complete_shop_profile_card like-border">
+            <div className="complete_shop_profile_card_head">
+              <h3 className="complete_shop_profile_card_title">
+                Services
+              </h3>
+              <button
+                type="button"
+                className="complete_shop_profile_btn complete_shop_profile_btn_primary"
+                onClick={addService}
+              >
+                + Add Service
+              </button>
+            </div>
+            {services.length === 0 && (
+              <div className="complete_shop_profile_empty small">
+                No services yet
+              </div>
+            )}
+            {services.map((sv, idx) => (
+              <div
+                key={sv.id}
+                className="complete_shop_profile_row"
+              >
+                <input
+                  className="complete_shop_profile_input"
+                  placeholder={`Service ${idx + 1} name`}
+                  value={sv.name}
+                  onChange={(e) =>
+                    updateService(sv.id, {
+                      name: e.target.value,
+                    })
+                  }
+                />
+                <input
+                  className="complete_shop_profile_input"
+                  placeholder="Price"
+                  value={sv.price}
+                  onChange={(e) =>
+                    updateService(sv.id, {
+                      price: e.target.value,
+                    })
+                  }
+                />
+                <input
+                  className="complete_shop_profile_input"
+                  placeholder="Unit"
+                  value={sv.unit}
+                  onChange={(e) =>
+                    updateService(sv.id, {
+                      unit: e.target.value,
+                    })
+                  }
+                />
+                <input
+                  className="complete_shop_profile_input"
+                  placeholder="ETA"
+                  value={sv.eta}
+                  onChange={(e) =>
+                    updateService(sv.id, {
+                      eta: e.target.value,
+                    })
+                  }
+                />
+                <button
+                  type="button"
+                  className="complete_shop_profile_btn complete_shop_profile_btn_danger"
+                  onClick={() => removeService(sv.id)}
+                >
+                  Remove
                 </button>
               </div>
             ))}
           </div>
         </div>
-
-        {/* Image upload */}
-        <div>
-          <label className="block text-sm font-medium">Shop Image</label>
-          <div className="mt-2 flex items-center gap-4">
-            <div className="w-36 h-24 border rounded overflow-hidden flex items-center justify-center bg-gray-50">
-              {imagePreview ? (
-                <img src={imagePreview} alt="preview" className="object-cover w-full h-full" />
-              ) : (
-                <span className="text-xs text-gray-400">No image</span>
-              )}
-            </div>
-            <div>
-              <input type="file" accept="image/*" onChange={handleImageChange} />
-              <div className="text-xs text-gray-500 mt-1">Recommended: clear photo of shop frontage</div>
-            </div>
+        {errors.catalog && (
+          <div
+            className="complete_shop_profile_error"
+            style={{ marginTop: 8 }}
+          >
+            {errors.catalog}
           </div>
+        )}
+
+        {/* ACTIONS */}
+        <div
+          className="complete_shop_profile_actions"
+          style={{ marginTop: 16 }}
+        >
+          <div className="complete_shop_profile_spacer" />
+          <button
+            type="submit"
+            className="complete_shop_profile_btn complete_shop_profile_btn_primary"
+            disabled={busy}
+          >
+            {busy ? "Submitting..." : "Submit Application"}
+          </button>
         </div>
-
-        {/* Address & location */}
-        <div>
-          <label className="block text-sm font-medium">Address</label>
-          <input
-            value={address}
-            onChange={e => setAddress(e.target.value)}
-            className="mt-1 block w-full rounded border px-3 py-2"
-            placeholder="Full address, landmark, city"
-          />
-          <div className="mt-2 flex items-center gap-2">
-            <input
-              value={latitude}
-              onChange={e => setLatitude(e.target.value)}
-              className="rounded border px-2 py-1 w-32"
-              placeholder="lat"
-            />
-            <input
-              value={longitude}
-              onChange={e => setLongitude(e.target.value)}
-              className="rounded border px-2 py-1 w-32"
-              placeholder="lng"
-            />
-            <button type="button" onClick={useBrowserLocation} className="px-3 py-1 rounded bg-gray-200">
-              Use my location
-            </button>
-          </div>
-          <div className="text-xs text-gray-500 mt-1">Latitude/Longitude optional — helps show precise location on map</div>
-        </div>
-
-        {/* Opening hours, payment methods, description */}
-        <div>
-          <label className="block text-sm font-medium">Opening hours (optional)</label>
-          <input
-            value={openingHours}
-            onChange={e => setOpeningHours(e.target.value)}
-            className="mt-1 block w-full rounded border px-3 py-2"
-            placeholder="e.g. 9:00 AM - 9:00 PM"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium">Payment methods</label>
-          <div className="mt-2 flex gap-4 items-center">
-            <label className="inline-flex items-center gap-2">
-              <input type="checkbox" checked={paymentMethods.cash} onChange={e => setPaymentMethods(prev => ({...prev, cash: e.target.checked}))} />
-              <span className="text-sm">Cash</span>
-            </label>
-            <label className="inline-flex items-center gap-2">
-              <input type="checkbox" checked={paymentMethods.upi} onChange={e => setPaymentMethods(prev => ({...prev, upi: e.target.checked}))} />
-              <span className="text-sm">UPI</span>
-            </label>
-            <label className="inline-flex items-center gap-2">
-              <input type="checkbox" checked={paymentMethods.card} onChange={e => setPaymentMethods(prev => ({...prev, card: e.target.checked}))} />
-              <span className="text-sm">Card</span>
-            </label>
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium">Short description (what makes your shop special)</label>
-          <textarea
-            value={description}
-            onChange={e => setDescription(e.target.value)}
-            className="mt-1 block w-full rounded border px-3 py-2"
-            rows={4}
-            placeholder="A short description visitors will see"
-          />
-        </div>
-
-        {/* Buttons & messages */}
-        <div className="flex items-center justify-between">
-          <div>
-            {error && <div className="text-sm text-red-500">{error}</div>}
-            {successMessage && <div className="text-sm text-green-600">{successMessage}</div>}
-          </div>
-
-          <div className="flex gap-3">
-            <button type="button" onClick={() => window.history.back()} className="px-4 py-2 border rounded">Back</button>
-            <button type="submit" disabled={loading} className="px-4 py-2 rounded bg-green-600 text-white">
-              {loading ? "Saving..." : "Save & Continue"}
-            </button>
-          </div>
-        </div>
-      </form>
-
-      <div className="mt-6 text-xs text-gray-500">
-        Tip: Add clear shop images and accurate address to get more views from customers.
       </div>
-    </div>
+    </form>
   );
 }

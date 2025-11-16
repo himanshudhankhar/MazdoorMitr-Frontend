@@ -502,7 +502,9 @@ const LoginPage = () => {
             }
             const token = resp.token || resp.authToken;
             if (token) localStorage.setItem("authToken", token);
+            console.log(JSON.stringify(resp.shop));
             if (resp.userId) localStorage.setItem("userId", resp.userId);
+            if (resp.shop) localStorage.setItem("shopId", resp.shop.id);
             localStorage.setItem("userType", role);
             navigate(resp.forwardLink || resp.redirectUrl || "/");
         } catch (err) {
@@ -532,7 +534,7 @@ const LoginPage = () => {
                     <h1>MazdoorMitr</h1>
                 </div>
                 <nav className="header-nav">
-                    <a href="/landing">Home</a>
+                    <a href="/">Home</a>
                     <a href="/about">About</a>
                     <a href="/contact">Contact</a>
                 </nav>
@@ -581,7 +583,7 @@ const LoginPage = () => {
                                         checked={role === "Employer"}
                                         onChange={(e) => setRole(e.target.value)}
                                     />
-                                    Employer
+                                    User
                                 </label>
 
                                 <label>
@@ -611,7 +613,7 @@ const LoginPage = () => {
                             </small>
                             <br />
                             <small className="role-hint">
-                                * Choose “Employer” if you want to hire or to purchase something.
+                                * Choose "User" if you want to hire or to purchase something.
                             </small>
                         </div>
 
