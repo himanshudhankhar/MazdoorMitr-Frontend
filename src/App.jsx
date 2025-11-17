@@ -87,7 +87,7 @@ function App() {
           <Route exact path="/modify-wallet-balance" element={<ProtectedRoute userType="admin"><ModifyWalletBalance /></ProtectedRoute>} />
           <Route exact path="/quickclap" element={<LandingPage />}/>
           <Route path="/app" element={<MazdoorMitra />}>
-                {/* <Route exact path="shops" element={<ProtectedRoute userType="user"><Shop /></ProtectedRoute>} /> */}
+                <Route exact path="shops" element={<ProtectedRoute userType="user"><Shop /></ProtectedRoute>} />
                 <Route exact path="marketplace" element={<ProtectedRoute userType="user"><Marketplace /></ProtectedRoute>} />
                 <Route exact path="shop-dashboard" element={<ProtectedRoute userType="user"><ShopDashboard /></ProtectedRoute>} />
                 

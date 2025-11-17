@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import axiosInstance from "../axiosConfig";
+import { useNavigate } from "react-router-dom";
+
 
 const Profile = () => {
+    const navigate = useNavigate();
     const [isEditing, setIsEditing] = useState(false);
     const [profileData, setProfileData] = useState({
         profileImage: "",
@@ -17,6 +20,13 @@ const Profile = () => {
     });
 
     useEffect(() => {
+        const userType = localStorage.getItem("userType");
+
+        // If BusinessOwner tries to open Profile, redirect instantly
+        if (userType === "BusinessOwner") {
+            navigate("/app/home");
+            return; // Stop further execution
+        }
         const fetchProfile = async () => {
             try {
                 const userId = localStorage.getItem("userId");
@@ -77,7 +87,7 @@ const Profile = () => {
             {/* Profile Header */}
             <div className="profile-header">
                 <img
-                    src={profileData.profileImage }
+                    src={profileData.profileImage}
                     alt="Profile"
                     className="profile-picture"
                 />

@@ -39,8 +39,9 @@ export default function Home() {
 
             setLoading(true);
             const userId = localStorage.getItem("userId");
-            if (!userId) return;
-            const res = await axiosInstance.post(`/api/users/protected/search-profiles?query=${encodeURIComponent(searchTerm)}`, { id: userId }, { withCredentials: true });
+            const shopId = localStorage.getItem("shopId");
+            if (!userId && !shopId) return;
+            const res = await axiosInstance.post(`/api/users/protected/search-profiles`, { id: userId, shopId, query: searchTerm }, { withCredentials: true });
             setProfiles(res.data.profiles || []);
         } catch (error) {
             console.error('Error searching profiles:', error);

@@ -1,519 +1,342 @@
-import React, { useEffect, useMemo, useState } from "react";
-import "./Shop.css";
+// src/pages/Shops.jsx
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../axiosConfig";
+import "./Shops.css";
 
-const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const SHOP_TYPES = ["General Store", "Hardware", "Electronics", "Restaurant", "Salon", "Tailor", "Other"];
+const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-const emptyShop = {
-  id: "",
-  ownerId: "",
-  name: "",
-  ownerName: "",
-  contact: "",
-  address: "",
-  type: "",
-  imageUrl: "",                 // NEW: main display image
-  items: [],                    // Now supports [{name, price}]
-  services: [],                 // Now supports [{name, price}]
-  jobPostings: [],
-  walletBalance: 0,
-  transactions: [],
-  openingTime: "09:00",
-  closingTime: "18:00",
-  openDays: ["Mon", "Tue", "Wed", "Thu", "Fri"],
-  reviews: [],                  // NEW: [{user, rating(1-5), text, atISO}]
-  rating: 0,                    // NEW: avg rating (optional precomputed)
-};
+const Shops = () => {
+  const [shops, setShops] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [selectedShop, setSelectedShop] = useState(null);
 
-export default function Shop({
-  currentUserId = "demo-user-1",
-  initialShops,
-  myShopFromServer,
-}) {
-  // ---- Demo data (replace with API data) ----
-  const demoMyShop = {
-    ...emptyShop,
-    id: "shop-001",
-    ownerId: "demo-user-1",
-    name: "Sharma Hardware",
-    ownerName: "Rakesh Sharma",
-    contact: "9876543210",
-    address: "Main Bazaar, Rohtak",
-    type: "Hardware",
-    imageUrl: "https://images.unsplash.com/photo-1589733924641-221cfb41f0b4?q=80&w=1200&auto=format&fit=crop",
-    items: [{ name: "Cement (per bag)", price: 380 }, { name: "Bricks (100 pcs)", price: 750 }],
-    services: [{ name: "Local Delivery", price: 80 }],
-    walletBalance: 320.0,
-    openingTime: "09:30",
-    closingTime: "19:00",
-    openDays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-    reviews: [
-      { user: "Vijay", rating: 5, text: "Achhi quality aur time par delivery.", at: "2025-09-12T09:21:00Z" },
-      { user: "Kamal", rating: 4, text: "Rates theek hain, staff helpful.", at: "2025-10-03T14:05:00Z" },
-    ],
-    rating: 4.5,
+  const getTodayHours = (hours = []) => {
+    const todayName = dayNames[new Date().getDay()];
+    return hours.find((h) => h.day === todayName);
   };
 
-  const demoShops = [
-    demoMyShop,
-    {
-      ...emptyShop,
-      id: "shop-002",
-      ownerId: "demo-user-2",
-      name: "Balaji Tailors",
-      ownerName: "Sunita",
-      contact: "9800000011",
-      address: "Sector 6, Rohtak",
-      type: "Tailor",
-      imageUrl: "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1200&auto=format&fit=crop",
-      services: [{ name: "Stitching (per piece)", price: 250 }, { name: "Alteration", price: 120 }],
-      openingTime: "10:00",
-      closingTime: "20:00",
-      openDays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-      reviews: [{ user: "Pooja", rating: 5, text: "Fitting bahut acchi aayi!", at: "2025-08-19T08:10:00Z" }],
-      rating: 5,
-    },
-    {
-      ...emptyShop,
-      id: "shop-003",
-      ownerId: "demo-user-3",
-      name: "Kumar Electronics",
-      ownerName: "Vijay",
-      contact: "9800000022",
-      address: "Jhajjar Road",
-      type: "Electronics",
-      imageUrl: "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1200&auto=format&fit=crop",
-      items: [{ name: "LED Bulb", price: 120 }, { name: "Ceiling Fan", price: 1499 }],
-      services: [{ name: "Repair Visit", price: 199 }],
-      reviews: [{ user: "Rahul", rating: 4, text: "Quick service.", at: "2025-07-02T12:22:00Z" }],
-      rating: 4,
-    },
-  ];
+  const buildDisplayAddress = (shop) => {
+    const contact = shop.contact || {};
+    const parts = [
+      contact.address,
+      contact.city,
+      contact.landmark,
+      contact.pincode,
+    ].filter(Boolean);
+    return parts.join(", ");
+  };
 
-  const [shops, setShops] = useState(initialShops || demoShops);
-  const [myShop, setMyShop] = useState(myShopFromServer || demoMyShop);
-  const [query, setQuery] = useState("");
+  const fetchShops = async (query = "") => {
+    setLoading(true);
+    setError("");
 
-  // Edit modal state (only for own shop)
-  const [editOpen, setEditOpen] = useState(false);
-  const [draft, setDraft] = useState(myShop || emptyShop);
-  const [tagInput, setTagInput] = useState("");
+    try {
+      const res = await axiosInstance.get("/api/users/protected/shops", {
+        params: { searchQuery: query },
+        withCredentials: true,
+      });
 
-  // Public preview modal for own shop
-  const [previewOpen, setPreviewOpen] = useState(false);
-
-  // NEW: Modal for any shop (click card)
-  const [selectedShop, setSelectedShop] = useState(null);
-  const [shopModalOpen, setShopModalOpen] = useState(false);
+      const shopsData = res.data.shops || [];
+      setShops(shopsData);
+    } catch (err) {
+      console.error("Error fetching shops:", err);
+      setError("Unable to load shops. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (myShopFromServer) setMyShop(myShopFromServer);
-    if (initialShops) setShops(initialShops);
-  }, [myShopFromServer, initialShops]);
+    fetchShops();
+  }, []);
 
-  // Partition: my shop vs others
-  const otherShops = useMemo(
-    () => (shops || []).filter((s) => s?.ownerId !== (myShop?.ownerId || currentUserId)),
-    [shops, myShop, currentUserId]
-  );
-
-  const filteredOthers = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return otherShops;
-    return otherShops.filter((s) =>
-      [s.name, s.ownerName, s.type, s.address].filter(Boolean).some((v) => String(v).toLowerCase().includes(q))
-    );
-  }, [otherShops, query]);
-
-  // ---------- UI Handlers (own shop) ----------
-  function startEditOwn() {
-    setDraft(JSON.parse(JSON.stringify(myShop || emptyShop)));
-    setEditOpen(true);
-  }
-
-  function toggleDay(day) {
-    setDraft((d) => {
-      const set = new Set(d.openDays || []);
-      set.has(day) ? set.delete(day) : set.add(day);
-      return { ...d, openDays: Array.from(set) };
-    });
-  }
-
-  function addTag(kind) {
-    const value = tagInput.trim();
-    if (!value) return;
-    setDraft((d) => {
-      const arr = Array.from(new Set([...(d[kind] || []), value]));
-      return { ...d, [kind]: arr };
-    });
-    setTagInput("");
-  }
-  function removeTag(kind, value) {
-    setDraft((d) => ({ ...d, [kind]: (d[kind] || []).filter((x) => x !== value) }));
-  }
-
-  async function submitOwnShop(e) {
+  const handleSearchSubmit = (e) => {
     e.preventDefault();
-    if (!draft.name || !draft.ownerName || !draft.contact) return alert("Name, Owner and Contact are required.");
-    // TODO: API update
-    setMyShop(draft);
-    setShops((list) => list.map((s) => (s.id === draft.id ? draft : s)));
-    setEditOpen(false);
-  }
+    fetchShops(searchQuery.trim());
+  };
 
-  // Wallet demo actions
-  function addCreditToMy(amount) {
-    setMyShop((s) => {
-      const walletBalance = Number(s.walletBalance || 0) + Number(amount);
-      const tx = { id: crypto.randomUUID(), type: "credit", amount: Number(amount), at: new Date().toISOString() };
-      const updated = { ...s, walletBalance, transactions: [tx, ...(s.transactions || [])] };
-      setShops((list) => list.map((it) => (it.id === s.id ? updated : it)));
-      return updated;
-    });
-  }
-  function addDebitToMy(amount) {
-    setMyShop((s) => {
-      const walletBalance = Math.max(0, Number(s.walletBalance || 0) - Number(amount));
-      const tx = { id: crypto.randomUUID(), type: "debit", amount: Number(amount), at: new Date().toISOString() };
-      const updated = { ...s, walletBalance, transactions: [tx, ...(s.transactions || [])] };
-      setShops((list) => list.map((it) => (it.id === s.id ? updated : it)));
-      return updated;
-    });
-  }
+  const openShopModal = (shop) => {
+    setSelectedShop(shop);
+  };
 
-  // ---------- Reusable card ----------
-  function ShopCard({ s, isOwn = false, showWalletActions = false }) {
-    return (
-      <div
-        className="shop_card"
-        onClick={() => {
-          setSelectedShop(s);
-          setShopModalOpen(true);
-        }}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            setSelectedShop(s);
-            setShopModalOpen(true);
-          }
-        }}
-      >
-        {s.imageUrl && (
-          <div className="shop_img_wrap">
-            <img className="shop_img" src={s.imageUrl} alt={s.name || "Shop"} />
-          </div>
-        )}
+  const closeModal = () => {
+    setSelectedShop(null);
+  };
 
-        <div className="shop_card_head">
-          <h3 className="shop_card_title">
-            {s.name || "-"} {isOwn && <span style={{ fontSize: 12, color: "#16a34a" }}>(Your Shop)</span>}
-          </h3>
-          <span className="shop_tag">{s.type || "Uncategorized"}</span>
-        </div>
-
-        <div className="shop_row">
-          <span className="shop_label">Owner:</span> <span>{s.ownerName || "-"}</span>
-        </div>
-        <div className="shop_row">
-          <span className="shop_label">Contact:</span> <span>{s.contact || "-"}</span>
-        </div>
-        <div className="shop_row">
-          <span className="shop_label">Address:</span> <span>{s.address || "-"}</span>
-        </div>
-
-        {(s.items?.length || s.services?.length) ? (
-          <div className="shop_pills">
-            {(s.items || []).slice(0, 3).map((v) => (
-              <span className="shop_pill" key={`i-${v.name || v}`}>{v.name || v}</span>
-            ))}
-            {(s.services || []).slice(0, 3).map((v) => (
-              <span className="shop_pill shop_pill_alt" key={`s-${v.name || v}`}>{v.name || v}</span>
-            ))}
-          </div>
-        ) : null}
-
-        <div className="shop_hours">
-          <span className="shop_label">Hours:</span>
-          <span>{s.openingTime} - {s.closingTime}</span>
-          <span className="shop_divider">•</span>
-          <span>{(s.openDays || []).join(", ")}</span>
-        </div>
-
-        <div className="shop_wallet">
-          <div>
-            <span className="shop_label">Wallet:</span> ₹{Number(s.walletBalance || 0).toFixed(2)}{" "}
-            {typeof s.rating === "number" && s.rating > 0 && (
-              <span className="shop_rating">★ {s.rating.toFixed(1)}</span>
-            )}
-          </div>
-          {showWalletActions && (
-            <div className="shop_wallet_actions" onClick={(e) => e.stopPropagation()}>
-              <button className="shop_btn shop_btn_sm" onClick={() => addCreditToMy(50)}>+ ₹50</button>
-              <button className="shop_btn shop_btn_sm shop_btn_warn" onClick={() => addDebitToMy(50)}>- ₹50</button>
-            </div>
-          )}
-        </div>
-
-        <div className="shop_card_footer" onClick={(e) => e.stopPropagation()}>
-          {isOwn ? (
-            <>
-              <button className="shop_btn" onClick={startEditOwn}>Edit</button>
-              <button className="shop_btn" onClick={() => setPreviewOpen(true)}>Public Preview</button>
-            </>
-          ) : (
-            <a className="shop_btn" href={`/shops/${s.id}`} onClick={(e) => e.stopPropagation()}>View</a>
-          )}
-        </div>
+  return (
+    <div className="shops-page">
+      <div className="shops-header">
+        <h1 className="shops-title">Shops</h1>
+        <p className="shops-subtitle">
+          Browse shops and services on MazdoorMitr. Click a shop to see full details.
+        </p>
       </div>
-    );
-  }
 
-  // ---------- Modal to show any shop full details ----------
-  function ShopDetailsModal({ shop, onClose }) {
-    if (!shop) return null;
-    return (
-      <div className="shop_modal_backdrop" onClick={onClose}>
-        <div className="shop_modal shop_modal_wide" onClick={(e) => e.stopPropagation()}>
-          <div className="shop_modal_header">
-            <h3 className="shop_modal_title">{shop.name}</h3>
-            <button className="shop_btn shop_btn_sm" onClick={onClose}>Close</button>
-          </div>
+      {/* 🔍 Search Bar */}
+      <form className="shops-search-bar" onSubmit={handleSearchSubmit}>
+        <input
+          type="text"
+          placeholder="Search shops by name, category or location..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="shops-search-input"
+        />
+        <button type="submit" className="shops-search-button">
+          Search
+        </button>
+      </form>
 
-          <div className="shop_modal_body">
-            {shop.imageUrl && (
-              <div className="shop_modal_image">
-                <img src={shop.imageUrl} alt={shop.name} />
+      {/* Status messages */}
+      {loading && <p className="shops-status">Loading shops...</p>}
+      {error && <p className="shops-error">{error}</p>}
+      {!loading && !error && shops.length === 0 && (
+        <p className="shops-status">No shops found. Try a different search.</p>
+      )}
+
+      {/* 🔹 Shops Grid */}
+      <div className="shops-grid">
+        {shops.map((shop) => {
+          const basics = shop.basics || {};
+          const todayHours = getTodayHours(shop.hours || []);
+          const displayAddress = buildDisplayAddress(shop);
+
+          return (
+            <div
+              key={shop._id || shop.id}
+              className="shops-card"
+              onClick={() => openShopModal(shop)}
+            >
+              <div className="shops-card-image-wrapper">
+                <img
+                  src={
+                    shop.photoUrl ||
+                    shop.imageUrl ||
+                    "https://via.placeholder.com/300x200?text=Shop+Image"
+                  }
+                  alt={basics.shopName || shop.shopName || "Shop"}
+                  className="shops-card-image"
+                />
               </div>
-            )}
 
-            <div className="shop_modal_info">
-              <div className="shop_row"><span className="shop_label">Owner:</span> <span>{shop.ownerName}</span></div>
-              <div className="shop_row"><span className="shop_label">Contact:</span> <span>{shop.contact}</span></div>
-              <div className="shop_row"><span className="shop_label">Address:</span> <span>{shop.address}</span></div>
-              <div className="shop_row">
-                <span className="shop_label">Hours:</span>
-                <span>{shop.openingTime} - {shop.closingTime} • {(shop.openDays || []).join(", ")}</span>
-              </div>
-              {typeof shop.rating === "number" && shop.rating > 0 && (
-                <div className="shop_row"><span className="shop_label">Rating:</span> <span>★ {shop.rating.toFixed(1)}</span></div>
-              )}
+              <div className="shops-card-body">
+                {/* ✅ Shop name (NOT owner name) */}
+                <h3 className="shops-card-title">
+                  {basics.shopName || shop.shopName || "Shop Name"}
+                </h3>
 
-              {(shop.items?.length || shop.services?.length) ? (
-                <div className="shop_modal_lists">
-                  {shop.items?.length > 0 && (
-                    <div className="shop_list_block">
-                      <h4 className="shop_list_title">Items</h4>
-                      <ul className="shop_list">
-                        {shop.items.map((it, idx) => (
-                          <li key={`it-${idx}`} className="shop_list_row">
-                            <span>{it.name || it}</span>
-                            {typeof it.price !== "undefined" && <span className="shop_price">₹{Number(it.price).toFixed(0)}</span>}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {shop.services?.length > 0 && (
-                    <div className="shop_list_block">
-                      <h4 className="shop_list_title">Services</h4>
-                      <ul className="shop_list">
-                        {shop.services.map((sv, idx) => (
-                          <li key={`sv-${idx}`} className="shop_list_row">
-                            <span>{sv.name || sv}</span>
-                            {typeof sv.price !== "undefined" && <span className="shop_price">₹{Number(sv.price).toFixed(0)}</span>}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              ) : null}
+                {basics.tagline && (
+                  <p className="shops-card-tagline">“{basics.tagline}”</p>
+                )}
 
-              <div className="shop_reviews_block">
-                <h4 className="shop_list_title">Reviews</h4>
-                {shop.reviews?.length ? (
-                  <ul className="shop_reviews">
-                    {shop.reviews.map((r, idx) => (
-                      <li key={`rv-${idx}`} className="shop_review_row">
-                        <div className="shop_review_head">
-                          <span className="shop_review_user">{r.user}</span>
-                          <span className="shop_review_rating">★ {Number(r.rating).toFixed(1)}</span>
-                          {r.at && <span className="shop_review_date">{new Date(r.at).toLocaleDateString()}</span>}
-                        </div>
-                        {r.text && <div className="shop_review_text">{r.text}</div>}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div className="shop_empty">No reviews yet.</div>
+                <p className="shops-card-location">
+                  {displayAddress || shop.address || "Location not available"}
+                </p>
+
+                <p className="shops-card-category">
+                  {basics.category || shop.category || ""}
+                </p>
+
+                {/* Today's hours */}
+                {todayHours && (
+                  <p className="shops-card-timings">
+                    Today:{" "}
+                    {todayHours.open
+                      ? `${todayHours.from || "--"} - ${todayHours.to || "--"}`
+                      : "Closed"}
+                  </p>
+                )}
+
+                {/* Status badge if present */}
+                {shop.status && (
+                  <p
+                    className={`shops-card-status shops-status-${shop.status}`}
+                  >
+                    {shop.status}
+                  </p>
                 )}
               </div>
             </div>
-          </div>
-
-          <div className="shop_modal_actions">
-            <a className="shop_btn shop_btn_primary" href={`/shops/${shop.id}`}>Go to Shop Page</a>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="shop_page">
-      {/* My Shop */}
-      <div className="shop_page_head">
-        <h2 className="shop_title">My Shop</h2>
-      </div>
-      {myShop ? (
-        <ShopCard s={myShop} isOwn showWalletActions />
-      ) : (
-        <div className="shop_empty">You don’t have a shop yet. (It will be created automatically at signup.)</div>
-      )}
-
-      {/* Others */}
-      <div className="shop_page_head" style={{ marginTop: 24 }}>
-        <h2 className="shop_title">Other Shops</h2>
-        <div className="shop_actions">
-          <input
-            className="shop_input"
-            placeholder="Search by name, owner, type, address…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-        </div>
+          );
+        })}
       </div>
 
-      <div className="shop_grid">
-        {filteredOthers.map((s) => (
-          <ShopCard key={s.id} s={s} />
-        ))}
-        {filteredOthers.length === 0 && <div className="shop_empty">No shops found.</div>}
-      </div>
+      {/* 🔸 Modal with full shop details */}
+      {selectedShop && (() => {
+        const basics = selectedShop.basics || {};
+        const displayAddress = buildDisplayAddress(selectedShop);
+        const todayHours = getTodayHours(selectedShop.hours || []);
 
-      {/* Edit Own Shop Modal */}
-      {editOpen && (
-        <div className="shop_modal_backdrop" onClick={() => setEditOpen(false)}>
-          <div className="shop_modal" onClick={(e) => e.stopPropagation()}>
-            <h3 className="shop_modal_title">Edit Shop</h3>
-            <form className="shop_form" onSubmit={submitOwnShop}>
-              <div className="shop_form_grid">
-                <label className="shop_field">
-                  <span className="shop_label">Shop Name</span>
-                  <input className="shop_input" value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} required />
-                </label>
+        const allItems =
+          selectedShop.catalog?.items?.length > 0
+            ? selectedShop.catalog.items
+            : selectedShop.items || [];
 
-                <label className="shop_field">
-                  <span className="shop_label">Owner Name</span>
-                  <input className="shop_input" value={draft.ownerName} onChange={(e) => setDraft({ ...draft, ownerName: e.target.value })} required />
-                </label>
+        const allServices =
+          selectedShop.catalog?.services?.length > 0
+            ? selectedShop.catalog.services
+            : selectedShop.services || [];
 
-                <label className="shop_field">
-                  <span className="shop_label">Contact</span>
-                  <input className="shop_input" value={draft.contact} onChange={(e) => setDraft({ ...draft, contact: e.target.value })} required />
-                </label>
+        const whatsapp =
+          selectedShop.whatsapp ||
+          basics.whatsapp ||
+          selectedShop.contact?.whatsapp;
 
-                <label className="shop_field shop_field_col2">
-                  <span className="shop_label">Address</span>
-                  <input className="shop_input" value={draft.address} onChange={(e) => setDraft({ ...draft, address: e.target.value })} />
-                </label>
+        return (
+          <div className="shops-modal-overlay" onClick={closeModal}>
+            <div
+              className="shops-modal"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button className="shops-modal-close" onClick={closeModal}>
+                ✕
+              </button>
 
-                <label className="shop_field">
-                  <span className="shop_label">Type</span>
-                  <select className="shop_input" value={draft.type} onChange={(e) => setDraft({ ...draft, type: e.target.value })}>
-                    <option value="">Select type</option>
-                    {SHOP_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
-                  </select>
-                </label>
-
-                <label className="shop_field">
-                  <span className="shop_label">Opening</span>
-                  <input type="time" className="shop_input" value={draft.openingTime} onChange={(e) => setDraft({ ...draft, openingTime: e.target.value })} />
-                </label>
-
-                <label className="shop_field">
-                  <span className="shop_label">Closing</span>
-                  <input type="time" className="shop_input" value={draft.closingTime} onChange={(e) => setDraft({ ...draft, closingTime: e.target.value })} />
-                </label>
-
-                <div className="shop_field shop_days">
-                  <span className="shop_label">Open Days</span>
-                  <div className="shop_days_pills">
-                    {DAYS.map((d) => (
-                      <button
-                        type="button"
-                        key={d}
-                        className={`shop_pill ${draft.openDays?.includes(d) ? "shop_pill_active" : ""}`}
-                        onClick={() => toggleDay(d)}
-                      >
-                        {d}
-                      </button>
-                    ))}
-                  </div>
+              <div className="shops-modal-header">
+                <div className="shops-modal-image-wrapper">
+                  <img
+                    src={
+                      selectedShop.photoUrl ||
+                      selectedShop.imageUrl ||
+                      "https://via.placeholder.com/400x250?text=Shop+Image"
+                    }
+                    alt={basics.shopName || selectedShop.shopName || "Shop"}
+                    className="shops-modal-image"
+                  />
                 </div>
 
-                <div className="shop_field shop_field_col2">
-                  <span className="shop_label">Items & Services</span>
-                  <div className="shop_tag_row">
-                    <input
-                      className="shop_input"
-                      placeholder="e.g., Cement / Haircut"
-                      value={tagInput}
-                      onChange={(e) => setTagInput(e.target.value)}
-                    />
-                    <button type="button" className="shop_btn shop_btn_sm" onClick={() => addTag("items")}>+ Item</button>
-                    <button type="button" className="shop_btn shop_btn_sm" onClick={() => addTag("services")}>+ Service</button>
-                  </div>
-                  <div className="shop_pills_wrap">
-                    {(draft.items || []).map((v, idx) => (
-                      <span key={`i-${idx}`} className="shop_pill">
-                        {typeof v === "string" ? v : v.name}
-                        <button type="button" className="shop_pill_x" onClick={() => removeTag("items", v)}>×</button>
-                      </span>
-                    ))}
-                    {(draft.services || []).map((v, idx) => (
-                      <span key={`s-${idx}`} className="shop_pill shop_pill_alt">
-                        {typeof v === "string" ? v : v.name}
-                        <button type="button" className="shop_pill_x" onClick={() => removeTag("services", v)}>×</button>
-                      </span>
-                    ))}
-                  </div>
+                <div className="shops-modal-title-block">
+                  <h2 className="shops-modal-title">
+                    {basics.shopName || selectedShop.shopName || "Shop Name"}
+                  </h2>
+
+                  {basics.tagline && (
+                    <p className="shops-modal-tagline">“{basics.tagline}”</p>
+                  )}
+
+                  <p className="shops-modal-location">
+                    {displayAddress ||
+                      selectedShop.address ||
+                      "Location not available"}
+                  </p>
+
+                  {(basics.category || selectedShop.category) && (
+                    <p className="shops-modal-category">
+                      Category: {basics.category || selectedShop.category}
+                    </p>
+                  )}
+
+                  {/* Today's hours */}
+                  {todayHours && (
+                    <p className="shops-modal-timings">
+                      Today:{" "}
+                      {todayHours.open
+                        ? `${todayHours.from || "--"} - ${
+                            todayHours.to || "--"
+                          }`
+                        : "Closed"}
+                    </p>
+                  )}
+
+                  {/* Contact info */}
+                  {selectedShop.phone && (
+                    <p className="shops-modal-contact">
+                      Phone: {selectedShop.phone}
+                    </p>
+                  )}
+                  {whatsapp && (
+                    <p className="shops-modal-contact">
+                      WhatsApp: {whatsapp}
+                    </p>
+                  )}
+
+                  {/* Status */}
+                  {selectedShop.status && (
+                    <p
+                      className={`shops-modal-status shops-status-${selectedShop.status}`}
+                    >
+                      Status: {selectedShop.status}
+                    </p>
+                  )}
+
+                  {/* Owner name */}
+                  {selectedShop.name && (
+                    <p className="shops-modal-owner">
+                      Owner: {selectedShop.name}
+                    </p>
+                  )}
                 </div>
               </div>
 
-              <div className="shop_modal_actions">
-                <button type="button" className="shop_btn" onClick={() => setEditOpen(false)}>Cancel</button>
-                <button type="submit" className="shop_btn shop_btn_primary">Save</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+              {/* About */}
+              {(basics.about || selectedShop.about) && (
+                <div className="shops-modal-section">
+                  <h3 className="shops-section-title">About</h3>
+                  <p className="shops-description">
+                    {basics.about || selectedShop.about}
+                  </p>
+                </div>
+              )}
 
-      {/* Public Preview Modal (own shop) */}
-      {previewOpen && myShop && (
-        <div className="shop_modal_backdrop" onClick={() => setPreviewOpen(false)}>
-          <div className="shop_modal" onClick={(e) => e.stopPropagation()}>
-            <h3 className="shop_modal_title">Public Preview</h3>
-            <ShopCard s={myShop} isOwn={false} showWalletActions={false} />
-            <div className="shop_modal_actions">
-              <button type="button" className="shop_btn" onClick={() => setPreviewOpen(false)}>Close</button>
+              {/* Items / Price list (ONLY in modal) */}
+              {allItems.length > 0 && (
+                <div className="shops-modal-section">
+                  <h3 className="shops-section-title">Items</h3>
+                  <div className="shops-items-list">
+                    {allItems.map((item, idx) => (
+                      <div key={idx} className="shops-item-row">
+                        <span className="shops-item-name">
+                          {item.name || "Item"}
+                        </span>
+                        <span className="shops-item-price">
+                          {item.price ? `₹${item.price}` : ""}
+                          {item.unit ? ` / ${item.unit}` : ""}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Services list (ONLY in modal) */}
+              {allServices.length > 0 && (
+                <div className="shops-modal-section">
+                  <h3 className="shops-section-title">Services</h3>
+                  <ul className="shops-services-list">
+                    {allServices.map((service, idx) => (
+                      <li key={idx} className="shops-service-pill">
+                        {service}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Weekly Timings */}
+              {selectedShop.hours?.length > 0 && (
+                <div className="shops-modal-section">
+                  <h3 className="shops-section-title">Weekly Timings</h3>
+                  <div className="shops-hours-list">
+                    {selectedShop.hours.map((h, idx) => (
+                      <div key={idx} className="shops-hours-row">
+                        <span className="shops-hours-day">{h.day}</span>
+                        <span className="shops-hours-time">
+                          {h.open
+                            ? `${h.from || "--"} - ${h.to || "--"}`
+                            : "Closed"}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Any shop full details modal */}
-      {shopModalOpen && (
-        <ShopDetailsModal
-          shop={selectedShop}
-          onClose={() => {
-            setShopModalOpen(false);
-            setSelectedShop(null);
-          }}
-        />
-      )}
+        );
+      })()}
     </div>
   );
-}
+};
+
+export default Shops;
