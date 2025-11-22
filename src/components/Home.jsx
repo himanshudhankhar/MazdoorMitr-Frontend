@@ -19,7 +19,7 @@ export default function Home() {
     const fetchTopProfiles = async () => {
         try {
             setLoading(true);
-            const userId = localStorage.getItem("userId");
+            const userId = localStorage.getItem("userId") || localStorage.getItem("shopId");
             if (!userId) return;
             const res = await axiosInstance.post('/api/users/protected/get-random-profiles', { id: userId }, { withCredentials: true });
             setProfiles(res.data.profiles || []);
@@ -66,7 +66,7 @@ export default function Home() {
     const confirmAndFetchContact = async () => {
         try {
             setContactLoading(true);
-            const selfId = localStorage.getItem("userId");
+            const selfId = localStorage.getItem("userId") || localStorage.getItem("shopId");
             const res = await axiosInstance.post('/api/users/protected/get-contact-number', {
                 selfid: selfId,
                 otheruserid: selectedProfile.id
@@ -124,7 +124,7 @@ export default function Home() {
                             </div>
                         ))
                     ) : (
-                        <p>No profiles found.</p>
+                        <p>No suggestions rightnow.</p>
                     )}
                 </div>
             )}

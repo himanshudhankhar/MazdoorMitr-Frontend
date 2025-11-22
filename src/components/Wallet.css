@@ -1,134 +1,187 @@
-body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-}
-
 .wallet-page-container {
-    max-width: 600px;
-    margin: 30px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
+  max-width: 650px;
+  min-width: 350px;
+  margin: 30px auto;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
 }
 
-h1 {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 20px;
+/* HEADER */
+.wallet-page-container h1 {
+  font-size: 26px;
+  color: #222;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 24px;
 }
 
+/* FUNDS SECTION */
 .funds-section {
-    margin-bottom: 30px;
+  margin-bottom: 32px;
+  text-align: center;
 }
 
 .funds-section h2 {
-    font-size: 1.5rem;
-    color: #444;
-    margin-bottom: 10px;
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #444;
 }
 
 .funds-amount {
-    font-size: 2rem;
-    color: #007bff;
-    font-weight: bold;
+  font-size: 32px;
+  color: #0077ff;
+  font-weight: bold;
+  margin: 0;
 }
 
-.recharge-section, .transfer-section, .transactions-section {
-    margin-bottom: 30px;
+/* SHARED SECTION HEADINGS */
+.recharge-section,
+.transfer-section,
+.transactions-section {
+  margin-bottom: 30px;
 }
 
-.recharge-section h2, .transfer-section h2, .transactions-section h2 {
-    font-size: 1.5rem;
-    color: #444;
-    margin-bottom: 10px;
+.recharge-section h2,
+.transfer-section h2,
+transactions-section h2,
+.transactions-section h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 12px;
 }
 
-input[type="number"], input[type="text"] {
-    width: 80%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
+/* RECHARGE + TRANSFER LAYOUT */
+.recharge-section,
+.transfer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;   /* center horizontally */
+  text-align: center;    /* center text and headings */
 }
 
-button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+/* INPUTS */
+.recharge-section input,
+.transfer-section input {
+  width: 100%;
+  max-width: 320px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
 }
 
-button:hover {
-    background-color: #0056b3;
+.recharge-section input:focus,
+.transfer-section input:focus {
+  border-color: #0077ff;
 }
 
+/* BASE BUTTON STYLE */
+button,
+.show-all-btn {
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  background: #0077ff;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.1s ease;
+}
+
+button:hover,
+.show-all-btn:hover {
+  background: #005fd6;
+  transform: translateY(-1px);
+}
+
+button:disabled,
+.show-all-btn:disabled {
+  background: #d0d0d0;
+  cursor: not-allowed;
+}
+
+/* RECHARGE / TRANSFER BUTTONS */
+.recharge-section button,
+.transfer-section button {
+  width: auto;
+  min-width: 140px;
+  max-width: 200px;
+  align-self: center;
+}
+
+/* TRANSACTIONS SECTION (centered like others) */
+.transactions-section {
+  margin-top: 10px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* center whole block */
+  text-align: center;
+}
+
+/* TRANSACTIONS TABLE */
 .transactions-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    text-align: left;
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 12px;
 }
 
-.transactions-table th, .transactions-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    font-size: 1rem;
+.transactions-table th,
+.transactions-table td {
+  padding: 10px;
+  border-bottom: 1px solid #e6e6e6;
+  text-align: center;
 }
 
 .transactions-table th {
-    background-color: #f1f1f1;
-    color: #333;
-    font-weight: bold;
-}
-
-.transactions-table tr:nth-child(even) {
-    background-color: #f9f9f9;
+  font-weight: 600;
+  background: #eef3ff;
+  color: #3a3a3a;
 }
 
 .transactions-table tr:hover {
-    background-color: #f1f1f1;
-}
-
-.transactions-table td {
-    text-align: center;
+  background: #f2f6ff;
 }
 
 .transactions-table .credit {
-    color: #28a745;
-    font-weight: bold;
+  color: #22a745;
+  font-weight: bold;
 }
 
 .transactions-table .debit {
-    color: #dc3545;
-    font-weight: bold;
+  color: #e23737;
+  font-weight: bold;
 }
 
+/* SHOW ALL BUTTON (centered under table) */
 .show-all-btn {
-    margin-top: 15px;
-    padding: 10px 20px;
-    background-color: #007bff; /* Bootstrap primary blue */
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  margin-top: 15px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  align-self: center; /* works with .transactions-section flex */
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .wallet-page-container {
+    padding: 16px;
   }
-  
-  .show-all-btn:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+
+  .wallet-page-container h1 {
+    font-size: 22px;
   }
-  
-  .show-all-btn:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
+
+  .funds-amount {
+    font-size: 26px;
   }
+}

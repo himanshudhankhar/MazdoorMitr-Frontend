@@ -1,0 +1,396 @@
+.market_place_page {
+  max-width: 1100px;
+  margin: 20px auto 40px;
+  padding: 0 16px;
+  font-family: Arial, sans-serif;
+}
+
+/* Header */
+.market_place_header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.market_place_title {
+  font-size: 26px;
+  font-weight: 600;
+  color: #222;
+  margin: 0;
+}
+
+/* Actions: tabs + search */
+.market_place_actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Tabs */
+.market_place_tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.market_place_tab {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid #d0d0d0;
+  background: #ffffff;
+  font-size: 13px;
+  cursor: pointer;
+  color: #555;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Ensure text visible even on active/focus */
+.market_place_tab:focus,
+.market_place_tab:active {
+  color: #555;
+  outline: none;
+}
+
+.market_place_tab:hover {
+  background: #f0f6ff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.market_place_tab_active {
+  background: #0077ff;
+  color: #ffffff;
+  border-color: #0077ff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+/* Also keep text white when active/focused */
+.market_place_tab_active:focus,
+.market_place_tab_active:active {
+  color: #ffffff;
+  background: #0077ff;
+  outline: none;
+}
+
+/* Search input */
+.market_place_search_input {
+  min-width: 220px;
+  padding: 8px 10px;
+  border-radius: 18px;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.market_place_search_input:focus {
+  border-color: #0077ff;
+}
+
+/* Grid */
+.market_place_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+/* Card */
+.market_place_card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 14px 14px 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.market_place_card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
+}
+
+/* Card head: title + badge */
+.market_place_card_head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.market_place_card_title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #222;
+  margin: 0;
+}
+
+.market_place_tag {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #e6f0ff;
+  color: #0050c8;
+  white-space: nowrap;
+}
+
+/* Rows */
+.market_place_row {
+  font-size: 13px;
+  color: #444;
+  margin-bottom: 4px;
+}
+
+.market_place_label {
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+/* Description text */
+.market_place_text {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.5;
+  margin: 8px 0 10px;
+}
+
+/* Card footer */
+.market_place_card_footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Buttons */
+.market_place_btn {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.market_place_btn_primary {
+  background: #0077ff;
+  color: #ffffff;
+}
+
+.market_place_btn_primary:hover {
+  background: #005fd6;
+  transform: translateY(-1px);
+}
+
+/* Empty state */
+.market_place_empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 30px 10px;
+  font-size: 14px;
+  color: #777;
+  border-radius: 12px;
+  background: #f5f7ff;
+}
+
+/* MODAL OVERLAY */
+.market_place_modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+}
+
+/* MODAL BOX */
+.market_place_modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 20px 20px;
+  width: 520px;
+  max-width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+}
+
+/* CLOSE BUTTON */
+.market_place_modal_close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: #f03;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* MODAL CONTENT */
+.market_place_modal_title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 6px;
+  color: #222;
+}
+
+.market_place_modal_highlight {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0077ff;
+  margin: 0 0 8px;
+}
+
+.market_place_modal_row {
+  font-size: 14px;
+  color: #444;
+  margin: 4px 0;
+}
+
+.market_place_modal_label {
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+.market_place_modal_description {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* FORM IN MODAL */
+.market_place_application_form {
+  margin-top: 18px;
+  border-top: 1px solid #eee;
+  padding-top: 14px;
+}
+
+.market_place_form_title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: #222;
+}
+
+.market_place_form_group {
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.market_place_form_label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.market_place_form_input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.market_place_form_input:focus {
+  border-color: #0077ff;
+}
+
+.market_place_form_textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  outline: none;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.market_place_form_textarea:focus {
+  border-color: #0077ff;
+}
+
+/* MODAL ACTIONS */
+.market_place_modal_actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Right side actions (search + post button) */
+.market_place_right_actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.market_place_post_button {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #00a36f;
+  color: #ffffff;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.market_place_post_button:hover {
+  background: #00895d;
+  transform: translateY(-1px);
+}
+
+/* Responsive tweaks */
+@media (max-width: 700px) {
+  .market_place_actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .market_place_tabs {
+    justify-content: flex-start;
+  }
+
+  .market_place_search_input {
+    width: 100%;
+  }
+
+  .market_place_right_actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .market_place_post_button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 500px) {
+  .market_place_header {
+    align-items: flex-start;
+  }
+
+  .market_place_title {
+    font-size: 22px;
+  }
+}
