@@ -47,6 +47,7 @@ import CompleteShopProfile from './components/CompleteShopProfile';
 import Shop from './components/Shops';
 import Marketplace from './components/MarketPlace';
 import ShopDashboard from './components/ShopDashboard';
+import ViewProfile from './components/ViewProfile';
 function App() {
 
   return (
@@ -98,7 +99,7 @@ function App() {
                 <Route exact path="complete-profile-employer" element={<ProtectedRoute userType="user"><CompleteProfileEmployer /></ProtectedRoute>} />
                 <Route exact path="create-labourer-profile" element={<ProtectedRoute userType="user"><CreateLabourerProfile /></ProtectedRoute>} />
                 <Route exact path="complete-shop-profile" element={<ProtectedRoute userType="user"><CompleteShopProfile /></ProtectedRoute>} />
-
+                <Route exact path="profile-view/:profileId" element={<ProtectedRoute userType="user"><ViewProfile /></ProtectedRoute>} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -26,18 +26,29 @@ const Wallet = () => {
     const [upiId, setUpiId] = useState('');
     const [transactions, setTransactions] = useState([]);
 
+    // current wallet id can be user or shop
+    const currentWalletId =
+        localStorage.getItem('userId') || localStorage.getItem('shopId') || null;
+
     useEffect(() => {
         const fetchWalletDetails = async () => {
             try {
-                const userId = localStorage.getItem("userId") || localStorage.getItem("shopId");
-                const userType = localStorage.getItem("userType");
+                const userId =
+                    localStorage.getItem('userId') || localStorage.getItem('shopId');
+                const userType = localStorage.getItem('userType');
                 if (!userId) return;
-                const response = await axiosInstance.post('/api/users/protected/wallet-details', { userId, userType }, { withCredentials: true });
+
+                const response = await axiosInstance.post(
+                    '/api/users/protected/wallet-details',
+                    { userId, userType },
+                    { withCredentials: true }
+                );
+
                 const { balance, transactionHistory } = response.data;
-                setAvailableFunds(balance);
+                setAvailableFunds(balance || 0);
                 setTransactions(transactionHistory || []);
             } catch (error) {
-                console.error("Failed to fetch wallet details:", error);
+                console.error('Failed to fetch wallet details:', error);
             }
         };
 
@@ -54,17 +65,22 @@ const Wallet = () => {
 
     const handleShowAllTransactions = async () => {
         try {
-            const userId = localStorage.getItem("userId");
+            const userId =
+                localStorage.getItem('userId') || localStorage.getItem('shopId');
             if (!userId) return;
-            const response = await axiosInstance.post('/api/users/protected/getAllWalletTransactions', { userId }, { withCredentials: true });
+
+            const response = await axiosInstance.post(
+                '/api/users/protected/getAllWalletTransactions',
+                { userId },
+                { withCredentials: true }
+            );
+
             const { transactions: allTransactions } = response.data;
             setTransactions(allTransactions || []);
         } catch (error) {
-            console.error("Failed to fetch all transactions:", error);
+            console.error('Failed to fetch all transactions:', error);
         }
     };
-
-    const currentWalletId = localStorage.getItem("userId");;
 
     return (
         <div className="wallet-page-container">
@@ -119,10 +135,45 @@ const Wallet = () => {
                             </thead>
                             <tbody>
                                 {transactions.map((tx) => {
-                                    const isCredit = tx.receiverWalletId === currentWalletId;
-                                    const direction = isCredit ? "Credit (Received)" : "Debit (Given)";
-                                    const purpose = tx?.otherDetails?.type || "—";
-                                    const displayType = purpose ? `${direction} • ${purpose}` : direction;
+                                    const isCredit =
+                                        currentWalletId &&
+                                        tx.receiverWalletId === currentWalletId;
+                                    const isDebit =
+                                        currentWalletId &&
+                                        tx.giverWalletId === currentWalletId;
+
+                                    // Amount to show:
+                                    // - if I'm receiver → amount_credited
+                                    // - if I'm giver → amount_debited
+                                    // (fallback to tx.amount for old data)
+                                    let rawAmount = 0;
+                                    if (isCredit) {
+                                        rawAmount =
+                                            tx.amount_credited ??
+                                            tx.amount ??
+                                            0;
+                                    } else if (isDebit) {
+                                        rawAmount =
+                                            tx.amount_debited ??
+                                            tx.amount ??
+                                            0;
+                                    } else {
+                                        // Just in case, fallback to amount if neither matches
+                                        rawAmount = tx.amount ?? 0;
+                                    }
+
+                                    const amount = Number(rawAmount) || 0;
+
+                                    const direction = isCredit
+                                        ? 'Credit (Received)'
+                                        : 'Debit (Given)';
+
+                                    const purpose =
+                                        tx.transaction_type ||
+                                        tx?.otherDetails?.type ||
+                                        '—';
+
+                                    const displayType = `${direction} • ${purpose}`;
 
                                     // pick the name if available, otherwise fall back to ID
                                     const counterparty = isCredit
@@ -131,22 +182,28 @@ const Wallet = () => {
 
                                     return (
                                         <tr key={tx.id || tx.transactionId}>
-                                            <td title={counterparty || ""}>{counterparty || "N/A"}</td>
-                                            <td>{formatTimestamp(tx.timestamp)}</td>
-                                            <td>{Number(tx.amount || 0).toFixed(2)}</td>
+                                            <td title={counterparty || ''}>
+                                                {counterparty || 'N/A'}
+                                            </td>
+                                            <td>{formatTimestamp(tx.timestamp || tx.createdAt)}</td>
+                                            <td>
+                                                {amount.toFixed(2)}
+                                            </td>
                                             <td>{displayType}</td>
-                                            <td>{tx.status || "—"}</td>
+                                            <td>{tx.status || '—'}</td>
                                         </tr>
                                     );
                                 })}
                             </tbody>
                         </table>
 
-                        <button className="show-all-btn" onClick={handleShowAllTransactions}>
+                        <button
+                            className="show-all-btn"
+                            onClick={handleShowAllTransactions}
+                        >
                             Show All Transactions
                         </button>
                     </>
-
                 ) : (
                     <p>No transactions available.</p>
                 )}

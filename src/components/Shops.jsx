@@ -12,6 +12,11 @@ const Shops = () => {
   const [error, setError] = useState("");
   const [selectedShop, setSelectedShop] = useState(null);
 
+  // 👉 New state for reveal-contact flow
+  const [revealedContact, setRevealedContact] = useState(null);
+  const [isRevealing, setIsRevealing] = useState(false);
+  const [revealError, setRevealError] = useState("");
+
   const getTodayHours = (hours = []) => {
     const todayName = dayNames[new Date().getDay()];
     return hours.find((h) => h.day === todayName);
@@ -34,7 +39,7 @@ const Shops = () => {
 
     try {
       const res = await axiosInstance.get("/api/users/protected/shops", {
-        params: { searchQuery: query },
+        params: { search: query || undefined },
         withCredentials: true,
       });
 
@@ -59,10 +64,60 @@ const Shops = () => {
 
   const openShopModal = (shop) => {
     setSelectedShop(shop);
+    // reset reveal contact state whenever a new shop is opened
+    setRevealedContact(null);
+    setRevealError("");
+    setIsRevealing(false);
   };
 
   const closeModal = () => {
     setSelectedShop(null);
+    setRevealedContact(null);
+    setRevealError("");
+    setIsRevealing(false);
+  };
+
+  // 🔔 Call reveal-contact API for the selected shop
+  const handleRevealContact = async () => {
+    if (!selectedShop) return;
+
+    const profileId = selectedShop.id || selectedShop._id;
+    if (!profileId) {
+      setRevealError("Shop ID missing. Please try again.");
+      return;
+    }
+
+    try {
+      setIsRevealing(true);
+      setRevealError("");
+
+      const res = await axiosInstance.post(
+        `/api/users/protected/profile-view/${profileId}/reveal-contact`,
+        {},
+        { withCredentials: true }
+      );
+
+      const data = res.data || {};
+
+      if (!data.success) {
+        setRevealError(data.message || "Unable to reveal contact.");
+        return;
+      }
+
+      // ✅ Save revealed contact (phone + whatsapp)
+      setRevealedContact({
+        phone: data.phone || null,
+        whatsapp: data.whatsapp || null,
+      });
+    } catch (err) {
+      console.error("Error revealing contact:", err);
+      const msg =
+        err?.response?.data?.message ||
+        "Failed to reveal contact. Please try again.";
+      setRevealError(msg);
+    } finally {
+      setIsRevealing(false);
+    }
   };
 
   return (
@@ -163,178 +218,202 @@ const Shops = () => {
       </div>
 
       {/* 🔸 Modal with full shop details */}
-      {selectedShop && (() => {
-        const basics = selectedShop.basics || {};
-        const displayAddress = buildDisplayAddress(selectedShop);
-        const todayHours = getTodayHours(selectedShop.hours || []);
+      {selectedShop &&
+        (() => {
+          const basics = selectedShop.basics || {};
+          const displayAddress = buildDisplayAddress(selectedShop);
+          const todayHours = getTodayHours(selectedShop.hours || []);
 
-        const allItems =
-          selectedShop.catalog?.items?.length > 0
-            ? selectedShop.catalog.items
-            : selectedShop.items || [];
+          const allItems =
+            selectedShop.catalog?.items?.length > 0
+              ? selectedShop.catalog.items
+              : selectedShop.items || [];
 
-        const allServices =
-          selectedShop.catalog?.services?.length > 0
-            ? selectedShop.catalog.services
-            : selectedShop.services || [];
+          const allServices =
+            selectedShop.catalog?.services?.length > 0
+              ? selectedShop.catalog.services
+              : selectedShop.services || [];
 
-        const whatsapp =
-          selectedShop.whatsapp ||
-          basics.whatsapp ||
-          selectedShop.contact?.whatsapp;
+          return (
+            <div className="shops-modal-overlay" onClick={closeModal}>
+              <div
+                className="shops-modal"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button className="shops-modal-close" onClick={closeModal}>
+                  ✕
+                </button>
 
-        return (
-          <div className="shops-modal-overlay" onClick={closeModal}>
-            <div
-              className="shops-modal"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button className="shops-modal-close" onClick={closeModal}>
-                ✕
-              </button>
+                <div className="shops-modal-header">
+                  <div className="shops-modal-image-wrapper">
+                    <img
+                      src={
+                        selectedShop.photoUrl ||
+                        selectedShop.imageUrl ||
+                        "https://via.placeholder.com/400x250?text=Shop+Image"
+                      }
+                      alt={basics.shopName || selectedShop.shopName || "Shop"}
+                      className="shops-modal-image"
+                    />
+                  </div>
 
-              <div className="shops-modal-header">
-                <div className="shops-modal-image-wrapper">
-                  <img
-                    src={
-                      selectedShop.photoUrl ||
-                      selectedShop.imageUrl ||
-                      "https://via.placeholder.com/400x250?text=Shop+Image"
-                    }
-                    alt={basics.shopName || selectedShop.shopName || "Shop"}
-                    className="shops-modal-image"
-                  />
+                  <div className="shops-modal-title-block">
+                    <h2 className="shops-modal-title">
+                      {basics.shopName || selectedShop.shopName || "Shop Name"}
+                    </h2>
+
+                    {basics.tagline && (
+                      <p className="shops-modal-tagline">
+                        “{basics.tagline}”
+                      </p>
+                    )}
+
+                    <p className="shops-modal-location">
+                      {displayAddress ||
+                        selectedShop.address ||
+                        "Location not available"}
+                    </p>
+
+                    {(basics.category || selectedShop.category) && (
+                      <p className="shops-modal-category">
+                        Category: {basics.category || selectedShop.category}
+                      </p>
+                    )}
+
+                    {/* Today's hours */}
+                    {todayHours && (
+                      <p className="shops-modal-timings">
+                        Today:{" "}
+                        {todayHours.open
+                          ? `${todayHours.from || "--"} - ${
+                              todayHours.to || "--"
+                            }`
+                          : "Closed"}
+                      </p>
+                    )}
+
+                    {/* Status */}
+                    {selectedShop.status && (
+                      <p
+                        className={`shops-modal-status shops-status-${selectedShop.status}`}
+                      >
+                        Status: {selectedShop.status}
+                      </p>
+                    )}
+
+                    {/* Owner name */}
+                    {selectedShop.name && (
+                      <p className="shops-modal-owner">
+                        Owner: {selectedShop.name}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
-                <div className="shops-modal-title-block">
-                  <h2 className="shops-modal-title">
-                    {basics.shopName || selectedShop.shopName || "Shop Name"}
-                  </h2>
+                {/* 🔐 Contact section – phone & WhatsApp hidden until reveal */}
+                <div className="shops-modal-section">
+                  <h3 className="shops-section-title">Contact</h3>
 
-                  {basics.tagline && (
-                    <p className="shops-modal-tagline">“{basics.tagline}”</p>
+                  {revealError && (
+                    <p className="shops-error-text">{revealError}</p>
                   )}
 
-                  <p className="shops-modal-location">
-                    {displayAddress ||
-                      selectedShop.address ||
-                      "Location not available"}
-                  </p>
-
-                  {(basics.category || selectedShop.category) && (
-                    <p className="shops-modal-category">
-                      Category: {basics.category || selectedShop.category}
-                    </p>
-                  )}
-
-                  {/* Today's hours */}
-                  {todayHours && (
-                    <p className="shops-modal-timings">
-                      Today:{" "}
-                      {todayHours.open
-                        ? `${todayHours.from || "--"} - ${
-                            todayHours.to || "--"
-                          }`
-                        : "Closed"}
-                    </p>
-                  )}
-
-                  {/* Contact info */}
-                  {selectedShop.phone && (
-                    <p className="shops-modal-contact">
-                      Phone: {selectedShop.phone}
-                    </p>
-                  )}
-                  {whatsapp && (
-                    <p className="shops-modal-contact">
-                      WhatsApp: {whatsapp}
-                    </p>
-                  )}
-
-                  {/* Status */}
-                  {selectedShop.status && (
-                    <p
-                      className={`shops-modal-status shops-status-${selectedShop.status}`}
-                    >
-                      Status: {selectedShop.status}
-                    </p>
-                  )}
-
-                  {/* Owner name */}
-                  {selectedShop.name && (
-                    <p className="shops-modal-owner">
-                      Owner: {selectedShop.name}
-                    </p>
+                  {revealedContact ? (
+                    <>
+                      {revealedContact.phone && (
+                        <p className="shops-modal-contact">
+                          Phone: {revealedContact.phone}
+                        </p>
+                      )}
+                      {revealedContact.whatsapp && (
+                        <p className="shops-modal-contact">
+                          WhatsApp: {revealedContact.whatsapp}
+                        </p>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <p className="shops-modal-contact-muted">
+                        Contact details are hidden. ₹15 will be deducted from your
+                        wallet to view this shop&apos;s contact.
+                      </p>
+                      <button
+                        className="shops-modal-contact-btn"
+                        onClick={handleRevealContact}
+                        disabled={isRevealing}
+                      >
+                        {isRevealing ? "Processing..." : "Get Contact"}
+                      </button>
+                    </>
                   )}
                 </div>
+
+                {/* About */}
+                {(basics.about || selectedShop.about) && (
+                  <div className="shops-modal-section">
+                    <h3 className="shops-section-title">About</h3>
+                    <p className="shops-description">
+                      {basics.about || selectedShop.about}
+                    </p>
+                  </div>
+                )}
+
+                {/* Items / Price list (ONLY in modal) */}
+                {allItems.length > 0 && (
+                  <div className="shops-modal-section">
+                    <h3 className="shops-section-title">Items</h3>
+                    <div className="shops-items-list">
+                      {allItems.map((item, idx) => (
+                        <div key={idx} className="shops-item-row">
+                          <span className="shops-item-name">
+                            {item.name || "Item"}
+                          </span>
+                          <span className="shops-item-price">
+                            {item.price ? `₹${item.price}` : ""}
+                            {item.unit ? ` / ${item.unit}` : ""}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Services list (ONLY in modal) */}
+                {allServices.length > 0 && (
+                  <div className="shops-modal-section">
+                    <h3 className="shops-section-title">Services</h3>
+                    <ul className="shops-services-list">
+                      {allServices.map((service, idx) => (
+                        <li key={idx} className="shops-service-pill">
+                          {service}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Weekly Timings */}
+                {selectedShop.hours?.length > 0 && (
+                  <div className="shops-modal-section">
+                    <h3 className="shops-section-title">Weekly Timings</h3>
+                    <div className="shops-hours-list">
+                      {selectedShop.hours.map((h, idx) => (
+                        <div key={idx} className="shops-hours-row">
+                          <span className="shops-hours-day">{h.day}</span>
+                          <span className="shops-hours-time">
+                            {h.open
+                              ? `${h.from || "--"} - ${h.to || "--"}`
+                              : "Closed"}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-
-              {/* About */}
-              {(basics.about || selectedShop.about) && (
-                <div className="shops-modal-section">
-                  <h3 className="shops-section-title">About</h3>
-                  <p className="shops-description">
-                    {basics.about || selectedShop.about}
-                  </p>
-                </div>
-              )}
-
-              {/* Items / Price list (ONLY in modal) */}
-              {allItems.length > 0 && (
-                <div className="shops-modal-section">
-                  <h3 className="shops-section-title">Items</h3>
-                  <div className="shops-items-list">
-                    {allItems.map((item, idx) => (
-                      <div key={idx} className="shops-item-row">
-                        <span className="shops-item-name">
-                          {item.name || "Item"}
-                        </span>
-                        <span className="shops-item-price">
-                          {item.price ? `₹${item.price}` : ""}
-                          {item.unit ? ` / ${item.unit}` : ""}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Services list (ONLY in modal) */}
-              {allServices.length > 0 && (
-                <div className="shops-modal-section">
-                  <h3 className="shops-section-title">Services</h3>
-                  <ul className="shops-services-list">
-                    {allServices.map((service, idx) => (
-                      <li key={idx} className="shops-service-pill">
-                        {service}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Weekly Timings */}
-              {selectedShop.hours?.length > 0 && (
-                <div className="shops-modal-section">
-                  <h3 className="shops-section-title">Weekly Timings</h3>
-                  <div className="shops-hours-list">
-                    {selectedShop.hours.map((h, idx) => (
-                      <div key={idx} className="shops-hours-row">
-                        <span className="shops-hours-day">{h.day}</span>
-                        <span className="shops-hours-time">
-                          {h.open
-                            ? `${h.from || "--"} - ${h.to || "--"}`
-                            : "Closed"}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
-          </div>
-        );
-      })()}
+          );
+        })()}
     </div>
   );
 };

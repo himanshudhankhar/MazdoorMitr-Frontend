@@ -17,15 +17,22 @@ export default function ShopDashboard() {
   const [loadingExplore, setLoadingExplore] = useState(false);
   const [exploreError, setExploreError] = useState("");
 
+  // NEW: state for explore-shop modal + contact reveal
+  const [selectedShop, setSelectedShop] = useState(null);
+  const [contactLoading, setContactLoading] = useState(false);
+  const [contactError, setContactError] = useState("");
+  const [contactInfo, setContactInfo] = useState(null);
+
+  const userType = localStorage.getItem("userType");
+
   // ====== FETCH OWN SHOP ======
   useEffect(() => {
-    const userType = localStorage.getItem("userType");
+    // Only BusinessOwner can access this page
+    if (userType !== "BusinessOwner") {
+      navigate("/app/home");
+      return;
+    }
 
-        // If BusinessOwner tries to open Profile, redirect instantly
-        if (userType !== "BusinessOwner") {
-            navigate("/app/home");
-            return; // Stop further execution
-        }
     async function fetchMyShop() {
       setLoadingMyShop(true);
       setMyShopError("");
@@ -42,7 +49,7 @@ export default function ShopDashboard() {
       }
     }
     fetchMyShop();
-  }, []);
+  }, [navigate, userType]);
 
   // ====== FETCH OTHER SHOPS / WORKERS ======
   async function fetchExplore() {
@@ -51,13 +58,11 @@ export default function ShopDashboard() {
 
     try {
       if (tab === "shops") {
-        // GET list of shops
         const res = await axiosInstance.get("/api/users/protected/shops", {
           params: { search: search || undefined },
         });
         setShops(res.data.shops || []);
       } else {
-        // WORKERS: use POST /protected/search-profiles
         const res = await axiosInstance.post(
           "/api/users/protected/search-profiles",
           { query: search || "" }
@@ -77,7 +82,6 @@ export default function ShopDashboard() {
   }
 
   useEffect(() => {
-    // reload when tab changes
     fetchExplore();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);
@@ -87,6 +91,91 @@ export default function ShopDashboard() {
     shop?.photos?.imageUrl ||
     shop?.photos?.logoUrl ||
     "";
+
+  const formatCreatedAt = (createdAt) => {
+    if (!createdAt) return "";
+    let ms = createdAt;
+    if (typeof createdAt === "object") {
+      const secs = createdAt._seconds ?? createdAt.seconds;
+      if (typeof secs === "number") ms = secs * 1000;
+    }
+    const d = new Date(ms);
+    if (Number.isNaN(d.getTime())) return "";
+    return d.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  const formatHoursSummary = (hoursArr) => {
+    if (!Array.isArray(hoursArr) || hoursArr.length === 0) return "";
+    const allSame =
+      hoursArr.every((h) => h.open) &&
+      hoursArr.every(
+        (h) => h.from === hoursArr[0].from && h.to === hoursArr[0].to
+      );
+    if (allSame) {
+      return `Daily ${hoursArr[0].from}–${hoursArr[0].to}`;
+    }
+    const first = hoursArr[0];
+    const last = hoursArr[hoursArr.length - 1];
+    return `${first.day}–${last.day} ${first.from}–${first.to}`;
+  };
+
+  const openShopModal = (shop) => {
+    setSelectedShop(shop);
+    setContactInfo(null);
+    setContactError("");
+    setContactLoading(false);
+  };
+
+  const closeShopModal = () => {
+    setSelectedShop(null);
+    setContactInfo(null);
+    setContactError("");
+    setContactLoading(false);
+  };
+
+  const handleGetContact = async () => {
+    if (!selectedShop) return;
+    try {
+      setContactLoading(true);
+      setContactError("");
+      setContactInfo(null);
+
+      const res = await axiosInstance.post(
+        `/api/users/protected/profile-view/${selectedShop.id}/reveal-contact`,
+        {},
+        { withCredentials: true }
+      );
+
+      const data = res.data || {};
+      if (data.success === false) {
+        setContactError(data.message || "Failed to get contact.");
+        return;
+      }
+
+      setContactInfo({
+        phone: data.phone || null,
+        whatsapp: data.whatsapp || null,
+      });
+
+      if (data.message) {
+        // optional toast/alert
+        console.log("Contact reveal:", data.message);
+      }
+    } catch (err) {
+      console.error("Get contact error:", err);
+      const msg =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        "Failed to get contact.";
+      setContactError(msg);
+    } finally {
+      setContactLoading(false);
+    }
+  };
 
   return (
     <div className="shop_dashboard_page">
@@ -236,7 +325,8 @@ export default function ShopDashboard() {
             <button
               type="button"
               className={
-                "shop_dashboard_tab" + (tab === "workers" ? " is-active" : "")
+                "shop_dashboard_tab" +
+                (tab === "workers" ? " is-active" : "")
               }
               onClick={() => setTab("workers")}
             >
@@ -283,54 +373,112 @@ export default function ShopDashboard() {
               </div>
             )}
 
-            {shops.map((shop) => (
-              <div
-                key={shop.id}
-                className="shop_dashboard_card shop_dashboard_card_small"
-              >
-                <div className="shop_dashboard_card_head">
-                  <div>
-                    <h3 className="shop_dashboard_card_title">
-                      {shop.basics?.shopName || "Unnamed Shop"}
-                    </h3>
-                    <div className="shop_dashboard_chip">
-                      {shop.basics?.category || "Category"}
+            {shops.map((shop) => {
+              const photoUrl = getShopPhotoUrl(shop);
+              const createdAtLabel = formatCreatedAt(shop.createdAt);
+              const hoursSummary = formatHoursSummary(shop.hours);
+              const itemsCount = shop.catalog?.items
+                ? shop.catalog.items.length
+                : 0;
+              const servicesCount = shop.catalog?.services
+                ? shop.catalog.services.length
+                : 0;
+
+              const firstItem =
+                shop.catalog?.items && shop.catalog.items.length > 0
+                  ? shop.catalog.items[0]
+                  : null;
+
+              return (
+                <div
+                  key={shop.id}
+                  className="shop_dashboard_card shop_dashboard_card_small shop_dashboard_card_clickable"
+                  onClick={() => openShopModal(shop)}
+                >
+                  <div className="shop_dashboard_card_head">
+                    <div>
+                      <h3 className="shop_dashboard_card_title">
+                        {shop.basics?.shopName || "Unnamed Shop"}
+                      </h3>
+
+                      <div className="shop_dashboard_myshop_owner_line">
+                        <span className="shop_dashboard_muted_small">
+                          Owner:&nbsp;
+                        </span>
+                        <span>{shop.name || "—"}</span>
+                      </div>
+
+                      <div className="shop_dashboard_chip_row">
+                        <div className="shop_dashboard_chip">
+                          {shop.basics?.category || "Category"}
+                        </div>
+                        {shop.status && (
+                          <div className="shop_dashboard_chip shop_dashboard_chip_status">
+                            {shop.status}
+                          </div>
+                        )}
+                      </div>
+
+                      {shop.basics?.tagline && (
+                        <div className="shop_dashboard_tagline">
+                          {shop.basics.tagline}
+                        </div>
+                      )}
+
+                      {createdAtLabel && (
+                        <div className="shop_dashboard_muted_small">
+                          Since {createdAtLabel}
+                        </div>
+                      )}
                     </div>
+
+                    {photoUrl && (
+                      <img
+                        className="shop_dashboard_card_image"
+                        src={photoUrl}
+                        alt="Shop"
+                      />
+                    )}
                   </div>
-                  {getShopPhotoUrl(shop) && (
-                    <img
-                      className="shop_dashboard_card_image"
-                      src={getShopPhotoUrl(shop)}
-                      alt="Shop"
-                    />
-                  )}
+
+                  <p className="shop_dashboard_card_text">
+                    {shop.basics?.about || "No description"}
+                  </p>
+
+                  <div className="shop_dashboard_mini_kv">
+                    <span>
+                      {shop.contact?.address ? `${shop.contact.address}, ` : ""}
+                      {shop.contact?.city || "-"}
+                      {shop.contact?.pincode
+                        ? ` - ${shop.contact.pincode}`
+                        : ""}
+                    </span>
+                    <span>{hoursSummary || "Timings not set"}</span>
+                  </div>
+
+                  <div className="shop_dashboard_mini_kv">
+                    <span>
+                      Items: {itemsCount} • Services: {servicesCount}
+                    </span>
+                    {firstItem && (
+                      <span>
+                        Popular item:&nbsp;
+                        <strong>
+                          {firstItem.name}
+                          {firstItem.price
+                            ? ` (₹${String(firstItem.price).replace(/`/g, "")})`
+                            : ""}
+                        </strong>
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <p className="shop_dashboard_card_text">
-                  {shop.basics?.about || "No description"}
-                </p>
-                <div className="shop_dashboard_mini_kv">
-                  <span>
-                    {shop.contact?.city || "-"},{" "}
-                    {shop.contact?.pincode || ""}
-                  </span>
-                  <span>
-                    Items:{" "}
-                    {shop.catalog?.items
-                      ? shop.catalog.items.length
-                      : 0}
-                    {" · "}
-                    Services:{" "}
-                    {shop.catalog?.services
-                      ? shop.catalog.services.length
-                      : 0}
-                  </span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
-        {/* WORKERS LIST */}
+        {/* WORKERS LIST (unchanged) */}
         {tab === "workers" && (
           <div className="shop_dashboard_grid">
             {loadingExplore && workers.length === 0 && (
@@ -381,6 +529,176 @@ export default function ShopDashboard() {
           </div>
         )}
       </section>
+
+      {/* ====== SHOP DETAILS MODAL (Explore → shop card click) ====== */}
+      {selectedShop && (
+        <div
+          className="shop_dashboard_modal_overlay"
+          onClick={closeShopModal}
+        >
+          <div
+            className="shop_dashboard_modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="shop_dashboard_modal_close"
+              onClick={closeShopModal}
+            >
+              ✕
+            </button>
+
+            <div className="shop_dashboard_modal_header">
+              <div>
+                <h2 className="shop_dashboard_modal_title">
+                  {selectedShop.basics?.shopName || "Unnamed Shop"}
+                </h2>
+                <p className="shop_dashboard_muted_small">
+                  Owner: {selectedShop.name || "—"}
+                </p>
+                <div className="shop_dashboard_chip_row">
+                  <div className="shop_dashboard_chip">
+                    {selectedShop.basics?.category || "Category"}
+                  </div>
+                  {selectedShop.status && (
+                    <div className="shop_dashboard_chip shop_dashboard_chip_status">
+                      {selectedShop.status}
+                    </div>
+                  )}
+                </div>
+                {selectedShop.basics?.tagline && (
+                  <p className="shop_dashboard_tagline">
+                    {selectedShop.basics.tagline}
+                  </p>
+                )}
+              </div>
+
+              {getShopPhotoUrl(selectedShop) && (
+                <img
+                  className="shop_dashboard_modal_image"
+                  src={getShopPhotoUrl(selectedShop)}
+                  alt="Shop"
+                />
+              )}
+            </div>
+
+            {/* About */}
+            {selectedShop.basics?.about && (
+              <div className="shop_dashboard_modal_section">
+                <h3 className="shop_dashboard_subtitle">About</h3>
+                <p className="shop_dashboard_modal_text">
+                  {selectedShop.basics.about}
+                </p>
+              </div>
+            )}
+
+            {/* Address & timings */}
+            <div className="shop_dashboard_modal_section">
+              <h3 className="shop_dashboard_subtitle">Location & Timings</h3>
+              <p className="shop_dashboard_modal_text">
+                {selectedShop.contact?.address || "-"}
+                {selectedShop.contact?.city
+                  ? `, ${selectedShop.contact.city}`
+                  : ""}
+                {selectedShop.contact?.pincode
+                  ? ` - ${selectedShop.contact.pincode}`
+                  : ""}
+              </p>
+              {selectedShop.contact?.landmark && (
+                <p className="shop_dashboard_modal_text">
+                  Landmark: {selectedShop.contact.landmark}
+                </p>
+              )}
+              <p className="shop_dashboard_modal_text">
+                {formatHoursSummary(selectedShop.hours) || "Timings not set"}
+              </p>
+            </div>
+
+            {/* Contact (masked / reveal) */}
+            <div className="shop_dashboard_modal_section">
+              <h3 className="shop_dashboard_subtitle">Contact</h3>
+              <p className="shop_dashboard_modal_text">
+                Phone:&nbsp;
+                {contactInfo?.phone
+                  ? contactInfo.phone
+                  : "Hidden (tap Get Contact)"}
+              </p>
+              <p className="shop_dashboard_modal_text">
+                WhatsApp:&nbsp;
+                {contactInfo?.whatsapp
+                  ? contactInfo.whatsapp
+                  : selectedShop.basics?.whatsapp
+                  ? "Hidden (tap Get Contact)"
+                  : "Not provided"}
+              </p>
+
+              {contactError && (
+                <p className="shop_dashboard_error" style={{ marginTop: 6 }}>
+                  {contactError}
+                </p>
+              )}
+
+              <button
+                type="button"
+                className="shop_dashboard_btn shop_dashboard_btn_primary"
+                onClick={handleGetContact}
+                disabled={contactLoading}
+              >
+                {contactLoading ? "Getting contact…" : "Get Contact (₹15)"}
+              </button>
+            </div>
+
+            {/* Items */}
+            <div className="shop_dashboard_modal_section">
+              <h3 className="shop_dashboard_subtitle">Items</h3>
+              {selectedShop.catalog?.items &&
+              selectedShop.catalog.items.length > 0 ? (
+                <ul className="shop_dashboard_list">
+                  {selectedShop.catalog.items.map((item, idx) => (
+                    <li key={idx} className="shop_dashboard_list_item">
+                      <span>{item.name}</span>
+                      <span>
+                        {item.price
+                          ? `₹${String(item.price).replace(/`/g, "")}`
+                          : "Price not set"}
+                        {item.unit ? ` / ${item.unit}` : ""}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="shop_dashboard_muted_small">
+                  No items added yet.
+                </p>
+              )}
+            </div>
+
+            {/* Services */}
+            <div className="shop_dashboard_modal_section">
+              <h3 className="shop_dashboard_subtitle">Services</h3>
+              {selectedShop.catalog?.services &&
+              selectedShop.catalog.services.length > 0 ? (
+                <ul className="shop_dashboard_list">
+                  {selectedShop.catalog.services.map((svc, idx) => (
+                    <li key={idx} className="shop_dashboard_list_item">
+                      <span>{svc.name || "Service"}</span>
+                      <span>
+                        {svc.price
+                          ? `₹${String(svc.price).replace(/`/g, "")}`
+                          : "Price not set"}
+                        {svc.unit ? ` / ${svc.unit}` : ""}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="shop_dashboard_muted_small">
+                  No services added yet.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
