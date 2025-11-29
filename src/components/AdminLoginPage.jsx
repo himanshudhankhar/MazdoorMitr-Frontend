@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./AdminLoginPage.css";
-import axiosInstance from '../axiosConfig';
-import { useNavigate } from 'react-router-dom';
+import axiosInstance from "../axiosConfig";
+import { useNavigate } from "react-router-dom";
 
 const AdminLogin = () => {
   const [username, setUsername] = useState("");
@@ -12,10 +12,14 @@ const AdminLogin = () => {
   const handleSendOtp = async (event) => {
     event.preventDefault();
     try {
-      console.log("hi");
-      const response = await axiosInstance.post('/api/users/send-otp/admin-login', { passcode: username });
-      console.log(response.data);
-      alert("OTP sent successfully to registered mobile (check console in dev mode)");
+      const response = await axiosInstance.post(
+        "/api/users/send-otp/admin-login",
+        { passcode: username }
+      );
+      console.log("📨 OTP send response:", response.data);
+      alert(
+        "OTP sent successfully to registered mobile (check console in dev mode)"
+      );
       setOtpSent(true);
     } catch (error) {
       console.error("Error sending OTP:", error);
@@ -26,11 +30,32 @@ const AdminLogin = () => {
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      const response = await axiosInstance.post('/api/users/verify-otp/admin-login', { otp });
-      console.log('✅ Login successful:', response.data);
-      localStorage.setItem("authToken", response.data.token);
+      const response = await axiosInstance.post(
+        "/api/users/verify-otp/admin-login",
+        { otp }
+      );
+      console.log("✅ Login successful:", response.data);
+
+      const token = response?.data?.token;
+      if (!token) {
+        console.warn("No token in response, not redirecting.");
+        alert("Login response missing token. Check backend response shape.");
+        return;
+      }
+
+      // Store token and role
+      localStorage.setItem("authToken", token);
       localStorage.setItem("userType", "admin");
-      navigate('/admin-dashboard');
+
+      // First try SPA navigation
+      navigate("/admin-dashboard", { replace: true });
+
+      // Hard redirect fallback (if a guard or router glitch stops navigate)
+      setTimeout(() => {
+        if (window.location.pathname !== "/admin-dashboard") {
+          window.location.replace("/admin-dashboard");
+        }
+      }, 100);
     } catch (error) {
       console.error("❌ OTP verification failed:", error);
       alert("Invalid or expired OTP. Please try again.");
@@ -42,21 +67,31 @@ const AdminLogin = () => {
       <header className="admin-login-header">
         <h1>Admin Portal</h1>
       </header>
+
       <div className="admin-login-container">
         <h2>Admin Login</h2>
-        <form>
+
+        {/* Use a single form; Login button submits it */}
+        <form onSubmit={handleLogin}>
           <div className="admin-login-form-group">
             <label htmlFor="passcode">Passcode:</label>
             <input
               type="text"
-              id="username"
+              id="passcode"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter admin passcode"
               required
             />
           </div>
-          <button onClick={handleSendOtp} className="admin-login-btn" style={{marginBottom: '10px'}}>
+
+          {/* Send OTP does NOT submit form */}
+          <button
+            type="button"
+            onClick={handleSendOtp}
+            className="admin-login-btn"
+            style={{ marginBottom: "10px" }}
+          >
             Send OTP on Mobile
           </button>
 
@@ -73,13 +108,15 @@ const AdminLogin = () => {
                   required
                 />
               </div>
-              <button onClick={handleLogin} className="admin-login-btn">
+
+              <button type="submit" className="admin-login-btn">
                 Login
               </button>
             </>
           )}
         </form>
       </div>
+
       <footer className="admin-login-footer-login">
         <p>&copy; 2025 Admin Portal. All Rights Reserved.</p>
       </footer>

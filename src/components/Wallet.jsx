@@ -31,16 +31,30 @@ const Wallet = () => {
         localStorage.getItem('userId') || localStorage.getItem('shopId') || null;
 
     useEffect(() => {
+
+
         const fetchWalletDetails = async () => {
             try {
-                const userId =
-                    localStorage.getItem('userId') || localStorage.getItem('shopId');
-                const userType = localStorage.getItem('userType');
+                // Decide which ID to use based on last login type
+                const accountType = localStorage.getItem("accountType"); // "USER" or "SHOP"
+
+                let userId = null;
+                let userTypeForBackend = null;
+
+                if (accountType === "SHOP") {
+                    userId = localStorage.getItem("shopId");
+                    userTypeForBackend = "BusinessOwner";
+                } else {
+                    // default to normal user
+                    userId = localStorage.getItem("userId");
+                    userTypeForBackend = "user";
+                }
+
                 if (!userId) return;
 
                 const response = await axiosInstance.post(
-                    '/api/users/protected/wallet-details',
-                    { userId, userType },
+                    "/api/users/protected/wallet-details",
+                    { userId, userType: userTypeForBackend },
                     { withCredentials: true }
                 );
 
@@ -48,9 +62,33 @@ const Wallet = () => {
                 setAvailableFunds(balance || 0);
                 setTransactions(transactionHistory || []);
             } catch (error) {
-                console.error('Failed to fetch wallet details:', error);
+                console.error("Failed to fetch wallet details:", error);
             }
         };
+
+
+
+
+        // const fetchWalletDetails = async () => {
+        //     try {
+        //         const userId =
+        //             localStorage.getItem('userId') || localStorage.getItem('shopId');
+        //         const userType = localStorage.getItem('userType');
+        //         if (!userId) return;
+
+        //         const response = await axiosInstance.post(
+        //             '/api/users/protected/wallet-details',
+        //             { userId, userType },
+        //             { withCredentials: true }
+        //         );
+
+        //         const { balance, transactionHistory } = response.data;
+        //         setAvailableFunds(balance || 0);
+        //         setTransactions(transactionHistory || []);
+        //     } catch (error) {
+        //         console.error('Failed to fetch wallet details:', error);
+        //     }
+        // };
 
         fetchWalletDetails();
     }, []);

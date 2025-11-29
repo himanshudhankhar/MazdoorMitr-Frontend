@@ -48,6 +48,9 @@ import Shop from './components/Shops';
 import Marketplace from './components/MarketPlace';
 import ShopDashboard from './components/ShopDashboard';
 import ViewProfile from './components/ViewProfile';
+import AdminProtectedRoute from './components/AdminProtectedRoute';
+import ReviewShops from './components/ReviewShops';
+import UnifiedLogin from './components/UnifiedLogin';
 function App() {
 
   return (
@@ -55,11 +58,17 @@ function App() {
       <BrowserRouter>
         <Routes>
         <Route exact path="/" element={<MazdoorMitrLandingPage />} />
-          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/login" element={<UnifiedLogin />} />
+          {/* <Route exact path="/login" element={<Login />} /> */}
+
           <Route exact path="/admin-login" element={<AdminLoginPage />} />
           <Route exact path="/employee-login" element={<EmployeeLogin />} />
           <Route exact path="/employee-dashboard" element={<ProtectedRoute userType="Employee"> <EmployeeDashboard /></ProtectedRoute>} />
-          <Route exact path="/admin-dashboard" element={<ProtectedRoute userType="admin"><AdminDashboard /></ProtectedRoute> }/>
+          {/* <Route exact path="/admin-dashboard" element={<ProtectedRoute userType="admin"><AdminDashboard /></ProtectedRoute> }/> */}
+          
+          <Route exact path="/admin-dashboard" element={<AdminProtectedRoute userType="admin"><AdminDashboard /></AdminProtectedRoute> }/>
+          <Route exact path="/review-shops" element={<ProtectedRoute userType="admin"><ReviewShops /></ProtectedRoute> }/>
+
           <Route exact path="/labourers-added" element={<LabourersAddedPage />} />
           <Route exact path="/registered-labourers-by-employee" element={<ProtectedRoute userType="Employee"> <RegisteredLabourersByEmployee /></ProtectedRoute>} />
           <Route exact path="/register-labourers-by-employee" element={<ProtectedRoute userType="Employee"> <RegisterLabourerByEmployee /></ProtectedRoute>} />

@@ -48,8 +48,8 @@ const CreateLabourerProfile = () => {
                 }
 
             } catch (err) {
-                console.error("Failed to load profile", err.response.data.message);
-                if(err.response.data.message == "User Type mismatch") {
+                console.error("Failed to load profile", err?.response?.data?.message);
+                if (err?.response?.data?.message === "User Type mismatch") {
                     alert("You are not registered as Labourer!");
                     navigate("/app/home");
                 }
@@ -57,23 +57,28 @@ const CreateLabourerProfile = () => {
         };
 
         fetchProfile();
-    }, []);
+    }, [navigate]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         try {
             const fileInput = document.getElementById("profileImage");
-            if(!fileInput  && !imageUrl) {
+            if (!fileInput && !imageUrl) {
                 alert("Upload Image!!");
                 return;
             }
-            var userId = localStorage.getItem("userId");
+
+            const userId = localStorage.getItem("userId");
             const formData = new FormData();
-            if(fileInput) {
-            const file = fileInput.files[0];
-            formData.append("file", file); // image
+
+            if (fileInput) {
+                const file = fileInput.files[0];
+                if (file) {
+                    formData.append("file", file);
+                }
             }
+
             formData.append("name", name);
             formData.append("location", location);
             formData.append("contactNumber", contactNumber);
@@ -82,15 +87,22 @@ const CreateLabourerProfile = () => {
             formData.append("callTimeEnd", callTimeEnd);
             formData.append("id", userId);
 
-            const res = await axiosInstance.post("/api/users/protected/labourer/profile", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-                withCredentials: true, // important for auth
-            });
+            const res = await axiosInstance.post(
+                "/api/users/protected/labourer/profile",
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                    withCredentials: true,
+                }
+            );
 
             if (res.status === 200) {
-                alert("Profile updated successfully!");
+                alert("Profile updated successfully! Redirecting to home...");
+                setTimeout(() => {
+                    navigate("/app/home");
+                }, 3000);
             } else {
                 alert("Failed to update profile.");
             }
@@ -99,7 +111,6 @@ const CreateLabourerProfile = () => {
             alert("Error updating profile");
         }
     };
-
 
     return (
         <div className="create-labourer-profile">

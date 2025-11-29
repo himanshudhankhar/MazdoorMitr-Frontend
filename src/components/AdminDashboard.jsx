@@ -125,6 +125,9 @@ const AdminDashboard = () => {
           <button onClick={() => handleRedirect("/block-profiles")} className="dashboard-btn-admin-dashboard">
             Block Profiles
           </button>
+          <button onClick={() => handleRedirect("/review-shops")} className="dashboard-btn-admin-dashboard">
+            Review Shops
+          </button>
         </div>
       </div>
 

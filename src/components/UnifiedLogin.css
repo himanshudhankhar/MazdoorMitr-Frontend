@@ -1,0 +1,172 @@
+.unified_login_page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  padding: 16px;
+}
+
+.unified_login_card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px 20px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+}
+
+.unified_login_header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.unified_login_title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.unified_login_subtitle {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.unified_login_error {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.unified_login_form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.unified_login_label {
+  font-size: 14px;
+  color: #374151;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.unified_login_phone_row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.unified_login_phone_prefix {
+  padding: 8px 10px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.unified_login_input {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+.unified_login_input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
+}
+
+/* GENERAL BUTTONS */
+.unified_login_btn {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  color: #1f2937;        /* dark text always visible */
+}
+
+/* BLUE ACTION BUTTON */
+.unified_login_btn_primary {
+  background: #2563eb;
+  color: white;          /* white text safe on blue */
+}
+
+.unified_login_btn_primary:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+/* LINK BUTTON */
+.unified_login_btn_link {
+  background: transparent;
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+/* TEXT */
+.unified_login_hint {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.unified_login_info {
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 4px;
+}
+
+/* ROLE BUTTONS */
+.unified_login_roles {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ALWAYS VISIBLE TEXT BUTTON STYLE */
+.unified_login_role_btn {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;          /* light but contrasty */
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  color: #1f2937;                /* dark text */
+}
+
+.unified_login_role_btn:hover {
+  background: #e2e8f0;          /* slightly darker hover */
+  border-color: #2563eb;
+}
+
+/* ACCOUNT TYPE SELECTOR BUTTON */
+.unified_login_account_type_btn {
+  padding: 10px 5px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: left;
+  color: #1f2937;
+  margin: 5px;
+}
+
+.unified_login_account_type_btn_active {
+  background: #dbeafe;          /* light blue */
+  border-color: #2563eb;
+  color: #1e3a8a;               /* dark blue text */
+}
+
+.unified_login_account_type_btn:hover {
+  background: #e0e7ff;
+}

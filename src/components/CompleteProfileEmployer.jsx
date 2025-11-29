@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./CompleteProfileEmployer.css";
 import axiosInstance from "../axiosConfig";
 import { useNavigate } from "react-router-dom";
- 
+
 const CompleteProfile = () => {
   const navigate = useNavigate();
   const [profilePic, setProfilePic] = useState(null);
@@ -46,10 +46,9 @@ const CompleteProfile = () => {
         if (data.imageUrl) {
           setImageUrl(data.imageUrl);
         }
-
       } catch (err) {
-        console.error("Failed to load profile", err.response.data.message);
-        if (err.response.data.message == "User Type mismatch") {
+        console.error("Failed to load profile", err.response?.data?.message);
+        if (err.response?.data?.message === "User Type mismatch") {
           alert("You are not registered as Employer!");
           navigate("/app/home");
         }
@@ -57,10 +56,9 @@ const CompleteProfile = () => {
     };
 
     fetchProfile();
-  }, []);
+  }, [navigate]);
 
   const handleSubmit = async (event) => {
-    //////////////////////////////
     event.preventDefault();
 
     try {
@@ -69,12 +67,17 @@ const CompleteProfile = () => {
         alert("Upload Image!!");
         return;
       }
-      var userId = localStorage.getItem("userId");
+
+      const userId = localStorage.getItem("userId");
       const formData = new FormData();
+
       if (fileInput) {
         const file = fileInput.files[0];
-        formData.append("file", file); // image
+        if (file) {
+          formData.append("file", file);
+        }
       }
+
       formData.append("name", name);
       formData.append("location", location);
       formData.append("contactNumber", contactNumber);
@@ -83,15 +86,24 @@ const CompleteProfile = () => {
       formData.append("callTimeEnd", callTimeEnd);
       formData.append("id", userId);
 
-      const res = await axiosInstance.post("/api/users/protected/employer/profile", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true, // important for auth
-      });
+      const res = await axiosInstance.post(
+        "/api/users/protected/employer/profile",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
+      );
 
       if (res.status === 200) {
-        alert("Profile updated successfully!");
+        alert("Profile updated successfully! Redirecting to home...");
+
+        // 🔥 Redirect after 3 seconds
+        setTimeout(() => {
+          navigate("/app/home");
+        }, 3000);
       } else {
         alert("Failed to update profile.");
       }
@@ -99,7 +111,6 @@ const CompleteProfile = () => {
       console.error("Error updating profile:", error);
       alert("Error updating profile");
     }
-    /////////////////////////////
   };
 
   return (
@@ -114,7 +125,6 @@ const CompleteProfile = () => {
             <img src={changedImage ? profilePic : imageUrl} alt="Preview" />
           </div>
         )}
-        {/* {profilePic && <img src={profilePic} alt="Profile Preview" className="profile-pic-preview" />} */}
       </div>
 
       <div className="form-group">
