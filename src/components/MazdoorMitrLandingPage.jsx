@@ -105,6 +105,7 @@ const LandingPage = () => {
           <a href="/about-us">About Us</a>
           <a href="/terms-and-conditions">Terms & Conditions</a>
           <a href="/privacy-policy">Privacy Policy</a>
+          <a href="/shipping-policy">Shipping Policy</a>
           <a href="/refund-policy">Refund Policy</a>
           <a href="/contact-us">Contact Us</a>
         </div>

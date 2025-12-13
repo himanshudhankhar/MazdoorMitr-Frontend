@@ -51,6 +51,7 @@ import ViewProfile from './components/ViewProfile';
 import AdminProtectedRoute from './components/AdminProtectedRoute';
 import ReviewShops from './components/ReviewShops';
 import UnifiedLogin from './components/UnifiedLogin';
+import ShippingPolicy from './components/ShippingPolicy';
 function App() {
 
   return (
@@ -93,6 +94,7 @@ function App() {
           <Route exact path="/refund-policy" element={<RefundPolicy/>} />
           <Route exact path="/about-us" element={<AboutUs/>} />
           <Route exact path="/privacy-policy" element={<PrivacyPolicy/>} />
+          <Route exact path="/shipping-policy" element={<ShippingPolicy/>} />
           <Route exact path="/contact-us" element={<ContactUs/>} />
           <Route exact path="/modify-wallet-balance" element={<ProtectedRoute userType="admin"><ModifyWalletBalance /></ProtectedRoute>} />
           <Route exact path="/quickclap" element={<LandingPage />}/>
