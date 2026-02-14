@@ -185,3 +185,4 @@ button:disabled,
     font-size: 26px;
   }
 }
+.transfer-message { margin-top: 10px; font-size: 14px; color: #0077ff; font-weight: 500; }
