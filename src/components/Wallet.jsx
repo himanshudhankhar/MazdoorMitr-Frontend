@@ -95,7 +95,15 @@ const Wallet = () => {
     alert("Recharge API to be implemented.");
   };
 
-  const handleTransfer = async () => {
+  const handleTransfer = async () => { 
+    if(!upiId.trim()|| !upiId.trim().includes('@')){
+      setTransferMessage("Incorrect UPI ID provided. Please enter a valid UPI ID");
+      return;
+    }
+    if(!transferAmount || isNaN(transferAmount) || transferAmount <= 0){
+      setTransferMessage("Amount to be transferred should be a valid number greater than 0.");
+      return
+    }
     if (!upiId?.trim() || !transferAmount || Number(transferAmount) <= 0) {
       setTransferMessage("Please enter valid UPI ID and amount.");
       return;
