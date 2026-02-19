@@ -18,7 +18,32 @@ function formatTimestamp(timestamp) {
 
   return date.toLocaleString("en-IN", options);
 }
-
+const WITHDRAWAL_FINAL_STATUSES = ["processed", "reversed", "failed"];
+async function pollWithdrawalStatus({
+  payoutId,
+  axiosInstance,
+  intervalMs = 3000,
+  maxAttempts = 40,
+  onStatus,
+}) {
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    try {
+      const { data } = await axiosInstance.get(
+        "/api/users/protected/wallet/withdrawal-status",
+        { params: { payoutId }, withCredentials: true },
+      );
+      const status = (data?.status || "").toLowerCase();
+      if (typeof onStatus === "function") onStatus(status, data);
+      if (WITHDRAWAL_FINAL_STATUSES.includes(status)) {
+        return { status, data };
+      }
+    } catch (err) {
+      if (attempt === maxAttempts - 1) throw err;
+    }
+    await new Promise((r) => setTimeout(r, intervalMs));
+  }
+  return { status: "timeout", data: null };
+}
 const Wallet = () => {
   const [availableFunds, setAvailableFunds] = useState(0);
   const [rechargeAmount, setRechargeAmount] = useState("");
@@ -28,6 +53,7 @@ const Wallet = () => {
   const [transferMessage, setTransferMessage] = useState("");
   const [transferLoading, setTransferLoading] = useState(false);
   const transferIdempotencyKeyRef = useRef(null);
+  const [transferPhase, setTransferPhase] = useState("idle");
 
   // current wallet id can be user or shop
   const currentWalletId =
@@ -90,21 +116,116 @@ const Wallet = () => {
 
     fetchWalletDetails();
   }, []);
+  const refreshWalletDetails = async () => {
+    try {
+      const accountType = localStorage.getItem("accountType");
+      const userId =
+        accountType === "SHOP"
+          ? localStorage.getItem("shopId")
+          : localStorage.getItem("userId");
+      const userTypeForBackend =
+        accountType === "SHOP" ? "BusinessOwner" : "user";
+      if (!userId) return;
+      const res = await axiosInstance.post(
+        "/api/users/protected/wallet-details",
+        { userId, userType: userTypeForBackend },
+        { withCredentials: true },
+      );
+      setAvailableFunds(res.data?.balance ?? availableFunds);
+      setTransactions(res.data?.transactionHistory ?? transactions);
+    }
+    catch (error) {
+      console.log("Error in refreshing wallet balance", error)
+    }
+  };
 
   const handleRecharge = () => {
     alert("Recharge API to be implemented.");
   };
 
+  
+  //   if(!upiId.trim()|| !upiId.trim().includes('@')){
+  //     setTransferMessage("Incorrect UPI ID provided. Please enter a valid UPI ID");
+  //     return;
+  //   }
+  //   if(!transferAmount || isNaN(transferAmount) || transferAmount <= 0){
+  //     setTransferMessage("Amount to be transferred should be a valid number greater than 0.");
+  //     return
+  //   }
+  //   if (!upiId?.trim() || !transferAmount || Number(transferAmount) <= 0) {
+  //     setTransferMessage("Please enter valid UPI ID and amount.");
+  //     return;
+  //   }
+
+  //   // One idempotency key per transfer attempt (same key for double-click / retry)
+  //   if (!transferIdempotencyKeyRef.current) {
+  //     if (typeof crypto !== "undefined" && crypto.randomUUID) {
+  //       transferIdempotencyKeyRef.current = crypto.randomUUID(); // exactly 36 chars
+  //     } else {
+  //       const hex = "0123456789abcdef";
+  //       let s = "";
+  //       for (let i = 0; i < 32; i++) s += hex[Math.floor(Math.random() * 16)];
+  //       transferIdempotencyKeyRef.current = [
+  //         s.slice(0, 8),
+  //         s.slice(8, 12),
+  //         s.slice(12, 16),
+  //         s.slice(16, 20),
+  //         s.slice(20, 32),
+  //       ].join("-");
+  //     }
+  //   }
+  //   const idempotencyKey = transferIdempotencyKeyRef.current;
+
+  //   setTransferLoading(true);
+  //   setTransferMessage("");
+
+  //   try {
+  //     const { data } = await axiosInstance.post(
+  //       "/api/users/protected/wallet/withdraw",
+  //       {
+  //         upiAddress: upiId.trim(),
+  //         amount: Number(transferAmount),
+  //         idempotencyKey,
+  //       },
+  //       { withCredentials: true },
+  //     );
+
+  //     console.log("Fund transferred successfully:", data);
+  //     setTransferMessage("Fund transferred successfully!");
+  //     setAvailableFunds(
+  //       data.newBalance ?? availableFunds - Number(transferAmount),
+  //     );
+  //     setTransferAmount("");
+  //     setUpiId("");
+  //     transferIdempotencyKeyRef.current = null;
+  //   } catch (error) {
+  //     console.error("Failed to transfer funds:", error);
+  //     setTransferMessage("Failed to transfer funds. Please try again.");
+
+  //   } finally {
+  //     setTransferLoading(false);
+  //   }
+  // };
+
   const handleTransfer = async () => {
-    if (!upiId?.trim() || !transferAmount || Number(transferAmount) <= 0) {
-      setTransferMessage("Please enter valid UPI ID and amount.");
+    if (!upiId?.trim() || !upiId.trim().includes("@")) {
+      setTransferMessage("Incorrect UPI ID. Please enter a valid UPI ID.");
+      return;
+    }
+    if (
+      !transferAmount ||
+      isNaN(transferAmount) ||
+      Number(transferAmount) <= 0
+    ) {
+      setTransferMessage(
+        "Amount to be transferred should be a valid number greater than 0.",
+      );
       return;
     }
 
-    // One idempotency key per transfer attempt (same key for double-click / retry)
     if (!transferIdempotencyKeyRef.current) {
       if (typeof crypto !== "undefined" && crypto.randomUUID) {
-        transferIdempotencyKeyRef.current = crypto.randomUUID(); // exactly 36 chars
+        transferIdempotencyKeyRef.current = crypto.randomUUID();
       } else {
         const hex = "0123456789abcdef";
         let s = "";
@@ -121,7 +242,8 @@ const Wallet = () => {
     const idempotencyKey = transferIdempotencyKeyRef.current;
 
     setTransferLoading(true);
-    setTransferMessage("");
+    setTransferMessage("Processing payout...");
+    setTransferPhase("processing");
 
     try {
       const { data } = await axiosInstance.post(
@@ -134,22 +256,83 @@ const Wallet = () => {
         { withCredentials: true },
       );
 
-      console.log("Fund transferred successfully:", data);
-      setTransferMessage("Fund transferred successfully!");
-      setAvailableFunds(
-        data.newBalance ?? availableFunds - Number(transferAmount),
-      );
-      setTransferAmount("");
-      setUpiId("");
-      transferIdempotencyKeyRef.current = null;
+      const payoutId = data?.payoutId;
+      if (!payoutId) {
+        setTransferMessage(
+          "Transfer initiated. Check your transaction history.",
+        );
+        setTransferPhase("done");
+        setAvailableFunds(
+          data?.newBalance ?? availableFunds - Number(transferAmount),
+        );
+        setTransferAmount("");
+        setUpiId("");
+        transferIdempotencyKeyRef.current = null;
+        return;
+      }
+
+      const { status } = await pollWithdrawalStatus({
+        payoutId,
+        axiosInstance,
+        intervalMs: 3000,
+        onStatus: (s) => {
+          if (
+            s === "queued" ||
+            s === "pending" ||
+            !WITHDRAWAL_FINAL_STATUSES.includes(s)
+          ) {
+            setTransferMessage("Processing payout...");
+          }
+        },
+      });
+
+      setTransferPhase("done");
+      if (status === "processed") {
+        setTransferMessage(
+          "Money has been successfully transferred to your account!",
+        );
+        setAvailableFunds(
+          data?.newBalance ?? availableFunds - Number(transferAmount),
+        );
+        setTransferAmount("");
+        setUpiId("");
+        transferIdempotencyKeyRef.current = null;
+        await refreshWalletDetails();
+      } else if (status === "reversed") {
+        setTransferMessage(
+          "Transfer was reversed. Wallet will reflect the updated balance in a short while.",
+        );
+        setTransferAmount("");
+        setUpiId("");
+        transferIdempotencyKeyRef.current = null;
+        setTimeout(refreshWalletDetails, 2000);
+      } else if (status === "failed") {
+        setTransferMessage(
+          "Transfer failed. Amount has been refunded to your wallet.",
+        );
+        setTransferAmount("");
+        setUpiId("");
+        transferIdempotencyKeyRef.current = null;
+        setTimeout(refreshWalletDetails, 2000);
+      } else {
+        setTransferMessage(
+          "Transfer is taking longer than usual. Check your transaction history in a few minutes.",
+        );
+        setTransferAmount("");
+        setUpiId("");
+        transferIdempotencyKeyRef.current = null;
+      }
     } catch (error) {
       console.error("Failed to transfer funds:", error);
-      setTransferMessage("Failed to transfer funds. Please try again.");
+      setTransferPhase("done");
+      setTransferMessage(
+        error?.response?.data?.message ||
+          "Failed to transfer funds. Please try again.",
+      );
     } finally {
       setTransferLoading(false);
     }
   };
-
   const handleShowAllTransactions = async () => {
     try {
       const userId =
@@ -204,7 +387,7 @@ const Wallet = () => {
           onChange={(e) => setTransferAmount(e.target.value)}
         />
         <button onClick={handleTransfer} disabled={transferLoading}>
-            {transferLoading ? "Transferring..." : "Transfer"}
+          {transferLoading ? "Transferring..." : "Transfer"}
         </button>
         {transferMessage && (
           <p className="transfer-message">{transferMessage}</p>
