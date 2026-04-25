@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import "./Wallet.css";
 import axiosInstance from "../axiosConfig";
 import { useRef } from "react";
+
+const YOUR_RAZORPAY_KEY_ID = "rzp_live_RoNYuHnX9kJVm7";
+
+
 function formatTimestamp(timestamp) {
   const ts = timestamp?._seconds || timestamp?.seconds;
   if (!ts) return "Invalid date";
@@ -93,27 +97,6 @@ const Wallet = () => {
       }
     };
 
-    // const fetchWalletDetails = async () => {
-    //     try {
-    //         const userId =
-    //             localStorage.getItem('userId') || localStorage.getItem('shopId');
-    //         const userType = localStorage.getItem('userType');
-    //         if (!userId) return;
-
-    //         const response = await axiosInstance.post(
-    //             '/api/users/protected/wallet-details',
-    //             { userId, userType },
-    //             { withCredentials: true }
-    //         );
-
-    //         const { balance, transactionHistory } = response.data;
-    //         setAvailableFunds(balance || 0);
-    //         setTransactions(transactionHistory || []);
-    //     } catch (error) {
-    //         console.error('Failed to fetch wallet details:', error);
-    //     }
-    // };
-
     fetchWalletDetails();
   }, []);
   const refreshWalletDetails = async () => {
@@ -139,200 +122,174 @@ const Wallet = () => {
     }
   };
 
-  const handleRecharge = () => {
-    alert("Recharge API to be implemented.");
+  const handleRecharge = async () => {
+    try {
+      const amount = rechargeAmount; // make dynamic later
+
+      const accountType = localStorage.getItem("accountType"); // "USER" or "SHOP"
+
+      let userId = null;
+      let userTypeForBackend = null;
+
+      if (accountType === "SHOP") {
+        userId = localStorage.getItem("shopId");
+        userTypeForBackend = "BusinessOwner";
+      } else {
+        // default to normal user
+        userId = localStorage.getItem("userId");
+        userTypeForBackend = "user";
+      }
+
+
+      const token = localStorage.getItem("authToken");
+
+      // 🧾 Step 1: Create order
+      const orderRes = await axiosInstance.post(
+        "/api/users/protected/create-order",
+        { amount },
+      );
+
+      const data = orderRes.data;
+
+      if (!data.success) {
+        alert("Failed to create order");
+        return;
+      }
+
+      // 💳 Step 2: Razorpay Checkout
+      const options = {
+        key: YOUR_RAZORPAY_KEY_ID,
+        amount: data.amount,
+        currency: data.currency,
+        order_id: data.orderId,
+        name: "MazdoorMitr",
+        description: "Wallet Recharge",
+
+        handler: async function (response) {
+          try {
+            // 🔐 Step 3: Verify payment
+            const verifyRes = await axiosInstance.post(
+              "/api/users/protected/verify-payment",
+              {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            if (verifyRes.data.success) {
+              alert("Payment successful! Wallet updated.");
+              refreshWalletDetails();
+            } else {
+              alert("Payment verification failed");
+            }
+          } catch (err) {
+            console.error("Verify error:", err);
+            alert("Verification failed");
+          }
+        },
+
+        prefill: {
+          name: data.userName || accountType,
+          // email: user.email || "",
+        },
+
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+
+    } catch (error) {
+      console.error("Recharge error:", error);
+      alert(error?.response?.data?.error || "Something went wrong");
+    }
   };
 
-  
-  //   if(!upiId.trim()|| !upiId.trim().includes('@')){
-  //     setTransferMessage("Incorrect UPI ID provided. Please enter a valid UPI ID");
-  //     return;
-  //   }
-  //   if(!transferAmount || isNaN(transferAmount) || transferAmount <= 0){
-  //     setTransferMessage("Amount to be transferred should be a valid number greater than 0.");
-  //     return
-  //   }
-  //   if (!upiId?.trim() || !transferAmount || Number(transferAmount) <= 0) {
-  //     setTransferMessage("Please enter valid UPI ID and amount.");
-  //     return;
-  //   }
-
-  //   // One idempotency key per transfer attempt (same key for double-click / retry)
-  //   if (!transferIdempotencyKeyRef.current) {
-  //     if (typeof crypto !== "undefined" && crypto.randomUUID) {
-  //       transferIdempotencyKeyRef.current = crypto.randomUUID(); // exactly 36 chars
-  //     } else {
-  //       const hex = "0123456789abcdef";
-  //       let s = "";
-  //       for (let i = 0; i < 32; i++) s += hex[Math.floor(Math.random() * 16)];
-  //       transferIdempotencyKeyRef.current = [
-  //         s.slice(0, 8),
-  //         s.slice(8, 12),
-  //         s.slice(12, 16),
-  //         s.slice(16, 20),
-  //         s.slice(20, 32),
-  //       ].join("-");
-  //     }
-  //   }
-  //   const idempotencyKey = transferIdempotencyKeyRef.current;
-
-  //   setTransferLoading(true);
-  //   setTransferMessage("");
-
-  //   try {
-  //     const { data } = await axiosInstance.post(
-  //       "/api/users/protected/wallet/withdraw",
-  //       {
-  //         upiAddress: upiId.trim(),
-  //         amount: Number(transferAmount),
-  //         idempotencyKey,
-  //       },
-  //       { withCredentials: true },
-  //     );
-
-  //     console.log("Fund transferred successfully:", data);
-  //     setTransferMessage("Fund transferred successfully!");
-  //     setAvailableFunds(
-  //       data.newBalance ?? availableFunds - Number(transferAmount),
-  //     );
-  //     setTransferAmount("");
-  //     setUpiId("");
-  //     transferIdempotencyKeyRef.current = null;
-  //   } catch (error) {
-  //     console.error("Failed to transfer funds:", error);
-  //     setTransferMessage("Failed to transfer funds. Please try again.");
-
-  //   } finally {
-  //     setTransferLoading(false);
-  //   }
-  // };
-
   const handleTransfer = async () => {
+    // 🔐 Validate UPI
     if (!upiId?.trim() || !upiId.trim().includes("@")) {
       setTransferMessage("Incorrect UPI ID. Please enter a valid UPI ID.");
       return;
     }
+
+    // 💰 Validate amount
     if (
       !transferAmount ||
       isNaN(transferAmount) ||
       Number(transferAmount) <= 0
     ) {
       setTransferMessage(
-        "Amount to be transferred should be a valid number greater than 0.",
+        "Amount should be a valid number greater than 0."
       );
       return;
     }
 
-    if (!transferIdempotencyKeyRef.current) {
-      if (typeof crypto !== "undefined" && crypto.randomUUID) {
-        transferIdempotencyKeyRef.current = crypto.randomUUID();
-      } else {
-        const hex = "0123456789abcdef";
-        let s = "";
-        for (let i = 0; i < 32; i++) s += hex[Math.floor(Math.random() * 16)];
-        transferIdempotencyKeyRef.current = [
-          s.slice(0, 8),
-          s.slice(8, 12),
-          s.slice(12, 16),
-          s.slice(16, 20),
-          s.slice(20, 32),
-        ].join("-");
-      }
+    const amount = Number(transferAmount);
+
+    // (optional but good UX)
+    if (amount > availableFunds) {
+      setTransferMessage("Insufficient balance.");
+      return;
     }
-    const idempotencyKey = transferIdempotencyKeyRef.current;
 
     setTransferLoading(true);
-    setTransferMessage("Processing payout...");
     setTransferPhase("processing");
+    setTransferMessage("Submitting payout request...");
 
     try {
       const { data } = await axiosInstance.post(
-        "/api/users/protected/wallet/withdraw",
+        "/api/users/protected/request-payout",
         {
-          upiAddress: upiId.trim(),
-          amount: Number(transferAmount),
-          idempotencyKey,
+          upiId: upiId.trim(),
+          amount,
         },
-        { withCredentials: true },
+        { withCredentials: true }
       );
 
-      const payoutId = data?.payoutId;
-      if (!payoutId) {
-        setTransferMessage(
-          "Transfer initiated. Check your transaction history.",
-        );
+      if (data.success) {
         setTransferPhase("done");
-        setAvailableFunds(
-          data?.newBalance ?? availableFunds - Number(transferAmount),
-        );
-        setTransferAmount("");
-        setUpiId("");
-        transferIdempotencyKeyRef.current = null;
-        return;
-      }
 
-      const { status } = await pollWithdrawalStatus({
-        payoutId,
-        axiosInstance,
-        intervalMs: 3000,
-        onStatus: (s) => {
-          if (
-            s === "queued" ||
-            s === "pending" ||
-            !WITHDRAWAL_FINAL_STATUSES.includes(s)
-          ) {
-            setTransferMessage("Processing payout...");
-          }
-        },
-      });
-
-      setTransferPhase("done");
-      if (status === "processed") {
         setTransferMessage(
-          "Money has been successfully transferred to your account!",
+          "Payout request submitted successfully. Amount has been deducted and will be processed within 72 hours."
         );
-        setAvailableFunds(
-          data?.newBalance ?? availableFunds - Number(transferAmount),
-        );
+
+        // 💰 Update wallet UI immediately (since deduction is instant)
+        setAvailableFunds((prev) => prev - amount);
+
+        // 🧹 Reset form
         setTransferAmount("");
         setUpiId("");
-        transferIdempotencyKeyRef.current = null;
+
+        // 🔄 Optional: re-fetch from backend (recommended for consistency)
         await refreshWalletDetails();
-      } else if (status === "reversed") {
-        setTransferMessage(
-          "Transfer was reversed. Wallet will reflect the updated balance in a short while.",
-        );
-        setTransferAmount("");
-        setUpiId("");
-        transferIdempotencyKeyRef.current = null;
-        setTimeout(refreshWalletDetails, 2000);
-      } else if (status === "failed") {
-        setTransferMessage(
-          "Transfer failed. Amount has been refunded to your wallet.",
-        );
-        setTransferAmount("");
-        setUpiId("");
-        transferIdempotencyKeyRef.current = null;
-        setTimeout(refreshWalletDetails, 2000);
+
       } else {
-        setTransferMessage(
-          "Transfer is taking longer than usual. Check your transaction history in a few minutes.",
-        );
-        setTransferAmount("");
-        setUpiId("");
-        transferIdempotencyKeyRef.current = null;
+        setTransferMessage("Failed to submit payout request.");
+        setTransferPhase("done");
       }
+
     } catch (error) {
-      console.error("Failed to transfer funds:", error);
+      console.error("Payout request failed:", error);
+
       setTransferPhase("done");
+
       setTransferMessage(
-        error?.response?.data?.message ||
-          "Failed to transfer funds. Please try again.",
+        error?.response?.data?.error ||
+        "Failed to submit payout request. Please try again."
       );
     } finally {
       setTransferLoading(false);
     }
   };
+
   const handleShowAllTransactions = async () => {
     try {
       const userId =

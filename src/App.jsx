@@ -52,23 +52,28 @@ import AdminProtectedRoute from './components/AdminProtectedRoute';
 import ReviewShops from './components/ReviewShops';
 import UnifiedLogin from './components/UnifiedLogin';
 import ShippingPolicy from './components/ShippingPolicy';
+import Logout from './components/logout';
+import PayoutRequests from './components/PayoutRequestsPage';
 function App() {
 
   return (
     <>
       <BrowserRouter>
         <Routes>
-        <Route exact path="/" element={<MazdoorMitrLandingPage />} />
+          <Route exact path="/" element={<MazdoorMitrLandingPage />} />
           <Route exact path="/login" element={<UnifiedLogin />} />
           {/* <Route exact path="/login" element={<Login />} /> */}
+          <Route exact path="/logout" element={<Logout />} />
 
           <Route exact path="/admin-login" element={<AdminLoginPage />} />
           <Route exact path="/employee-login" element={<EmployeeLogin />} />
           <Route exact path="/employee-dashboard" element={<ProtectedRoute userType="Employee"> <EmployeeDashboard /></ProtectedRoute>} />
           {/* <Route exact path="/admin-dashboard" element={<ProtectedRoute userType="admin"><AdminDashboard /></ProtectedRoute> }/> */}
-          
-          <Route exact path="/admin-dashboard" element={<AdminProtectedRoute userType="admin"><AdminDashboard /></AdminProtectedRoute> }/>
-          <Route exact path="/review-shops" element={<ProtectedRoute userType="admin"><ReviewShops /></ProtectedRoute> }/>
+
+          <Route exact path="/admin-dashboard" element={<AdminProtectedRoute userType="admin"><AdminDashboard /></AdminProtectedRoute>} />
+          <Route exact path="/review-shops" element={<ProtectedRoute userType="admin"><ReviewShops /></ProtectedRoute>} />
+
+          <Route exact path="/payout-requests" element={<ProtectedRoute userType="admin"><PayoutRequests /></ProtectedRoute>} />
 
           <Route exact path="/labourers-added" element={<LabourersAddedPage />} />
           <Route exact path="/registered-labourers-by-employee" element={<ProtectedRoute userType="Employee"> <RegisteredLabourersByEmployee /></ProtectedRoute>} />
@@ -77,9 +82,9 @@ function App() {
           <Route exact path="/employers-added" element={<EmployersAddedPage />} />
           <Route exact path="/add-labourer" element={<ProtectedRoute userType="admin"><AddLabourer /></ProtectedRoute>} />
           <Route exact path="/modify-labourer" element={<ProtectedRoute userType="admin"><ModifyLabourerPage /></ProtectedRoute>} />
-          <Route exact path="/add-employer" element={ <ProtectedRoute userType="admin"><AddEmployer /></ProtectedRoute>} />
-          <Route exact path="/add-employee" element={ <ProtectedRoute userType="admin"><AddEmployeePage /></ProtectedRoute>} />
-          <Route exact path="/modify-employee" element={ <ProtectedRoute userType="admin"><ModifyEmployee /></ProtectedRoute>} />
+          <Route exact path="/add-employer" element={<ProtectedRoute userType="admin"><AddEmployer /></ProtectedRoute>} />
+          <Route exact path="/add-employee" element={<ProtectedRoute userType="admin"><AddEmployeePage /></ProtectedRoute>} />
+          <Route exact path="/modify-employee" element={<ProtectedRoute userType="admin"><ModifyEmployee /></ProtectedRoute>} />
           {/* <Route exact path="/search-modify-labourer" element={<SearchModifyLabourer />} /> */}
           <Route exact path="/modify-employer" element={<ProtectedRoute userType="admin"><ModifyEmployerPage /></ProtectedRoute>} />
           <Route exact path="/report-profiles" element={<ReportProfiles />} />
@@ -90,27 +95,27 @@ function App() {
           <Route exact path="/all-mediation-requests" element={<AllMediationRequests />} />
           <Route exact path="/all-labourers-added" element={<AllLabourersAdded />} />
           <Route exact path="/all-employers-added" element={<AllEmployersAdded />} />
-          <Route exact path="/terms-and-conditions" element={<TermsConditions/>} />
-          <Route exact path="/refund-policy" element={<RefundPolicy/>} />
-          <Route exact path="/about-us" element={<AboutUs/>} />
-          <Route exact path="/privacy-policy" element={<PrivacyPolicy/>} />
-          <Route exact path="/shipping-policy" element={<ShippingPolicy/>} />
-          <Route exact path="/contact-us" element={<ContactUs/>} />
+          <Route exact path="/terms-and-conditions" element={<TermsConditions />} />
+          <Route exact path="/refund-policy" element={<RefundPolicy />} />
+          <Route exact path="/about-us" element={<AboutUs />} />
+          <Route exact path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route exact path="/shipping-policy" element={<ShippingPolicy />} />
+          <Route exact path="/contact-us" element={<ContactUs />} />
           <Route exact path="/modify-wallet-balance" element={<ProtectedRoute userType="admin"><ModifyWalletBalance /></ProtectedRoute>} />
-          <Route exact path="/quickclap" element={<LandingPage />}/>
+          <Route exact path="/quickclap" element={<LandingPage />} />
           <Route path="/app" element={<MazdoorMitra />}>
-                <Route exact path="shops" element={<ProtectedRoute userType="user"><Shop /></ProtectedRoute>} />
-                <Route exact path="marketplace" element={<ProtectedRoute userType="user"><Marketplace /></ProtectedRoute>} />
-                <Route exact path="shop-dashboard" element={<ProtectedRoute userType="user"><ShopDashboard /></ProtectedRoute>} />
-                
-                <Route exact path="profile" element={<ProtectedRoute userType="user"><Profile /></ProtectedRoute>} />
-                <Route exact path="wallet" element={<ProtectedRoute userType="user"><Wallet /></ProtectedRoute>} />
-                <Route exact path="profile-page/:profileid" element={<ProtectedRoute userType="user"><ProfilePage /></ProtectedRoute>} />
-                <Route exact path="home" element={<ProtectedRoute userType="user"><Home /></ProtectedRoute>} />
-                <Route exact path="complete-profile-employer" element={<ProtectedRoute userType="user"><CompleteProfileEmployer /></ProtectedRoute>} />
-                <Route exact path="create-labourer-profile" element={<ProtectedRoute userType="user"><CreateLabourerProfile /></ProtectedRoute>} />
-                <Route exact path="complete-shop-profile" element={<ProtectedRoute userType="user"><CompleteShopProfile /></ProtectedRoute>} />
-                <Route exact path="profile-view/:profileId" element={<ProtectedRoute userType="user"><ViewProfile /></ProtectedRoute>} />
+            <Route exact path="shops" element={<ProtectedRoute userType="user"><Shop /></ProtectedRoute>} />
+            <Route exact path="marketplace" element={<ProtectedRoute userType="user"><Marketplace /></ProtectedRoute>} />
+            <Route exact path="shop-dashboard" element={<ProtectedRoute userType="user"><ShopDashboard /></ProtectedRoute>} />
+
+            <Route exact path="profile" element={<ProtectedRoute userType="user"><Profile /></ProtectedRoute>} />
+            <Route exact path="wallet" element={<ProtectedRoute userType="user"><Wallet /></ProtectedRoute>} />
+            <Route exact path="profile-page/:profileid" element={<ProtectedRoute userType="user"><ProfilePage /></ProtectedRoute>} />
+            <Route exact path="home" element={<ProtectedRoute userType="user"><Home /></ProtectedRoute>} />
+            <Route exact path="complete-profile-employer" element={<ProtectedRoute userType="user"><CompleteProfileEmployer /></ProtectedRoute>} />
+            <Route exact path="create-labourer-profile" element={<ProtectedRoute userType="user"><CreateLabourerProfile /></ProtectedRoute>} />
+            <Route exact path="complete-shop-profile" element={<ProtectedRoute userType="user"><CompleteShopProfile /></ProtectedRoute>} />
+            <Route exact path="profile-view/:profileId" element={<ProtectedRoute userType="user"><ViewProfile /></ProtectedRoute>} />
           </Route>
         </Routes>
       </BrowserRouter>

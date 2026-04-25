@@ -85,6 +85,14 @@ const AdminDashboard = () => {
                 View Details
               </button>
             </div>
+
+            <div className="analytics-card">
+              <h4>Payout Requests</h4>
+              <button onClick={() => handleRedirect("/payout-requests")} className="view-details-btn">
+                View Details
+              </button>
+            </div>
+
           </div>
         </div>
 
