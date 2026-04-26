@@ -1,0 +1,129 @@
+.complaints-redressal-mechanism-wrapper {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #e7e7e7;
+}
+
+/* HEADER */
+.complaints-redressal-mechanism-header {
+  margin-bottom: 10px;
+}
+
+.complaints-redressal-mechanism-back-btn {
+  padding: 6px 12px;
+  border: none;
+  background: #7ddd67;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* FILTERS */
+.complaints-redressal-mechanism-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.complaints-redressal-mechanism-filters input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.complaints-redressal-mechanism-filters button {
+  background: #1677ff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* LIST */
+.complaints-redressal-mechanism-card {
+  background: white;
+  border: 1px solid #e7e7e7;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* MAIN CARD */
+.complaints-redressal-mechanism-main-card {
+  border: 1px solid #e7e7e7;
+  padding: 14px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.complaints-redressal-mechanism-ticket-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.complaints-redressal-mechanism-status {
+  background: #05dbe7;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: white;
+}
+
+/* CHAT */
+.complaints-redressal-mechanism-chat {
+  height: 400px;
+  overflow-y: auto;
+  background: #f9fafb;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.complaints-redressal-mechanism-bubble {
+  max-width: 70%;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.complaints-redressal-mechanism-bubble.user {
+  background: #e5e7eb;
+  align-self: flex-start;
+}
+
+.complaints-redressal-mechanism-bubble.admin {
+  background: #1677ff;
+  color: white;
+  align-self: flex-end;
+}
+
+.complaints-redressal-mechanism-bubble span {
+  display: block;
+  font-size: 10px;
+  margin-top: 5px;
+}
+
+/* INPUT */
+.complaints-redressal-mechanism-input {
+  display: flex;
+  margin-top: 10px;
+}
+
+.complaints-redressal-mechanism-input input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+}
+
+.complaints-redressal-mechanism-input button {
+  background: #22c55e;
+  color: white;
+  border: none;
+  padding: 0 16px;
+  margin-left: 8px;
+  border-radius: 20px;
+  cursor: pointer;
+}

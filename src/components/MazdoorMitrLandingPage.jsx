@@ -1,7 +1,38 @@
 import React from 'react';
 import './MazdoorMitrLandingPage.css';
+import axiosInstance from '../axiosConfig';
 
 const LandingPage = () => {
+  const handleReachOutSubmit = async (e) => {
+    e.preventDefault();
+    const submittedForm = e.target;
+    console.log("submit clicked form " + submittedForm.name);
+
+    const payload = {
+      name: submittedForm.name.value.trim(),
+      contact: submittedForm.contact.value.trim(),
+      message: submittedForm.message.value.trim(),
+    };
+
+    if (!payload.name || !payload.contact || !payload.message) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    try {
+      await axiosInstance.post("/api/users/public/reach-out", payload);
+
+      alert("Your message has been submitted successfully!");
+
+      submittedForm.reset();
+    } catch (err) {
+      console.error(err);
+      alert(
+        err?.response?.data?.error ||
+        "Failed to submit your message. Please try again."
+      );
+    }
+  };
   return (
     <div className="landing-page-container">
       <header className="landing-page-header">
@@ -97,6 +128,45 @@ const LandingPage = () => {
             <p>Post requirements to buy materials, tools or get small works done by shops or workers.</p>
           </div>
         </div>
+      </section>
+
+
+      {/* Reach Out Section */}
+      <section className="landing-page-section reachout-section">
+        <h2 className="landing-page-section-title">Reach Out to Us</h2>
+        <p className="reachout-subtext">
+          Have questions, feedback, or need help? We’d love to hear from you.
+        </p>
+
+        <form className="reachout-form" onSubmit={handleReachOutSubmit}>
+          <input
+            type="text"
+            placeholder="Your Name"
+            className="reachout-input"
+            required
+            name='name'
+          />
+
+          <input
+            type="text"
+            placeholder="Email or Phone"
+            className="reachout-input"
+            required
+            name='contact'
+          />
+
+          <textarea
+            placeholder="Write your message..."
+            className="reachout-textarea"
+            rows={4}
+            required
+            name='message'
+          />
+
+          <button type="submit" className="reachout-button" >
+            Submit
+          </button>
+        </form>
       </section>
 
       {/* Footer */}

@@ -63,11 +63,12 @@ const CompleteProfile = () => {
 
     try {
       const fileInput = document.getElementById("profilePic");
-      if (!fileInput && !imageUrl) {
+      const file = fileInput?.files?.[0];
+
+      if (!file && !imageUrl) {
         alert("Upload Image!!");
         return;
       }
-
       const userId = localStorage.getItem("userId");
       const formData = new FormData();
 
@@ -153,6 +154,7 @@ const CompleteProfile = () => {
         <label>Contact Number:</label>
         <input
           type="tel"
+          disabled
           placeholder="Enter your contact number"
           value={contactNumber}
           onChange={(e) => setContactNumber(e.target.value)}

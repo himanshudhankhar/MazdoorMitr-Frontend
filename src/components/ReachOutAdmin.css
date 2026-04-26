@@ -1,0 +1,115 @@
+
+/* Container */
+.reachout-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+.reachout-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Filters */
+.reachout-filters {
+  margin-bottom: 15px;
+}
+
+.reachout-filters select {
+  padding: 6px;
+  border-radius: 6px;
+}
+
+/* List */
+.reachout-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Card */
+.reachout-card {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.reachout-card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Status */
+.reachout-status {
+  margin-top: 5px;
+  font-size: 12px;
+  color: #666;
+}
+
+/* Modal */
+.reachout-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.reachout-modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+}
+
+/* Message */
+.reachout-message-box {
+  background: #f5f5f5;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+/* Actions */
+.reachout-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.reachout-actions button {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.reachout-actions button:first-child {
+  background: #28a745;
+  color: white;
+}
+
+.reachout-actions button:last-child {
+  background: #dc3545;
+  color: white;
+}
+
+/* Close button */
+.reachout-close {
+  margin-top: 10px;
+  width: 100%;
+  padding: 8px;
+  border: none;
+  background: #888;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}

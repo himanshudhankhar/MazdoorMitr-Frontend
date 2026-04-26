@@ -1,0 +1,25 @@
+.complaints-floating-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+
+  padding: 10px 16px;
+  border-radius: 999px;
+
+  background-color: #1677ff;
+  color: white;
+  border: none;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+
+  z-index: 999;
+  transition: 0.2s;
+}
+
+.complaints-floating-btn:hover {
+  background-color: #145fd1;
+}

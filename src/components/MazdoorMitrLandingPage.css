@@ -123,3 +123,59 @@
   color: #666;
   margin-top: 10px;
 }
+
+/* Reach Out Section */
+.reachout-section {
+  text-align: center;
+}
+
+.reachout-subtext {
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.reachout-form {
+  max-width: 500px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reachout-input,
+.reachout-textarea {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.reachout-input:focus,
+.reachout-textarea:focus {
+  outline: none;
+  border-color: #1677ff;
+}
+
+.reachout-button {
+  display: inline-block;        /* 🔥 prevents full width */
+  align-self: center;           /* center inside flex form */
+  
+  padding: 8px 18px;            /* compact size */
+  
+  border: none;
+  border-radius: 999px;         /* 🔥 fully rounded (pill shape) */
+  
+  background-color: #1677ff;
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.reachout-button:hover {
+  background-color: #145fd1;
+}

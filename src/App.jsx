@@ -54,13 +54,26 @@ import UnifiedLogin from './components/UnifiedLogin';
 import ShippingPolicy from './components/ShippingPolicy';
 import Logout from './components/logout';
 import PayoutRequests from './components/PayoutRequestsPage';
-function App() {
+import ReachOutAdmin from './components/reachOutAdmin';
+import FloatingComplaintsButton from './components/FloatingComplaintsButton';
+
+import { useLocation } from "react-router-dom";
+import ComplaintsPage from './components/ComplaintsPage';
+import ComplaintsRedressalPage from './components/ComplaintsRedressalPage';
+
+function AppContent() {
+  const location = useLocation();
+
+  const hideOnRoutes = ["/", "/login", "/admin-dashboard"];
 
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route exact path="/" element={<MazdoorMitrLandingPage />} />
+      {!hideOnRoutes.includes(location.pathname) && (
+        <FloatingComplaintsButton />
+      )}
+
+      <Routes>
+       <Route exact path="/" element={<MazdoorMitrLandingPage />} />
           <Route exact path="/login" element={<UnifiedLogin />} />
           {/* <Route exact path="/login" element={<Login />} /> */}
           <Route exact path="/logout" element={<Logout />} />
@@ -75,6 +88,7 @@ function App() {
 
           <Route exact path="/payout-requests" element={<ProtectedRoute userType="admin"><PayoutRequests /></ProtectedRoute>} />
 
+          <Route exact path="/reachouts" element={<ProtectedRoute userType="admin"><ReachOutAdmin /></ProtectedRoute>} />
           <Route exact path="/labourers-added" element={<LabourersAddedPage />} />
           <Route exact path="/registered-labourers-by-employee" element={<ProtectedRoute userType="Employee"> <RegisteredLabourersByEmployee /></ProtectedRoute>} />
           <Route exact path="/register-labourers-by-employee" element={<ProtectedRoute userType="Employee"> <RegisterLabourerByEmployee /></ProtectedRoute>} />
@@ -85,6 +99,7 @@ function App() {
           <Route exact path="/add-employer" element={<ProtectedRoute userType="admin"><AddEmployer /></ProtectedRoute>} />
           <Route exact path="/add-employee" element={<ProtectedRoute userType="admin"><AddEmployeePage /></ProtectedRoute>} />
           <Route exact path="/modify-employee" element={<ProtectedRoute userType="admin"><ModifyEmployee /></ProtectedRoute>} />
+          <Route exact path="/complaints-redressal" element={<ProtectedRoute userType="admin"><ComplaintsRedressalPage /></ProtectedRoute>} />
           {/* <Route exact path="/search-modify-labourer" element={<SearchModifyLabourer />} /> */}
           <Route exact path="/modify-employer" element={<ProtectedRoute userType="admin"><ModifyEmployerPage /></ProtectedRoute>} />
           <Route exact path="/report-profiles" element={<ReportProfiles />} />
@@ -108,6 +123,7 @@ function App() {
             <Route exact path="marketplace" element={<ProtectedRoute userType="user"><Marketplace /></ProtectedRoute>} />
             <Route exact path="shop-dashboard" element={<ProtectedRoute userType="user"><ShopDashboard /></ProtectedRoute>} />
 
+            <Route exact path="complaints" element={<ProtectedRoute userType="user"><ComplaintsPage /></ProtectedRoute>} />
             <Route exact path="profile" element={<ProtectedRoute userType="user"><Profile /></ProtectedRoute>} />
             <Route exact path="wallet" element={<ProtectedRoute userType="user"><Wallet /></ProtectedRoute>} />
             <Route exact path="profile-page/:profileid" element={<ProtectedRoute userType="user"><ProfilePage /></ProtectedRoute>} />
@@ -117,8 +133,18 @@ function App() {
             <Route exact path="complete-shop-profile" element={<ProtectedRoute userType="user"><CompleteShopProfile /></ProtectedRoute>} />
             <Route exact path="profile-view/:profileId" element={<ProtectedRoute userType="user"><ViewProfile /></ProtectedRoute>} />
           </Route>
-        </Routes>
+      </Routes>
+    </>
+  );
+}
+function App() {
+
+  return (
+    <>
+      <BrowserRouter>
+        <AppContent/>
       </BrowserRouter>
+
     </>
   )
 }

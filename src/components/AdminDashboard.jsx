@@ -93,6 +93,20 @@ const AdminDashboard = () => {
               </button>
             </div>
 
+            <div className="analytics-card">
+              <h4>Reach Out Requests</h4>
+              <button onClick={() => handleRedirect("/reachouts")} className="view-details-btn">
+                View Details
+              </button>
+            </div>
+
+            <div className="analytics-card">
+              <h4>Complaints Redressal</h4>
+              <button onClick={() => handleRedirect("/complaints-redressal")} className="view-details-btn">
+                View Details
+              </button>
+            </div>
+
           </div>
         </div>
 

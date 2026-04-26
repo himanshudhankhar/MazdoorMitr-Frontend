@@ -1,3 +1,5 @@
+import { Navigate } from "react-router";
+
 const AdminProtectedRoute = ({ children }) => {
   const userType = localStorage.getItem("userType");
   const token = localStorage.getItem("authToken");

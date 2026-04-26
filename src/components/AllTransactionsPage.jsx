@@ -153,7 +153,8 @@ const AllTransactionsPage = () => {
               <th>Type</th>
               <th>Giver Wallet</th>
               <th>Receiver Wallet</th>
-              <th>Amount</th>
+              <th>Amount Credited</th>
+              <th>Amount Debited</th>
               <th>Platform Cut</th>
               <th>Status</th>
               <th>Timestamp</th>
@@ -166,8 +167,9 @@ const AllTransactionsPage = () => {
                 <td>{txn.type}</td>
                 <td>{txn.giverWalletId}</td>
                 <td>{txn.receiverWalletId}</td>
-                <td>₹{txn.amount}</td>
-                <td>₹{txn.platformCut}</td>
+                <td>₹{txn.amount_credited}</td>
+                <td>₹{txn.amount_debited}</td>
+                <td>₹{txn.platform_cut}</td>
                 <td>{txn.status}</td>
                 <td>{new Date(txn.timestamp).toLocaleString()}</td>
               </tr>
