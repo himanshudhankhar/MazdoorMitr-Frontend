@@ -60,14 +60,30 @@ import FloatingComplaintsButton from './components/FloatingComplaintsButton';
 import { useLocation } from "react-router-dom";
 import ComplaintsPage from './components/ComplaintsPage';
 import ComplaintsRedressalPage from './components/ComplaintsRedressalPage';
+import { LoaderProvider, useLoader } from "./LoaderContext";
+import { loaderRef } from "./loaderRef";
+import GlobalSpinner from './GlobalSpinner';
+const LoaderBridge = () => {
+  const { startLoading, stopLoading } = useLoader();
+
+  loaderRef.start = startLoading;
+  loaderRef.stop = stopLoading;
+
+  return null;
+};
 
 function AppContent() {
   const location = useLocation();
 
   const hideOnRoutes = ["/", "/login", "/admin-dashboard"];
 
+
+
   return (
     <>
+  <LoaderProvider>
+  <LoaderBridge />
+  <GlobalSpinner />
       {!hideOnRoutes.includes(location.pathname) && (
         <FloatingComplaintsButton />
       )}
@@ -134,6 +150,7 @@ function AppContent() {
             <Route exact path="profile-view/:profileId" element={<ProtectedRoute userType="user"><ViewProfile /></ProtectedRoute>} />
           </Route>
       </Routes>
+      </LoaderProvider>
     </>
   );
 }

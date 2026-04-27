@@ -118,7 +118,7 @@ export default function Home() {
                                     <p className="profile-profession">{profile.skills || "No Skills Provided"}</p>
                                     <p className="profile-address">{profile.location || "Location Unknown"}</p>
                                     <p className="profile-user-type">
-                                        {profile.userType === "Employer" ? "Employer" : "Labourer"}
+                                        {profile.userType === "Employer" ? "Employer" : "Worker"}
                                     </p>
                                 </div>
                             </div>

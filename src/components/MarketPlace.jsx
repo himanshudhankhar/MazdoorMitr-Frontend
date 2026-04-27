@@ -73,6 +73,7 @@ export default function Marketplace() {
         : p.expectedWage || 0,
     location: p.location || "",
     desc: p.jobDescription || p.description || p.notes || "",
+    comments: p.comments,
   });
 
   const normalizeBuy = (p) => ({
@@ -85,6 +86,7 @@ export default function Marketplace() {
         : p.offerPrice || 0,
     location: p.location || "",
     notes: p.description || p.notes || "",
+    comments: p.comments,
   });
 
   const normalizeService = (p) => ({
@@ -94,6 +96,7 @@ export default function Marketplace() {
       p.budget !== undefined && p.budget !== null ? p.budget : 0,
     location: p.location || "",
     notes: p.description || p.notes || "",
+    comments: p.comments,
   });
 
   // ===== FETCH RANDOM PUBLIC POSTS (reusable) =====
@@ -286,6 +289,8 @@ export default function Marketplace() {
 
       alert("Application / quote submitted successfully.");
       closeModal();
+      fetchRandomPublicPosts();
+      // fetchMyPosts();
     } catch (err) {
       console.error("Error submitting application / comment:", err);
       const msg =
@@ -1187,6 +1192,87 @@ export default function Marketplace() {
                 </p>
               </>
             )}
+{/* {selected.data.comments.map((comment) => {<div>show {JSON.stringify(comment)} </div>}) } */}
+{/* {JSON.stringify(selected)} */}
+
+
+{/* COMMENTS SECTION */}
+<div className="market_place_comments_section">
+  <h3 className="market_place_form_title">Comments</h3>
+
+  {!selected?.data?.comments ||
+    selected.data.comments.length === 0 ? (
+    <p>No comments yet.</p>
+  ) : (
+    <div className="market_place_comments_list">
+      {selected.data.comments.map((c) => (
+        <div
+          key={c.id}
+          className="market_place_comment_item"
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 8,
+            marginBottom: 10,
+          }}
+        >
+          {/* Avatar */}
+          <div
+            className="market_place_comment_avatar"
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: "50%",
+              overflow: "hidden",
+              flexShrink: 0,
+              border: "1px solid #ddd",
+            }}
+          >
+            <img
+              src={
+                c.avatarUrl ||
+                "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg?w=1060"
+              }
+              alt={c.commenterName || "User"}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+          </div>
+
+          {/* Content */}
+          <div style={{ flex: 1 }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: 2,
+              }}
+            >
+              <span style={{ fontWeight: 600 }}>
+                {c.commenterName || "Unknown"}
+              </span>
+              <span style={{ fontSize: 12, opacity: 0.7 }}>
+                {/* {formatCommentDate(c.createdAtMillis || c.createdAt)} */}
+                {new Date(c.createdAtMillis).toLocaleString()}
+              </span>
+            </div>
+
+            <p style={{ margin: 0, fontSize: 14 }}>
+              {c.expectedPrice
+                ? `₹${c.expectedPrice} - `
+                : ""}
+              {c.text}
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
 
             {/* Application / Quote form */}
             <form
@@ -1376,6 +1462,7 @@ export default function Marketplace() {
                     {myPostComments.map((c) => (
                       <div
                         key={c.id}
+                        onClick={() => handleCommentUserClick(c.commenterId)}
                         className="market_place_comment_item"
                         style={{
                           display: "flex",
@@ -1386,7 +1473,7 @@ export default function Marketplace() {
                       >
                         <div
                           className="market_place_comment_avatar"
-                          onClick={() => handleCommentUserClick(c.commenterId)}
+                          
                           title="View profile"
                           style={{
                             width: 36,
