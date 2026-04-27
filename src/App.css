@@ -41,7 +41,16 @@
   color: #888;
 } */
 
-body { 
+/* body { 
   margin: 0 !important;
   padding: 0 !important;
+} */
+
+.app-container {
+  width: 100%;
+  max-width: 100%;   /* ❗ critical */
+}
+body, #root {
+  width: 100%;
+  max-width: 100%;
 }

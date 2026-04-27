@@ -81,6 +81,7 @@ function AppContent() {
 
   return (
     <>
+    <div className="app-container">
   <LoaderProvider>
   <LoaderBridge />
   <GlobalSpinner />
@@ -151,6 +152,7 @@ function AppContent() {
           </Route>
       </Routes>
       </LoaderProvider>
+      </div>
     </>
   );
 }

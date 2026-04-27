@@ -310,6 +310,8 @@ const Wallet = () => {
   };
 
   return (
+    <div className="page-wrapper">
+
     <div className="wallet-page-container">
       <h1>Wallet</h1>
 
@@ -428,6 +430,7 @@ const Wallet = () => {
           <p>No transactions available.</p>
         )}
       </div>
+    </div>
     </div>
   );
 };

@@ -186,3 +186,190 @@ button:disabled,
   }
 }
 .transfer-message { margin-top: 10px; font-size: 14px; color: #0077ff; font-weight: 500; }
+
+
+.wallet-page-container {
+  width: 100%;              /* ✅ responsive */
+  max-width: 650px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+
+  box-sizing: border-box;   /* ✅ prevents overflow */
+}
+
+/* HEADER */
+.wallet-page-container h1 {
+  font-size: 24px;
+  color: #222;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* FUNDS SECTION */
+.funds-section {
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.funds-section h2 {
+  font-size: 18px;
+  margin-bottom: 6px;
+  color: #444;
+}
+
+.funds-amount {
+  font-size: 28px;
+  color: #0077ff;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* SECTION HEADINGS */
+.recharge-section h2,
+.transfer-section h2,
+.transactions-section h2 {
+  font-size: 17px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+/* RECHARGE + TRANSFER */
+.recharge-section,
+.transfer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  text-align: center;
+}
+
+/* INPUTS */
+.recharge-section input,
+.transfer-section input {
+  width: 100%;
+  max-width: 320px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* BUTTON */
+button,
+.show-all-btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #0077ff;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover,
+.show-all-btn:hover {
+  background: #005fd6;
+}
+
+button:disabled {
+  background: #d0d0d0;
+  cursor: not-allowed;
+}
+
+/* BUTTON ALIGN */
+.recharge-section button,
+.transfer-section button {
+  width: 100%;
+  max-width: 200px;
+}
+
+/* TRANSACTIONS */
+.transactions-section {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* TABLE */
+.transactions-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.transactions-table {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+
+.transactions-table th,
+.transactions-table td {
+  padding: 8px;
+  border-bottom: 1px solid #e6e6e6;
+  text-align: center;
+}
+
+.transactions-table th {
+  background: #eef3ff;
+}
+
+.transactions-table .credit {
+  color: #22a745;
+  font-weight: bold;
+}
+
+.transactions-table .debit {
+  color: #e23737;
+  font-weight: bold;
+}
+
+/* RESPONSIVE FIX */
+@media (max-width: 600px) {
+  .wallet-page-container {
+    margin: 10px;
+    padding: 16px;
+  }
+
+  .wallet-page-container h1 {
+    font-size: 20px;
+  }
+
+  .funds-amount {
+    font-size: 24px;
+  }
+
+  .recharge-section input,
+  .transfer-section input {
+    max-width: 100%;  /* ✅ full width on mobile */
+  }
+
+  .recharge-section button,
+  .transfer-section button {
+    width: 100%;      /* ✅ full width buttons */
+  }
+}
+
+.transfer-message {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #0077ff;
+  font-weight: 500;
+}
+
+.page-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
