@@ -255,7 +255,7 @@ export default function ViewProfile() {
                   <>
                     <p className="profile_view_text">
                       Contact details are hidden. Pay ₹15 to view full contact
-                      details for this profile.
+                      details for this profile. It includes ₹10 as consultation fees + ₹5 Platform fee and GST.
                     </p>
                     {contactError && (
                       <p className="profile_view_error_text">

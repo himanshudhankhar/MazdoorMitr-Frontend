@@ -336,6 +336,7 @@ const Shops = () => {
                       <p className="shops-modal-contact-muted">
                         Contact details are hidden. ₹15 will be deducted from your
                         wallet to view this shop&apos;s contact.
+                        It includes ₹10 {basics.shopName || selectedShop.shopName || "Shop Name"}'s consultation fees + ₹5 Platform fee and GST.
                       </p>
                       <button
                         className="shops-modal-contact-btn"

@@ -136,7 +136,7 @@ export default function Home() {
                         {confirmationStep ? (
                             <>
                                 <h2>Do you want {selectedProfile.name}'s contact number?</h2>
-                                <p>Note: ₹15 will be deducted from your account.</p>
+                                <p>Note: ₹15 will be deducted from your account. It includes ₹10 {selectedProfile.name}'s consultation fees + ₹5 Platform fee and GST.</p>
                                 <button className="modal-button" onClick={() => { setConfirmationStep(false); confirmAndFetchContact(); }} disabled={contactLoading}>
                                     {contactLoading ? 'Processing...' : 'Yes, confirm & proceed'}
                                 </button>

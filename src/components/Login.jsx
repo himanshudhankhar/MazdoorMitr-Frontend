@@ -219,7 +219,7 @@ const PRIVACY_HTML = `
 const WALLET_HTML = `
   <h3>Wallet & Credits Policy</h3>
   <ul>
-    <li>Employers load credits; viewing a phone number deducts ₹15 + GST and credits ₹10 to the labourer.</li>
+    <li>Employers load credits; viewing a phone number deducts ₹15 and credits ₹10 to the labourer and rest goes to GST and platform fees.</li>
     <li>Labourers can withdraw to bank if balance is <strong>above ₹50</strong> (T+1 to T+3 working days).</li>
     <li>Except valid withdrawals above ₹50, credits are non-refundable and not transferable outside the platform.</li>
   </ul>
