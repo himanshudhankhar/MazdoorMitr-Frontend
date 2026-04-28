@@ -763,6 +763,10 @@
   color: #ffa500;
 }
 
+.shops-error-text {
+  color: red;
+}
+
 /* 📱 Responsive */
 @media (max-width: 600px) {
   .shops-modal {
@@ -786,5 +790,25 @@
   .shops-modal-title-block {
     text-align: center;
   }
+
+  .shops-service-pill {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f3f6ff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+
+.service-name {
+  font-weight: 500;
+  color: #222;
+}
+
+.service-meta {
+  font-size: 12px;
+  color: #666;
+}
 }
 

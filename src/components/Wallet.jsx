@@ -59,9 +59,17 @@ const Wallet = () => {
   const transferIdempotencyKeyRef = useRef(null);
   const [transferPhase, setTransferPhase] = useState("idle");
 
-  // current wallet id can be user or shop
-  const currentWalletId =
-    localStorage.getItem("userId") || localStorage.getItem("shopId") || null;
+const sanitize = (val) => {
+  if (!val || val === "undefined" || val === "null") return null;
+  return val;
+};
+
+const localUserId = sanitize(localStorage.getItem("userId"));
+const localShopId = sanitize(localStorage.getItem("shopId"));
+
+const currentWalletId = localUserId || localShopId;
+
+console.log("WalletId:", currentWalletId);
 
   useEffect(() => {
     const fetchWalletDetails = async () => {
@@ -369,6 +377,8 @@ const Wallet = () => {
               </thead>
               <tbody>
                 {transactions.map((tx) => {
+                  console.log("current wallet id " + currentWalletId);
+                  console.log("READ shopId:", localStorage.getItem("shopId"));
                   const isCredit =
                     currentWalletId && tx.receiverWalletId === currentWalletId;
                   const isDebit =

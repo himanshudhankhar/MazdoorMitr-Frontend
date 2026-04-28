@@ -66,7 +66,14 @@ export default function Home() {
     const confirmAndFetchContact = async () => {
         try {
             setContactLoading(true);
-            const selfId = localStorage.getItem("userId") || localStorage.getItem("shopId");
+            const sanitize = (val) => {
+                if (!val || val === "undefined" || val === "null") return null;
+                return val;
+            };
+
+            const selfId =
+                sanitize(localStorage.getItem("userId")) ||
+                sanitize(localStorage.getItem("shopId"));
             const res = await axiosInstance.post('/api/users/protected/get-contact-number', {
                 selfid: selfId,
                 otheruserid: selectedProfile.id

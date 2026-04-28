@@ -285,9 +285,8 @@ const Shops = () => {
                       <p className="shops-modal-timings">
                         Today:{" "}
                         {todayHours.open
-                          ? `${todayHours.from || "--"} - ${
-                              todayHours.to || "--"
-                            }`
+                          ? `${todayHours.from || "--"} - ${todayHours.to || "--"
+                          }`
                           : "Closed"}
                       </p>
                     )}
@@ -384,11 +383,28 @@ const Shops = () => {
                   <div className="shops-modal-section">
                     <h3 className="shops-section-title">Services</h3>
                     <ul className="shops-services-list">
-                      {allServices.map((service, idx) => (
+                      {/* {allServices.map((service, idx) => (
                         <li key={idx} className="shops-service-pill">
                           {service}
                         </li>
-                      ))}
+                      ))} */}
+                      {allServices
+                        .filter(Boolean)
+                        .map((service, idx) => {
+                          const name = service?.name || "Service";
+                          const price = service?.price ? `₹${service.price}` : "";
+                          const unit = service?.unit ? ` / ${service.unit}` : "";
+                          const eta = service?.eta ? ` / ${service.eta}` : "";
+
+                          return (
+                            <li key={idx} className="shops-service-pill">
+                              <span className="service-name">{name}</span>
+                              <span className="service-meta">
+                                -{price} {eta}
+                              </span>
+                            </li>
+                          );
+                        })}
                     </ul>
                   </div>
                 )}
