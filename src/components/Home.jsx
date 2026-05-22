@@ -96,7 +96,7 @@ export default function Home() {
                 <input
                     type="text"
                     className="search-bar"
-                    placeholder="Search profiles here..."
+                    placeholder="Search profiles here by name, skills or location..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onKeyDown={handleKeyDown}

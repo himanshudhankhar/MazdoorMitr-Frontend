@@ -67,6 +67,7 @@ export default function Header() {
 
 
         <NavLink to="/app/marketplace" className={({ isActive }) => isActive ? "active" : ""}>Marketplace</NavLink>
+        <NavLink to="/app/premium-services" className={({ isActive }) => isActive ? "active" : ""}>Premium Services</NavLink>
         <a onClick={handleLogout}>Logout</a>
       </nav>
     </header>

@@ -63,6 +63,7 @@ import ComplaintsRedressalPage from './components/ComplaintsRedressalPage';
 import { LoaderProvider, useLoader } from "./LoaderContext";
 import { loaderRef } from "./loaderRef";
 import GlobalSpinner from './GlobalSpinner';
+import PremiumPage from './components/PremiumPage';
 const LoaderBridge = () => {
   const { startLoading, stopLoading } = useLoader();
 
@@ -140,6 +141,7 @@ function AppContent() {
             <Route exact path="marketplace" element={<ProtectedRoute userType="user"><Marketplace /></ProtectedRoute>} />
             <Route exact path="shop-dashboard" element={<ProtectedRoute userType="user"><ShopDashboard /></ProtectedRoute>} />
 
+            <Route exact path="premium-services" element={<ProtectedRoute userType="user"><PremiumPage /></ProtectedRoute>} />
             <Route exact path="complaints" element={<ProtectedRoute userType="user"><ComplaintsPage /></ProtectedRoute>} />
             <Route exact path="profile" element={<ProtectedRoute userType="user"><Profile /></ProtectedRoute>} />
             <Route exact path="wallet" element={<ProtectedRoute userType="user"><Wallet /></ProtectedRoute>} />
