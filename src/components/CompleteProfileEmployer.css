@@ -35,13 +35,28 @@ body {
   .form-group input[type="tel"],
   .form-group input[type="email"],
   .form-group input[type="time"],
-  .form-group input[type="file"] {
+  .form-group input[type="file"]:not(.hidden-camera-input) {
     width: 100%;
     padding: 10px;
     margin-top: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;
+  }
+
+  .camera-capture-btn {
+    background-color: #1f6feb;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 10px;
+    padding: 10px 14px;
+  }
+
+  .hidden-camera-input {
+    display: none;
   }
   
   .timing-inputs {

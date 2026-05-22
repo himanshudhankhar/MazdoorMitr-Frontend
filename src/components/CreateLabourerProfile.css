@@ -38,12 +38,27 @@
   .form-group input[type="text"],
   .form-group input[type="tel"],
   .form-group textarea,
-  .form-group input[type="file"] {
+  .form-group input[type="file"]:not(.hidden-camera-input) {
     width: 100%;
     padding: 10px;
     font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 5px;
+  }
+
+  .camera-capture-btn {
+    background-color: #1f6feb;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 10px;
+    padding: 10px 14px;
+  }
+
+  .hidden-camera-input {
+    display: none;
   }
   
   textarea {

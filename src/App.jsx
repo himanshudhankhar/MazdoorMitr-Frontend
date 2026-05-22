@@ -64,6 +64,7 @@ import { LoaderProvider, useLoader } from "./LoaderContext";
 import { loaderRef } from "./loaderRef";
 import GlobalSpinner from './GlobalSpinner';
 import PremiumPage from './components/PremiumPage';
+import AdminPremiumRequests from './components/AdminPremiumRequests';
 const LoaderBridge = () => {
   const { startLoading, stopLoading } = useLoader();
 
@@ -105,6 +106,7 @@ function AppContent() {
           <Route exact path="/review-shops" element={<ProtectedRoute userType="admin"><ReviewShops /></ProtectedRoute>} />
 
           <Route exact path="/payout-requests" element={<ProtectedRoute userType="admin"><PayoutRequests /></ProtectedRoute>} />
+          <Route exact path="/admin-premium-requests" element={<ProtectedRoute userType="admin"><AdminPremiumRequests /></ProtectedRoute>} />
 
           <Route exact path="/reachouts" element={<ProtectedRoute userType="admin"><ReachOutAdmin /></ProtectedRoute>} />
           <Route exact path="/labourers-added" element={<LabourersAddedPage />} />
@@ -147,9 +149,9 @@ function AppContent() {
             <Route exact path="wallet" element={<ProtectedRoute userType="user"><Wallet /></ProtectedRoute>} />
             <Route exact path="profile-page/:profileid" element={<ProtectedRoute userType="user"><ProfilePage /></ProtectedRoute>} />
             <Route exact path="home" element={<ProtectedRoute userType="user"><Home /></ProtectedRoute>} />
-            <Route exact path="complete-profile-employer" element={<ProtectedRoute userType="user"><CompleteProfileEmployer /></ProtectedRoute>} />
-            <Route exact path="create-labourer-profile" element={<ProtectedRoute userType="user"><CreateLabourerProfile /></ProtectedRoute>} />
-            <Route exact path="complete-shop-profile" element={<ProtectedRoute userType="user"><CompleteShopProfile /></ProtectedRoute>} />
+            <Route exact path="complete-profile-employer" element={<ProtectedRoute userType="user" allowIncompleteProfile><CompleteProfileEmployer /></ProtectedRoute>} />
+            <Route exact path="create-labourer-profile" element={<ProtectedRoute userType="user" allowIncompleteProfile><CreateLabourerProfile /></ProtectedRoute>} />
+            <Route exact path="complete-shop-profile" element={<ProtectedRoute userType="user" allowIncompleteProfile><CompleteShopProfile /></ProtectedRoute>} />
             <Route exact path="profile-view/:profileId" element={<ProtectedRoute userType="user"><ViewProfile /></ProtectedRoute>} />
           </Route>
       </Routes>

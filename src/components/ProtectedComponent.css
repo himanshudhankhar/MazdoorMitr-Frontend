@@ -1,0 +1,34 @@
+.ProtectedRoute-incompleteProfile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 24px;
+}
+
+.ProtectedRoute-incompleteProfileBox {
+  width: min(420px, 100%);
+  border: 1px solid #d7dce3;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.1);
+}
+
+.ProtectedRoute-incompleteProfileBox p {
+  margin: 0 0 16px;
+  color: #1f2937;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.ProtectedRoute-incompleteProfileBox button {
+  border: 0;
+  border-radius: 6px;
+  background: #0f62fe;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 10px 16px;
+}

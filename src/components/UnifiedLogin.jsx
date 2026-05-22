@@ -389,6 +389,8 @@ const UnifiedLogin = () => {
                 localStorage.setItem("shopId", data.shop.id);
                 localStorage.setItem("accountType", "SHOP");
                 localStorage.setItem("userType", "BusinessOwner"); // for old APIs expecting userType
+                localStorage.setItem("profileRole", "BusinessOwner");
+                localStorage.setItem("profileIncomplete", String(data.shop.profileIncomplete === true));
                 redirectAfterShopLogin(data.shop);
                 return;
             }
@@ -398,6 +400,8 @@ const UnifiedLogin = () => {
                 localStorage.setItem("userId", user.id);
                 localStorage.setItem("accountType", "USER");
                 localStorage.setItem("userType", user.role || "user");
+                localStorage.setItem("profileRole", user.role || user.userType || "user");
+                localStorage.setItem("profileIncomplete", String(user.profileIncomplete === true));
 
                 setCurrentUser(user);
 
@@ -441,6 +445,8 @@ const UnifiedLogin = () => {
                 localStorage.setItem("userId", updatedUser.id);
                 localStorage.setItem("accountType", "USER");
                 localStorage.setItem("userType", updatedUser.role || "user");
+                localStorage.setItem("profileRole", updatedUser.role || updatedUser.userType || "user");
+                localStorage.setItem("profileIncomplete", String(updatedUser.profileIncomplete === true));
             }
 
             redirectAfterUserLogin(updatedUser);

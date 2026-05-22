@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./CompleteProfileEmployer.css";
 import axiosInstance from "../axiosConfig";
 import { useNavigate } from "react-router-dom";
+import CameraCapture from "./CameraCapture";
 
 const CompleteProfile = () => {
   const navigate = useNavigate();
@@ -14,10 +15,16 @@ const CompleteProfile = () => {
   const [callTimeEnd, setCallTimeEnd] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [changedImage, setChangedImage] = useState(false);
+  const [selectedImageFile, setSelectedImageFile] = useState(null);
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
+    handleImageFile(file);
+  };
+
+  const handleImageFile = (file) => {
     if (file) {
+      setSelectedImageFile(file);
       setChangedImage(true);
       setProfilePic(URL.createObjectURL(file));
     }
@@ -63,7 +70,7 @@ const CompleteProfile = () => {
 
     try {
       const fileInput = document.getElementById("profilePic");
-      const file = fileInput?.files?.[0];
+      const file = selectedImageFile || fileInput?.files?.[0];
 
       if (!file && !imageUrl) {
         alert("Upload Image!!");
@@ -72,11 +79,8 @@ const CompleteProfile = () => {
       const userId = localStorage.getItem("userId");
       const formData = new FormData();
 
-      if (fileInput) {
-        const file = fileInput.files[0];
-        if (file) {
-          formData.append("file", file);
-        }
+      if (file) {
+        formData.append("file", file);
       }
 
       formData.append("name", name);
@@ -99,6 +103,10 @@ const CompleteProfile = () => {
       );
 
       if (res.status === 200) {
+        localStorage.setItem(
+          "profileIncomplete",
+          String(res.data?.profile?.profileIncomplete === true)
+        );
         alert("Profile updated successfully! Redirecting to home...");
 
         // 🔥 Redirect after 3 seconds
@@ -121,6 +129,7 @@ const CompleteProfile = () => {
       <div className="form-group">
         <label>Profile Picture:</label>
         <input type="file" accept="image/*" id="profilePic" onChange={handleImageUpload} />
+        <CameraCapture onCapture={handleImageFile} />
         {(profilePic || imageUrl) && (
           <div className="image-preview">
             <img src={changedImage ? profilePic : imageUrl} alt="Preview" />

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axiosInstance from "../axiosConfig";
 import "./AddLabourer.css";
+import CameraCapture from "./CameraCapture";
 
 const hinglishTaglines = [
     "Main expert hoon plumbing mein",
@@ -83,8 +84,7 @@ const AddLabourerPage = () => {
         setForm((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
+    const setImageFile = (file) => {
         setForm((prev) => ({ ...prev, image: file }));
 
         if (file) {
@@ -94,6 +94,10 @@ const AddLabourerPage = () => {
             };
             reader.readAsDataURL(file);
         }
+    };
+
+    const handleImageChange = (e) => {
+        setImageFile(e.target.files[0]);
     };
 
     const sendOtp = async () => {
@@ -259,6 +263,7 @@ const AddLabourerPage = () => {
                     <label>
                         Upload Image:
                         <input type="file" accept="image/*" onChange={handleImageChange} />
+                        <CameraCapture onCapture={setImageFile} />
                     </label>
 
                     {imagePreview && (

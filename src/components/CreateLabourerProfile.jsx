@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./CreateLabourerProfile.css";
 import axiosInstance from "../axiosConfig";
 import { useNavigate } from "react-router-dom";
+import CameraCapture from "./CameraCapture";
 
 const CreateLabourerProfile = () => {
     const navigate = useNavigate();
@@ -14,10 +15,16 @@ const CreateLabourerProfile = () => {
     const [callTimeEnd, setCallTimeEnd] = useState("");
     const [imageUrl, setImageUrl] = useState("");
     const [changedImage, setChangedImage] = useState(false);
+    const [selectedImageFile, setSelectedImageFile] = useState(null);
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
+        handleImageFile(file);
+    };
+
+    const handleImageFile = (file) => {
         if (file) {
+            setSelectedImageFile(file);
             setChangedImage(true);
             setProfileImage(URL.createObjectURL(file));
         }
@@ -64,7 +71,8 @@ const CreateLabourerProfile = () => {
 
         try {
             const fileInput = document.getElementById("profileImage");
-            if (!fileInput && !imageUrl) {
+            const selectedFile = selectedImageFile || fileInput?.files?.[0];
+            if (!selectedFile && !imageUrl) {
                 alert("Upload Image!!");
                 return;
             }
@@ -72,11 +80,8 @@ const CreateLabourerProfile = () => {
             const userId = localStorage.getItem("userId");
             const formData = new FormData();
 
-            if (fileInput) {
-                const file = fileInput.files[0];
-                if (file) {
-                    formData.append("file", file);
-                }
+            if (selectedFile) {
+                formData.append("file", selectedFile);
             }
 
             formData.append("name", name);
@@ -99,6 +104,10 @@ const CreateLabourerProfile = () => {
             );
 
             if (res.status === 200) {
+                localStorage.setItem(
+                    "profileIncomplete",
+                    String(res.data?.profile?.profileIncomplete === true)
+                );
                 alert("Profile updated successfully! Redirecting to home...");
                 setTimeout(() => {
                     navigate("/app/home");
@@ -126,6 +135,7 @@ const CreateLabourerProfile = () => {
                             accept="image/*"
                             onChange={handleImageUpload}
                         />
+                        <CameraCapture onCapture={handleImageFile} />
                         {(profileImage || imageUrl) && (
                             <div className="image-preview">
                                 <img src={changedImage ? profileImage : imageUrl} alt="Preview" />

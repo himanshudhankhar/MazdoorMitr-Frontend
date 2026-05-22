@@ -1,0 +1,293 @@
+.AdminPremiumRequests-page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px;
+  color: #1f2937;
+}
+
+.AdminPremiumRequests-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.AdminPremiumRequests-header h1 {
+  margin: 0 0 6px;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.AdminPremiumRequests-header p {
+  margin: 0;
+  color: #5b6472;
+}
+
+.AdminPremiumRequests-header button,
+.AdminPremiumRequests-filters button,
+.AdminPremiumRequests-actions button,
+.AdminPremiumRequests-modalActions button {
+  border: 0;
+  border-radius: 6px;
+  background: #0f62fe;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 10px 14px;
+}
+
+.AdminPremiumRequests-header button:disabled,
+.AdminPremiumRequests-filters button:disabled,
+.AdminPremiumRequests-actions button:disabled,
+.AdminPremiumRequests-modalActions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.AdminPremiumRequests-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.AdminPremiumRequests-summary div {
+  border: 1px solid #d7dce3;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 14px;
+}
+
+.AdminPremiumRequests-summary span,
+.AdminPremiumRequests-grid span,
+.AdminPremiumRequests-rejection span {
+  display: block;
+  color: #687386;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.AdminPremiumRequests-summary strong {
+  display: block;
+  font-size: 24px;
+}
+
+.AdminPremiumRequests-filters {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(150px, 1fr));
+  gap: 12px;
+  align-items: end;
+  border: 1px solid #d7dce3;
+  border-radius: 8px;
+  background: #f8fafc;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+
+.AdminPremiumRequests-filters label,
+.AdminPremiumRequests-modalContent label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.AdminPremiumRequests-filters input,
+.AdminPremiumRequests-filters select,
+.AdminPremiumRequests-modalContent textarea {
+  border: 1px solid #cfd6df;
+  border-radius: 6px;
+  font: inherit;
+  padding: 10px;
+}
+
+.AdminPremiumRequests-error,
+.AdminPremiumRequests-success,
+.AdminPremiumRequests-state {
+  border-radius: 6px;
+  margin: 12px 0;
+  padding: 10px 12px;
+}
+
+.AdminPremiumRequests-error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.AdminPremiumRequests-success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.AdminPremiumRequests-state {
+  background: #eef2ff;
+  color: #3730a3;
+}
+
+.AdminPremiumRequests-list {
+  display: grid;
+  gap: 14px;
+}
+
+.AdminPremiumRequests-card {
+  border: 1px solid #d7dce3;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 16px;
+}
+
+.AdminPremiumRequests-cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.AdminPremiumRequests-cardHeader h2 {
+  margin: 0 0 4px;
+  font-size: 20px;
+}
+
+.AdminPremiumRequests-cardHeader p {
+  margin: 0;
+  color: #5b6472;
+}
+
+.AdminPremiumRequests-status {
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 10px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.AdminPremiumRequests-statusPending {
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.AdminPremiumRequests-statusCompleted {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.AdminPremiumRequests-statusRejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.AdminPremiumRequests-statusNeutral {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.AdminPremiumRequests-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.AdminPremiumRequests-grid p {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.AdminPremiumRequests-description,
+.AdminPremiumRequests-rejection {
+  border-radius: 6px;
+  margin: 14px 0 0;
+  padding: 10px;
+}
+
+.AdminPremiumRequests-description {
+  background: #f8fafc;
+}
+
+.AdminPremiumRequests-rejection {
+  background: #fef2f2;
+  color: #7f1d1d;
+}
+
+.AdminPremiumRequests-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 14px;
+}
+
+.AdminPremiumRequests-actions .AdminPremiumRequests-rejectButton {
+  background: #dc2626;
+}
+
+.AdminPremiumRequests-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.55);
+  padding: 16px;
+}
+
+.AdminPremiumRequests-modalContent {
+  width: min(460px, 100%);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 22px;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.25);
+}
+
+.AdminPremiumRequests-modalContent h3 {
+  margin: 0 0 8px;
+}
+
+.AdminPremiumRequests-modalContent p {
+  margin: 0 0 16px;
+  color: #5b6472;
+}
+
+.AdminPremiumRequests-modalContent textarea {
+  resize: vertical;
+}
+
+.AdminPremiumRequests-modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.AdminPremiumRequests-modalActions button:last-child {
+  background: #64748b;
+}
+
+@media (max-width: 840px) {
+  .AdminPremiumRequests-page {
+    padding: 16px;
+  }
+
+  .AdminPremiumRequests-header {
+    flex-direction: column;
+  }
+
+  .AdminPremiumRequests-summary,
+  .AdminPremiumRequests-filters,
+  .AdminPremiumRequests-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .AdminPremiumRequests-cardHeader,
+  .AdminPremiumRequests-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,90 @@
+.camera_capture_button {
+  align-self: flex-start;
+  background: #1f6feb;
+  border: 0;
+  border-radius: 6px;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 700;
+  margin-top: 8px;
+  padding: 10px 14px;
+}
+
+.camera_capture_modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.62);
+  padding: 16px;
+}
+
+.camera_capture_panel {
+  width: min(560px, 100%);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 16px;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.28);
+}
+
+.camera_capture_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.camera_capture_header h3 {
+  margin: 0;
+}
+
+.camera_capture_header button,
+.camera_capture_actions button {
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 9px 12px;
+}
+
+.camera_capture_header button,
+.camera_capture_actions button:last-child {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.camera_capture_video {
+  width: 100%;
+  max-height: 62vh;
+  border-radius: 8px;
+  background: #111827;
+  object-fit: contain;
+}
+
+.camera_capture_error {
+  border-radius: 6px;
+  background: #fee2e2;
+  color: #991b1b;
+  margin: 0;
+  padding: 12px;
+}
+
+.camera_capture_actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.camera_capture_actions button:first-child {
+  background: #0f62fe;
+  color: #ffffff;
+}
+
+.camera_capture_actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

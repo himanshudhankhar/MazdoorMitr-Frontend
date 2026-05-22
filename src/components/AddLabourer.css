@@ -95,6 +95,22 @@
   background-color: #303f9f;
 }
 
+.add-labourer-camera-btn {
+  align-self: flex-start;
+  background-color: #1f6feb;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 8px;
+  padding: 8px 12px;
+}
+
+.add-labourer-hidden-camera-input {
+  display: none;
+}
+
 .add-labourer-submit-btn {
   padding: 10px;
   background-color: #2e7d32;

@@ -232,6 +232,21 @@
   cursor: pointer;
 }
 
+.complete_shop_profile_camera_btn {
+  background: #1f6feb;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+  margin-top: 10px;
+  padding: 9px 12px;
+}
+
+.complete_shop_profile_hidden_camera_input {
+  display: none;
+}
+
 .complete_shop_profile_upload_hint {
   color: #777;
   font-size: 13px;

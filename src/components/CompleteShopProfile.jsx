@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../axiosConfig";
 import "./CompleteShopProfile.css"; // uses complete_shop_profile_* classes
+import CameraCapture from "./CameraCapture";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -282,6 +283,7 @@ export default function CompleteShopProfileSinglePage({ initial = {} }) {
       );
 
       alert("Shop submitted for review. Redirecting to home...");
+      localStorage.setItem("profileIncomplete", "false");
       console.log("Saved shop:", res.data.shop);
 
       setTimeout(() => {
@@ -545,6 +547,7 @@ export default function CompleteShopProfileSinglePage({ initial = {} }) {
               }
             />
           </div>
+          <CameraCapture onCapture={handleLogoSelect} />
         </div>
 
         {/* HOURS */}

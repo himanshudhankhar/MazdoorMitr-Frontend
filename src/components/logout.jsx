@@ -42,6 +42,8 @@ const Logout = () => {
       localStorage.removeItem("accountType");
       localStorage.removeItem("userType");
       localStorage.removeItem("shopId");
+      localStorage.removeItem("profileRole");
+      localStorage.removeItem("profileIncomplete");
 
       // 💳 Remove Razorpay-related keys (optional but good for clean reset)
       localStorage.removeItem("rzp_checkout_anon_id");
