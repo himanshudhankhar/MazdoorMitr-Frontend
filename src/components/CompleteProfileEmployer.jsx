@@ -46,7 +46,7 @@ const CompleteProfile = () => {
         console.log("profile data", data);
         setName(data.name || "");
         setLocation(data.location || "");
-        setContactNumber(data.contactNumber || "");
+        setContactNumber(data.contactNumber || data.phone || "");
         setEmail(data.email || "");
         setCallTimeStart(data.callTimeStart || "");
         setCallTimeEnd(data.callTimeEnd || "");
@@ -85,7 +85,7 @@ const CompleteProfile = () => {
 
       formData.append("name", name);
       formData.append("location", location);
-      formData.append("contactNumber", contactNumber);
+      formData.append("contactNumber", contactNumber || localStorage.getItem("phone") || "");
       formData.append("email", email);
       formData.append("callTimeStart", callTimeStart);
       formData.append("callTimeEnd", callTimeEnd);
